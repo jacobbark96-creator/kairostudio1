@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+		-webkit-text-size-adjust: 100%;
+		-webkit-tap-highlight-color: transparent;
+	}
+	
+	body {
+		@apply antialiased;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+		touch-action: manipulation;
+	}
+	
+	/* Improve touch targets */
+	button, a {
+		touch-action: manipulation;
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+	}
+	
+	/* Prevent text selection on buttons */
+	button {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+}
+
+/* Carousel marquee styles */
+.marquee {
+	--marquee-duration: 18s;
+}
+.marquee__inner {
+	display: flex;
+	gap: 1.5rem;
+	align-items: center;
+	animation: marquee var(--marquee-duration) linear infinite;
+}
+.marquee__inner > * {
+	flex: 0 0 auto;
+}
+
+/* Enable scrolling and animation on mobile */
+@media (max-width: 767px) {
+	.marquee {
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		scroll-snap-type: x proximity;
+	}
+	.marquee::-webkit-scrollbar {
+		display: none;
+	}
+	.marquee__inner {
+		animation: marquee 25s linear infinite;
+		will-change: transform;
+		min-width: max-content;
+	}
+	.marquee__inner > * {
+		scroll-snap-align: start;
+	}
+}
+.marquee:hover .marquee__inner {
+	animation-play-state: paused;
+}
+
+@keyframes marquee {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
+}
+
+/* Custom scrollbar */
+@layer utilities {
+	.scrollbar-hide {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+/* Smooth transitions for theme changes */
+* {
+	transition-property: background-color, border-color, color, fill, stroke;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 150ms;
+}
