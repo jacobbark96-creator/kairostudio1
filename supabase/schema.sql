@@ -36,6 +36,47 @@ create policy "Users can delete own invoices"
   on invoices for delete
   using (auth.uid() = user_id);
 
+-- ADMIN POLICIES FOR INVOICES --
+create policy "Admins can view all invoices"
+  on invoices for select
+  using (
+    exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
+
+create policy "Admins can insert all invoices"
+  on invoices for insert
+  with check (
+    exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
+
+create policy "Admins can update all invoices"
+  on invoices for update
+  using (
+    exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
+
+create policy "Admins can delete all invoices"
+  on invoices for delete
+  using (
+    exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
+
 -- Create a storage bucket for invoices if it doesn't exist
 insert into storage.buckets (id, name, public)
 values ('invoices', 'invoices', true)
@@ -53,6 +94,29 @@ create policy "Users can upload invoice images"
 create policy "Users can delete own invoice images"
   on storage.objects for delete
   using ( bucket_id = 'invoices' and auth.uid() = owner );
+
+-- ADMIN POLICIES FOR STORAGE --
+create policy "Admins can upload invoice images"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'invoices' 
+    and exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
+
+create policy "Admins can delete any invoice image"
+  on storage.objects for delete
+  using (
+    bucket_id = 'invoices'
+    and exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
 
 -- --- NEW SCHEMA FOR PROFILES AND CONTENT ---
 
@@ -79,6 +143,17 @@ create policy "Users can insert their own profile"
 create policy "Users can update own profile"
   on profiles for update
   using (auth.uid() = id);
+
+-- ADMIN POLICIES FOR PROFILES --
+create policy "Admins can update any profile"
+  on profiles for update
+  using (
+    exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
 
 -- Trigger to create profile on signup
 create or replace function public.handle_new_user()
