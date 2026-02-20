@@ -44,6 +44,43 @@ export interface Database {
           file_path?: string | null
         }
       }
+      profiles: {
+        Row: {
+          id: string
+          email: string | null
+          role: 'user' | 'admin'
+          created_at: string
+        }
+        Insert: {
+          id: string
+          email?: string | null
+          role?: 'user' | 'admin'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string | null
+          role?: 'user' | 'admin'
+          created_at?: string
+        }
+      }
+      site_content: {
+        Row: {
+          key: string
+          value: string
+          updated_at: string | null
+        }
+        Insert: {
+          key: string
+          value: string
+          updated_at?: string | null
+        }
+        Update: {
+          key?: string
+          value?: string
+          updated_at?: string | null
+        }
+      }
     }
   }
 }

@@ -70,6 +70,12 @@ export default function Layout({ children }: LayoutProps) {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-3 lg:gap-4">
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+              >
+                Client Portal
+              </Link>
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 aria-pressed={theme === 'dark'}
@@ -110,6 +116,13 @@ export default function Layout({ children }: LayoutProps) {
           {mobileMenuOpen && (
             <div className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
               <div className="flex flex-col gap-3">
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors min-h-[44px] flex items-center"
+                >
+                  Client Portal
+                </Link>
                 <button 
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px]"

@@ -1,15 +1,29 @@
-import { ArrowRight, Mail, Sparkles, Palette, Code, Zap } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowRight, Sparkles, Palette, Code, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import LogoCarousel from '../components/LogoCarousel';
-import ContactModal from '../components/ContactModal';
 import HeroCarousel from '../components/HeroCarousel';
-import WhyKairo from '../components/WhyKairo';
 import { useTheme } from '../hooks/useTheme';
+import { supabase } from '../lib/supabase';
+import TypewriterHero from '../components/TypewriterHero';
 
 export default function HomePage() {
-  const [showContact, setShowContact] = useState(false);
   const { theme } = useTheme();
+  const [heroTitle, setHeroTitle] = useState('We craft digital experiences that inspire');
+  const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
+
+  useEffect(() => {
+    fetchContent();
+  }, []);
+
+  const fetchContent = async () => {
+    const { data } = await supabase.from('site_content').select('*');
+    if (data) {
+      const title = data.find(item => item.key === 'hero_title')?.value;
+      const subtitle = data.find(item => item.key === 'hero_subtitle')?.value;
+      if (title) setHeroTitle(title);
+      if (subtitle) setHeroSubtitle(subtitle);
+    }
+  };
 
   const services = [
     {
@@ -41,18 +55,15 @@ export default function HomePage() {
                   Creative Design Studio
                 </span>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-6">
-                We craft digital
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400">
-                  experiences
-                </span>
-                <br />
-                that inspire
-              </h1>
+              <div className="h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64 mb-4 sm:mb-6">
+                <TypewriterHero 
+                  text={heroTitle} 
+                  className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 pb-2"
+                  speed={70}
+                />
+              </div>
               <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-6 sm:mb-8 leading-relaxed">
-                Transform your vision into stunning digital realities. We blend creativity with technology
-                to build brands that captivate and convert.
+                {heroSubtitle}
               </p>
               <Link 
                 to="/portfolio"
@@ -100,35 +111,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <WhyKairo />
-
-      <LogoCarousel theme={theme} />
-
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-black via-gray-900 to-black dark:from-gray-900 dark:via-black dark:to-gray-900 text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-            Ready to elevate
-            <br />
-            your brand?
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl text-gray-300 dark:text-gray-400 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-4">
-            Let's collaborate and create something extraordinary together.
-            Get in touch and let's start building.
-          </p>
-          <button 
-            onClick={() => setShowContact(true)} 
-            className="group px-6 sm:px-8 py-3.5 sm:py-4 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-medium mx-auto shadow-lg hover:shadow-cyan-500/50 hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px]"
-          >
-            <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
-            Start a Project
-            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
-          </button>
-        </div>
-      </section>
-
-      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
     </>
   );
 }
-
