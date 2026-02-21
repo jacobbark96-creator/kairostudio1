@@ -72,7 +72,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="hidden md:flex items-center gap-3 lg:gap-4">
               <Link
                 to="/dashboard"
-                className="text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors"
+                className="px-5 py-2 text-sm font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px] flex items-center"
               >
                 Client Portal
               </Link>

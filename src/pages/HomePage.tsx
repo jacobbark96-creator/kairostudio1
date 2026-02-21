@@ -1,7 +1,7 @@
 import { ArrowRight, Sparkles, Palette, Code, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import HeroCarousel from '../components/HeroCarousel';
+import RandomOffer from '../components/RandomOffer';
 import { useTheme } from '../hooks/useTheme';
 import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
@@ -74,8 +74,8 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
-              <div className="w-full sm:w-3/4 lg:w-full max-w-lg h-64 sm:h-80 md:h-96 lg:h-[500px]">
-                <HeroCarousel />
+              <div className="w-full sm:w-3/4 lg:w-full max-w-lg h-80 sm:h-96 md:h-[450px] lg:h-[500px]">
+                <RandomOffer />
               </div>
             </div>
           </div>

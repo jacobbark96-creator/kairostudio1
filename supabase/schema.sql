@@ -200,3 +200,32 @@ values
   ('hero_title', 'We craft digital experiences that inspire'),
   ('hero_subtitle', 'Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.')
 on conflict (key) do nothing;
+
+-- OFFERS TABLE --
+create table if not exists offers (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  description text,
+  max_claims int default 100,
+  current_claims int default 0,
+  active boolean default true,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Enable RLS for offers
+alter table offers enable row level security;
+
+-- Policies for offers
+create policy "Public can view active offers"
+  on offers for select
+  using (active = true);
+
+create policy "Admins can do everything with offers"
+  on offers for all
+  using (
+    exists (
+      select 1 from profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );

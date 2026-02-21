@@ -81,6 +81,35 @@ export interface Database {
           updated_at?: string | null
         }
       }
+      offers: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          max_claims: number
+          current_claims: number
+          active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          max_claims?: number
+          current_claims?: number
+          active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          max_claims?: number
+          current_claims?: number
+          active?: boolean
+          created_at?: string
+        }
+      }
     }
   }
 }

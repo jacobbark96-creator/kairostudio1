@@ -9,7 +9,7 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 
 export default function AdminCRM() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content'>('invoices');
+  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers'>('invoices');
   
   // Invoice State
   const [uploading, setUploading] = useState(false);
@@ -26,9 +26,17 @@ export default function AdminCRM() {
   const [heroSubtitle, setHeroSubtitle] = useState('');
   const [savingContent, setSavingContent] = useState(false);
 
+  // Offer State
+  const [offers, setOffers] = useState<Database['public']['Tables']['offers']['Row'][]>([]);
+  const [offerTitle, setOfferTitle] = useState('');
+  const [offerDescription, setOfferDescription] = useState('');
+  const [offerMaxClaims, setOfferMaxClaims] = useState(1);
+  const [creatingOffer, setCreatingOffer] = useState(false);
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
+    fetchOffers();
   }, []);
 
   const fetchUsers = async () => {
@@ -44,6 +52,47 @@ export default function AdminCRM() {
       setHeroTitle(title);
       setHeroSubtitle(subtitle);
     }
+  };
+
+  const fetchOffers = async () => {
+    const { data } = await supabase.from('offers').select('*').order('created_at', { ascending: false });
+    if (data) setOffers(data);
+  };
+
+  const handleCreateOffer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreatingOffer(true);
+    try {
+      const { error } = await supabase.from('offers').insert({
+        title: offerTitle,
+        description: offerDescription,
+        max_claims: offerMaxClaims,
+        active: true
+      });
+      if (error) throw error;
+      alert('Offer created!');
+      setOfferTitle('');
+      setOfferDescription('');
+      setOfferMaxClaims(1);
+      fetchOffers();
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setCreatingOffer(false);
+    }
+  };
+
+  const toggleOfferStatus = async (id: string, currentStatus: boolean) => {
+    const { error } = await supabase.from('offers').update({ active: !currentStatus }).eq('id', id);
+    if (error) alert(error.message);
+    else fetchOffers();
+  };
+
+  const deleteOffer = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this offer?')) return;
+    const { error } = await supabase.from('offers').delete().eq('id', id);
+    if (error) alert(error.message);
+    else fetchOffers();
   };
 
   const handleInvoiceUpload = async (e: React.FormEvent) => {
@@ -142,6 +191,12 @@ export default function AdminCRM() {
             className={`pb-4 px-4 ${activeTab === 'content' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
           >
             Edit Content
+          </button>
+          <button
+            onClick={() => setActiveTab('offers')}
+            className={`pb-4 px-4 ${activeTab === 'offers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+          >
+            Manage Offers
           </button>
         </div>
 
@@ -286,6 +341,86 @@ export default function AdminCRM() {
                 {savingContent ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                 {savingContent ? 'Saving...' : 'Save Changes'}
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'offers' && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Create New Offer</h2>
+            <form onSubmit={handleCreateOffer} className="space-y-4 mb-8">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+                <input
+                  type="text"
+                  value={offerTitle}
+                  onChange={(e) => setOfferTitle(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <textarea
+                  value={offerDescription}
+                  onChange={(e) => setOfferDescription(e.target.value)}
+                  rows={3}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Max Claims</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={offerMaxClaims}
+                  onChange={(e) => setOfferMaxClaims(parseInt(e.target.value))}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={creatingOffer}
+                className="w-full py-3 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {creatingOffer ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                {creatingOffer ? 'Creating...' : 'Create Offer'}
+              </button>
+            </form>
+
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Existing Offers</h2>
+            <div className="space-y-4">
+              {offers.map((offer) => (
+                <div key={offer.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex justify-between items-center">
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white">{offer.title}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{offer.description}</p>
+                    <p className="text-xs text-gray-400 mt-1">Claims: {offer.current_claims} / {offer.max_claims}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => toggleOfferStatus(offer.id, offer.active)}
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        offer.active 
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                          : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      {offer.active ? 'Active' : 'Inactive'}
+                    </button>
+                    <button
+                      onClick={() => deleteOffer(offer.id)}
+                      className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {offers.length === 0 && (
+                <p className="text-center text-gray-500 py-4">No offers created yet.</p>
+              )}
             </div>
           </div>
         )}

@@ -42,7 +42,7 @@ export const TypewriterHero: React.FC<TypewriterHeroProps> = ({
       <motion.span
         animate={{ opacity: [0, 1, 0] }}
         transition={{ repeat: Infinity, duration: 0.8 }}
-        className="inline-block ml-1 w-1 h-[1em] bg-current align-middle"
+        className="inline-block ml-1 w-3 h-[1em] bg-cyan-600 dark:bg-cyan-400 align-middle"
       />
     </motion.span>
   );
