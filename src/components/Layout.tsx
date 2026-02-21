@@ -4,13 +4,14 @@ import { Menu, X } from 'lucide-react';
 import Footer from './Footer';
 import ContactModal from './ContactModal';
 import { useTheme } from '../hooks/useTheme';
+import { useUI } from '../context/UIContext';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export default function Layout({ children }: LayoutProps) {
-  const [showContact, setShowContact] = useState(false);
+  const { isContactModalOpen, openContactModal, closeContactModal, contactModalPreill } = useUI();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -57,7 +58,7 @@ export default function Layout({ children }: LayoutProps) {
               className="cursor-pointer flex-shrink-0 flex items-center"
             >
               {kairoLogo && (
-                <div className="h-20 sm:h-16 md:h-20 lg:h-24 xl:h-28 w-auto max-w-[280px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] flex items-center justify-center">
+                <div className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-28 w-auto max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] flex items-center justify-center">
                   <img 
                     src={kairoLogo} 
                     alt="Kairo Studio" 
@@ -90,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
                 <span className="sr-only">Toggle dark mode</span>
               </button>
               <button
-                onClick={() => setShowContact(true)}
+                onClick={() => openContactModal()}
                 className="px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 transition-all duration-300 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 min-h-[44px]"
               >
                 Get in Touch
@@ -114,28 +115,28 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden mt-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-              <div className="flex flex-col gap-3">
+            <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-xl animate-in slide-in-from-top-5 duration-200">
+              <div className="flex flex-col gap-2 p-4">
                 <Link
                   to="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors min-h-[44px] flex items-center"
+                  className="px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center"
                 >
                   Client Portal
                 </Link>
                 <button 
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px]"
+                  className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full"
                 >
-                  <span className="text-sm font-medium">Theme</span>
+                  <span className="text-base font-medium">Theme</span>
                   <span className="text-sm text-gray-600 dark:text-gray-400">{theme === 'dark' ? 'Dark' : 'Light'}</span>
                 </button>
                 <button
                   onClick={() => {
-                    setShowContact(true);
+                    openContactModal();
                     setMobileMenuOpen(false);
                   }}
-                  className="px-4 py-3 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 transition-all duration-300 text-sm font-medium shadow-lg hover:shadow-xl min-h-[44px]"
+                  className="mt-2 w-full px-4 py-3.5 bg-cyan-600 text-white rounded-xl hover:bg-cyan-500 transition-all duration-300 text-base font-semibold shadow-lg active:scale-95"
                 >
                   Get in Touch
                 </button>
@@ -151,10 +152,14 @@ export default function Layout({ children }: LayoutProps) {
 
       <Footer 
         logo={kairoLogo}
-        onShowContact={() => setShowContact(true)}
+        onShowContact={() => openContactModal()}
       />
 
-      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={closeContactModal} 
+        lockedSubject={contactModalPreill}
+      />
     </div>
   );
 }

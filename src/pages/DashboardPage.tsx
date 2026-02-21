@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { Upload, FileText, Trash2, LogOut, Loader2, AlertCircle, Plus } from 'lucide-react';
+import { FileText, LogOut, Loader2, AlertCircle, Plus } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Invoice = Database['public']['Tables']['invoices']['Row'];
@@ -33,8 +33,9 @@ export default function DashboardPage() {
 
       if (error) throw error;
       setInvoices(data || []);
-    } catch (err: any) {
-      console.error('Error fetching invoices:', err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An error occurred';
+      console.error('Error fetching invoices:', message);
     } finally {
       setLoading(false);
     }
@@ -73,17 +74,20 @@ export default function DashboardPage() {
         .getPublicUrl(filePath);
 
       // 2. Insert record into Database
-      const { error: dbError } = await supabase
+      const newInvoice: Database['public']['Tables']['invoices']['Insert'] = {
+        user_id: user.id,
+        client_name: clientName,
+        amount: parseFloat(amount),
+        due_date: dueDate || null,
+        file_url: publicUrl,
+        file_path: filePath,
+        status: 'pending'
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: dbError } = await (supabase as any)
         .from('invoices')
-        .insert({
-          user_id: user.id,
-          client_name: clientName,
-          amount: parseFloat(amount),
-          due_date: dueDate || null,
-          file_url: publicUrl,
-          file_path: filePath,
-          status: 'pending'
-        });
+        .insert(newInvoice);
 
       if (dbError) throw dbError;
 
@@ -94,8 +98,9 @@ export default function DashboardPage() {
       setSelectedFile(null);
       setShowForm(false);
       await fetchInvoices();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An error occurred';
+      setError(message);
     } finally {
       setUploading(false);
     }
@@ -123,8 +128,9 @@ export default function DashboardPage() {
       if (dbError) throw dbError;
       
       setInvoices(invoices.filter((inv) => inv.id !== invoice.id));
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An error occurred';
+      setError(message);
     }
   };
 
@@ -244,7 +250,7 @@ export default function DashboardPage() {
             )}
 
             {/* Invoices List */}
-            <div className="overflow-x-auto">
+            <div className="mt-8">
               {loading ? (
                 <div className="flex justify-center py-12">
                   <Loader2 className="animate-spin h-8 w-8 text-cyan-600" />
@@ -258,60 +264,106 @@ export default function DashboardPage() {
                   </p>
                 </div>
               ) : (
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                  <thead className="bg-gray-50 dark:bg-gray-800">
-                    <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
-                      <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <>
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                      <thead className="bg-gray-50 dark:bg-gray-800">
+                        <tr>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                          <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {invoices.map((invoice) => (
+                          <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900 dark:text-white">{invoice.client_name}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm text-gray-900 dark:text-gray-300">${invoice.amount.toFixed(2)}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                ${invoice.status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 
+                                  invoice.status === 'overdue' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 
+                                  'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}`}>
+                                {invoice.status}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                              {new Date(invoice.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                              <div className="flex justify-end space-x-3">
+                                {invoice.file_url && (
+                                  <a
+                                    href={invoice.file_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-cyan-600 hover:text-cyan-900 dark:text-cyan-400 dark:hover:text-cyan-300"
+                                  >
+                                    View
+                                  </a>
+                                )}
+                                <button
+                                  onClick={() => handleDelete(invoice)}
+                                  className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden space-y-4">
                     {invoices.map((invoice) => (
-                      <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">{invoice.client_name}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900 dark:text-gray-300">${invoice.amount.toFixed(2)}</div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <div key={invoice.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">{invoice.client_name}</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(invoice.created_at).toLocaleDateString()}</p>
+                          </div>
+                          <span className={`px-2 py-1 text-xs font-semibold rounded-full 
                             ${invoice.status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 
                               invoice.status === 'overdue' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' : 
                               'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}`}>
                             {invoice.status}
                           </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                          {new Date(invoice.created_at).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex justify-end space-x-3">
+                        </div>
+                        <div className="flex justify-between items-center mt-4">
+                          <span className="text-lg font-bold text-gray-900 dark:text-white">${invoice.amount.toFixed(2)}</span>
+                          <div className="flex space-x-3">
                             {invoice.file_url && (
                               <a
                                 href={invoice.file_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-cyan-600 hover:text-cyan-900 dark:hover:text-cyan-400"
+                                className="text-sm font-medium text-cyan-600 hover:text-cyan-900 dark:text-cyan-400 dark:hover:text-cyan-300"
                               >
                                 View
                               </a>
                             )}
                             <button
                               onClick={() => handleDelete(invoice)}
-                              className="text-red-600 hover:text-red-900 dark:hover:text-red-400"
+                              className="text-sm font-medium text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                             >
-                              <Trash2 className="h-4 w-4" />
+                              Delete
                             </button>
                           </div>
-                        </td>
-                      </tr>
+                        </div>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                </>
               )}
             </div>
           </div>

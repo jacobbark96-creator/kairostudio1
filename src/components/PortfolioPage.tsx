@@ -1,10 +1,32 @@
 import React, { useState } from 'react';
 import { ArrowRight, ExternalLink, Code, Palette, Zap, Users, Globe, CheckCircle, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import ContactModal from './ContactModal';
+import { useUI } from '../context/UIContext';
+
+interface Project {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  image: string | null;
+  favicon?: string | null;
+  color: string;
+  featured: boolean;
+  link?: string;
+  client?: {
+    name: string;
+    industry: string;
+    location: string;
+  };
+  challenge?: string;
+  solution?: string;
+  features?: string[];
+  technologies?: string[];
+  results?: string[];
+}
 
 export default function PortfolioPage() {
-  const [showContact, setShowContact] = useState(false);
+  const { openContactModal } = useUI();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     client: false,
     challenge: false,
@@ -34,7 +56,7 @@ export default function PortfolioPage() {
   const techflowImage = Object.values(techflowModules || {})[0] || null;
   const verdeImage = Object.values(verdeModules || {})[0] || null;
 
-  const projects = [
+  const projects: Project[] = [
     {
       id: 'usehyro',
       title: 'UseHyro',
@@ -141,9 +163,9 @@ export default function PortfolioPage() {
               </span>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-5 sm:mb-6 md:mb-8">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-10 md:mb-12">
               {/* Project Image */}
-              <div className="order-2 lg:order-1">
+              <div>
                 <div className={`relative rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br ${featuredProject.color} p-0.5 sm:p-1 shadow-xl sm:shadow-2xl`}>
                   <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl overflow-hidden">
                     {featuredProject.image ? (
@@ -168,12 +190,12 @@ export default function PortfolioPage() {
               </div>
 
               {/* Project Details */}
-              <div className="order-1 lg:order-2">
+              <div>
                 <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
                   <div className={`w-9 h-9 sm:w-11 sm:h-11 md:w-14 md:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br ${featuredProject.color} flex items-center justify-center overflow-hidden flex-shrink-0`}>
-                    {(featuredProject as any).favicon ? (
+                    {featuredProject.favicon ? (
                       <img 
-                        src={(featuredProject as any).favicon} 
+                        src={featuredProject.favicon} 
                         alt={`${featuredProject.title} icon`}
                         className="w-full h-full object-contain p-1.5 sm:p-2"
                       />
@@ -463,7 +485,7 @@ export default function PortfolioPage() {
             Let's discuss how we can bring your vision to life with a custom solution tailored to your needs.
           </p>
           <button
-            onClick={() => setShowContact(true)}
+            onClick={() => openContactModal()}
             className="group px-5 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 md:py-4 lg:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 min-h-[44px] sm:min-h-[48px] md:min-h-[52px] lg:min-h-[56px] mx-auto"
           >
             Get Started Today
@@ -471,9 +493,6 @@ export default function PortfolioPage() {
           </button>
         </div>
       </section>
-
-      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
     </>
   );
 }
-

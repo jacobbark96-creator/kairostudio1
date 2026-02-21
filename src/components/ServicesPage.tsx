@@ -1,10 +1,9 @@
 import { ArrowRight, Sparkles, Palette, Code, Zap, Mail, CheckCircle, TrendingUp, DollarSign, Users, Rocket, Award, ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import ContactModal from './ContactModal';
+import { useUI } from '../context/UIContext';
 
 export default function ServicesPage() {
-  const [showContact, setShowContact] = useState(false);
+  const { openContactModal } = useUI();
 
   const services = [
     {
@@ -97,7 +96,7 @@ export default function ServicesPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-stretch sm:items-center px-4">
               <button 
-                onClick={() => setShowContact(true)}
+                onClick={() => openContactModal()}
                 className="group px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
               >
                 <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -254,7 +253,7 @@ export default function ServicesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-stretch sm:items-center px-4">
             <button 
-              onClick={() => setShowContact(true)}
+              onClick={() => openContactModal()}
               className="group px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
             >
               <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -273,9 +272,6 @@ export default function ServicesPage() {
           </p>
         </div>
       </section>
-
-      <ContactModal isOpen={showContact} onClose={() => setShowContact(false)} />
     </>
   );
 }
-

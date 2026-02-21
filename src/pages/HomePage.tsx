@@ -2,12 +2,10 @@ import { ArrowRight, Sparkles, Palette, Code, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RandomOffer from '../components/RandomOffer';
-import { useTheme } from '../hooks/useTheme';
 import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
 
 export default function HomePage() {
-  const { theme } = useTheme();
   const [heroTitle, setHeroTitle] = useState('We craft digital experiences that inspire');
   const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
 
@@ -18,8 +16,10 @@ export default function HomePage() {
   const fetchContent = async () => {
     const { data } = await supabase.from('site_content').select('*');
     if (data) {
-      const title = data.find(item => item.key === 'hero_title')?.value;
-      const subtitle = data.find(item => item.key === 'hero_subtitle')?.value;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const title = (data as any[]).find(item => item.key === 'hero_title')?.value;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value;
       if (title) setHeroTitle(title);
       if (subtitle) setHeroSubtitle(subtitle);
     }
@@ -45,36 +45,44 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-12 xl:gap-16 items-center">
             <div className="text-center lg:text-left">
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-4 sm:mb-6">
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-600 dark:text-cyan-400 animate-pulse" />
-                <span className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 tracking-wide uppercase">
+                <span className="text-xs sm:text-sm font-bold text-gray-500 dark:text-gray-400 tracking-widest uppercase">
                   Creative Design Studio
                 </span>
               </div>
-              <div className="h-32 sm:h-40 md:h-48 lg:h-56 xl:h-64 mb-4 sm:mb-6">
+              <div className="h-auto min-h-[120px] sm:h-40 md:h-48 lg:h-56 xl:h-64 mb-6 sm:mb-8">
                 <TypewriterHero 
                   text={heroTitle} 
-                  className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 pb-2"
+                  className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400 pb-2"
                   speed={70}
                 />
               </div>
-              <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-6 sm:mb-8 leading-relaxed">
+              <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-10 leading-relaxed">
                 {heroSubtitle}
               </p>
-              <Link 
-                to="/portfolio"
-                className="group px-6 sm:px-8 py-3.5 sm:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full hover:bg-cyan-600 dark:hover:bg-cyan-500 transition-all duration-300 flex items-center justify-center gap-2 text-base sm:text-lg font-medium mx-auto lg:mx-0 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px]"
-              >
-                View Our Work
-                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+                <Link 
+                  to="/portfolio"
+                  className="w-full sm:w-auto px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full hover:bg-cyan-600 dark:hover:bg-cyan-500 transition-all duration-300 flex items-center justify-center gap-2 text-lg font-bold shadow-lg hover:shadow-xl hover:-translate-y-1 active:scale-95"
+                >
+                  View Our Work
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  to="/services"
+                  className="w-full sm:w-auto px-8 py-4 border-2 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-full hover:border-cyan-600 dark:hover:border-cyan-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-all duration-300 flex items-center justify-center gap-2 text-lg font-bold"
+                >
+                  Our Services
+                </Link>
+              </div>
             </div>
-            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0">
-              <div className="w-full sm:w-3/4 lg:w-full max-w-lg h-80 sm:h-96 md:h-[450px] lg:h-[500px]">
+            <div className="flex justify-center lg:justify-end mb-8 lg:mb-0">
+              <div className="w-full max-w-lg h-auto min-h-[400px] sm:min-h-[450px]">
                 <RandomOffer />
               </div>
             </div>

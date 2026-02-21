@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 export default function ContactModal({
   isOpen,
   onClose,
+  lockedSubject,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  lockedSubject?: string;
 }) {
   const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
@@ -31,13 +33,14 @@ export default function ContactModal({
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const payload: any = {
+      const payload: Record<string, string | undefined> = {
         name,
         business,
         description,
         email,
         phone,
         website: website.trim() || undefined,
+        subject: lockedSubject || undefined,
       };
       // POST to backend endpoint that will process contact
       const res = await fetch('/api/contact', {
@@ -53,8 +56,9 @@ export default function ContactModal({
       }
 
       setSubmitted(true);
-    } catch (err: any) {
-      setSubmitError(err?.message || 'Submission failed');
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Submission failed';
+      setSubmitError(errorMessage);
     } finally {
       setSubmitting(false);
     }
@@ -83,6 +87,17 @@ export default function ContactModal({
               ✕
             </button>
           </div>
+
+          {lockedSubject && (
+            <div className="mb-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800 rounded-lg">
+              <span className="block text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">
+                Regarding Offer
+              </span>
+              <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                {lockedSubject}
+              </p>
+            </div>
+          )}
 
           {!submitted ? (
             <form onSubmit={(e) => handleSubmit(e)} className="mt-4 sm:mt-6 grid grid-cols-1 gap-4 sm:gap-5">

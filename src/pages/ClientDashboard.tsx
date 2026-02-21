@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { FileText, Download, Calendar, DollarSign, Clock, CheckCircle, AlertCircle } from 'lucide-react';
@@ -25,8 +24,9 @@ export default function ClientDashboard() {
 
       if (error) throw error;
       setInvoices(data || []);
-    } catch (err: any) {
-      console.error('Error fetching invoices:', err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An error occurred';
+      console.error('Error fetching invoices:', message);
     } finally {
       setLoading(false);
     }

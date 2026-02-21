@@ -89,7 +89,7 @@ export default function WhyKairo() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {features.map((f) => {
-            const Icon = f.icon as any;
+            const Icon = f.icon as React.ElementType;
             const isOpen = open === f.key;
             return (
               <div

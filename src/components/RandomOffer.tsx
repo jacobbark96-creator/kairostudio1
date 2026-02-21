@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { useUI } from '../context/UIContext';
 
 export default function RandomOffer() {
+  const { openContactModal } = useUI();
   const [step, setStep] = useState<'initial' | 'revealed'>('initial');
   const [offer, setOffer] = useState<{ title: string; description: string } | null>(null);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,8 @@ export default function RandomOffer() {
 
       if (data && data.length > 0) {
         // Filter those with available claims
-        const availableOffers = data.filter(o => o.current_claims < o.max_claims);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const availableOffers = (data as any[]).filter(o => o.current_claims < o.max_claims);
         
         if (availableOffers.length > 0) {
           const random = availableOffers[Math.floor(Math.random() * availableOffers.length)];
@@ -65,31 +67,31 @@ export default function RandomOffer() {
                 <button
                     onClick={revealOffer}
                     disabled={loading}
-                    className="px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 active:scale-95 shadow-lg flex items-center gap-2 mx-auto text-lg"
+                    className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 bg-white text-black font-bold rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 active:scale-95 shadow-lg flex items-center justify-center gap-2 mx-auto text-base sm:text-lg"
                 >
                     {loading ? 'Consulting the oracles...' : 'See yours now'}
                     {!loading && <ArrowRight className="w-5 h-5" />}
                 </button>
             </div>
         ) : (
-            <div className="relative z-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-md">
-                <div className="p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
-                    <h3 className="text-3xl font-bold text-white mb-4">
+            <div className="relative z-10 space-y-6 sm:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-md px-4 sm:px-0">
+                <div className="p-6 sm:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
                         {offer?.title}
                     </h3>
-                    <p className="text-gray-300 text-lg">
+                    <p className="text-gray-300 text-base sm:text-lg">
                         {offer?.description}
                     </p>
                 </div>
                 
                 {offer?.title !== "All out!" && offer?.title !== "No offers right now" && offer?.title !== "Error" ? (
-                    <Link
-                        to="/login"
-                        className="inline-flex px-10 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-full hover:from-cyan-400 hover:to-blue-400 transition-all transform hover:scale-105 active:scale-95 shadow-lg items-center gap-2 text-lg"
+                    <button
+                        onClick={() => openContactModal(offer?.title)}
+                        className="w-full sm:w-auto inline-flex px-8 py-3.5 sm:px-10 sm:py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-full hover:from-cyan-400 hover:to-blue-400 transition-all transform hover:scale-105 active:scale-95 shadow-lg items-center justify-center gap-2 text-base sm:text-lg"
                     >
                         I want it
-                        <ArrowRight className="w-6 h-6" />
-                    </Link>
+                        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </button>
                 ) : (
                      <button
                         onClick={() => setStep('initial')}

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+type Slide = 
+  | { id: string; url: string }
+  | { id: number; color: string };
+
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Placeholder cards for images user can upload later
-  const placeholderSlides = [
+  const placeholderSlides: Slide[] = [
     { id: 1, color: 'from-purple-400 to-blue-500' },
     { id: 2, color: 'from-pink-400 to-rose-500' },
     { id: 3, color: 'from-cyan-400 to-blue-600' },
@@ -16,7 +20,7 @@ export default function HeroCarousel() {
   const imageModules = import.meta.glob('./hero/*.{png,jpg,jpeg,webp,svg}', { eager: true }) as Record<string, { default: string }>;
   const imageUrls = Object.values(imageModules || {}).map((mod) => mod.default);
 
-  const imageSlides = imageUrls.map((url, i) => ({ id: `img-${i}`, url }));
+  const imageSlides: Slide[] = imageUrls.map((url, i) => ({ id: `img-${i}`, url }));
   const slides = imageSlides.length ? imageSlides : placeholderSlides;
 
   useEffect(() => {
@@ -47,16 +51,16 @@ export default function HeroCarousel() {
                 : 'opacity-0 translate-y-6 scale-95'
             }`}
           >
-            {('url' in slide && slide.url) ? (
+            {('url' in slide) ? (
               <img
-                src={(slide as any).url}
+                src={slide.url}
                 alt={`Hero ${index + 1}`}
                 className="w-full h-full object-cover"
               />
             ) : (
               <div
                 className={`w-full h-full bg-gradient-to-br ${
-                  (slide as any).color
+                  slide.color
                 } flex items-center justify-center`}
               >
                 <div className="text-center">

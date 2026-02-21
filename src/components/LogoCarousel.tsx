@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Logo = ({ children, alt }: { children: React.ReactNode; alt?: string }) => (
+const Logo = ({ children }: { children: React.ReactNode }) => (
   <div className="flex items-center justify-center px-4 sm:px-6 py-4 w-32 sm:w-40 h-20 sm:h-24 bg-white/0 flex-shrink-0">
     {children}
   </div>
@@ -43,7 +43,7 @@ export default function LogoCarousel({ theme = 'light' }: { theme?: 'light' | 'd
         <div className="relative md:overflow-hidden">
           <div className="marquee will-change-transform" aria-hidden="false">
             <div className="marquee__inner flex" role="list">
-              {logos.map((logo: any, i: number) => (
+              {logos.map((logo: string | React.ReactNode, i: number) => (
                 <Logo key={`logo-${i}`}>
                   {typeof logo === 'string' ? (
                     <img src={logo} alt={`client logo ${i + 1}`} className="h-12 sm:h-14 md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity duration-300" />
@@ -53,7 +53,7 @@ export default function LogoCarousel({ theme = 'light' }: { theme?: 'light' | 'd
                 </Logo>
               ))}
               {/* Duplicate logos for seamless marquee loop - only if we have logos */}
-              {logos.length > 0 && logos.map((logo: any, i: number) => (
+              {logos.length > 0 && logos.map((logo: string | React.ReactNode, i: number) => (
                 <Logo key={`logo-dup-${i}`}>
                   {typeof logo === 'string' ? (
                     <img src={logo} alt={`client logo ${i + 1} (duplicate)`} className="h-12 sm:h-14 md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity duration-300" />
