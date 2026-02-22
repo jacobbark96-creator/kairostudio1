@@ -54,6 +54,7 @@ export default function AdminCRM() {
   const [offerDescription, setOfferDescription] = useState('');
   const [offerMaxClaims, setOfferMaxClaims] = useState(1);
   const [creatingOffer, setCreatingOffer] = useState(false);
+  const [editingOffer, setEditingOffer] = useState<Database['public']['Tables']['offers']['Row'] | null>(null);
   
   // Offer Probabilities (Client-side control for now, ideally in DB)
   // We'll store these in site_content for persistence
@@ -195,24 +196,53 @@ export default function AdminCRM() {
     e.preventDefault();
     setCreatingOffer(true);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { error } = await (supabase.from('offers') as any).insert({
-        title: offerTitle,
-        description: offerDescription,
-        max_claims: offerMaxClaims,
-        active: true
-      });
-      if (error) throw error;
-      alert('Offer created!');
+      if (editingOffer) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await (supabase.from('offers') as any).update({
+            title: offerTitle,
+            description: offerDescription,
+            max_claims: offerMaxClaims,
+          }).eq('id', editingOffer.id);
+          
+          if (error) throw error;
+          alert('Offer updated!');
+      } else {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const { error } = await (supabase.from('offers') as any).insert({
+            title: offerTitle,
+            description: offerDescription,
+            max_claims: offerMaxClaims,
+            active: true
+          });
+          if (error) throw error;
+          alert('Offer created!');
+      }
+
       setOfferTitle('');
       setOfferDescription('');
       setOfferMaxClaims(1);
+      setEditingOffer(null);
       fetchOffers();
     } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       alert(error.message);
     } finally {
       setCreatingOffer(false);
     }
+  };
+
+  const startEditOffer = (offer: Database['public']['Tables']['offers']['Row']) => {
+    setEditingOffer(offer);
+    setOfferTitle(offer.title);
+    setOfferDescription(offer.description || '');
+    setOfferMaxClaims(offer.max_claims || 1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEditOffer = () => {
+    setEditingOffer(null);
+    setOfferTitle('');
+    setOfferDescription('');
+    setOfferMaxClaims(1);
   };
 
   const toggleOfferStatus = async (id: string, currentStatus: boolean) => {
@@ -1015,7 +1045,9 @@ export default function AdminCRM() {
                 </div>
             </div>
 
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Create New Offer</h2>
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+                {editingOffer ? 'Edit Offer' : 'Create New Offer'}
+            </h2>
             <form onSubmit={handleCreateOffer} className="space-y-4 mb-8">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
@@ -1047,14 +1079,25 @@ export default function AdminCRM() {
                   required
                 />
               </div>
-              <button
-                type="submit"
-                disabled={creatingOffer}
-                className="w-full py-3 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {creatingOffer ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                {creatingOffer ? 'Creating...' : 'Create Offer'}
-              </button>
+              <div className="flex gap-2">
+                <button
+                    type="submit"
+                    disabled={creatingOffer}
+                    className="flex-1 py-3 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                    {creatingOffer ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                    {creatingOffer ? 'Saving...' : (editingOffer ? 'Update Offer' : 'Create Offer')}
+                </button>
+                {editingOffer && (
+                    <button
+                        type="button"
+                        onClick={cancelEditOffer}
+                        className="py-3 px-4 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                    >
+                        Cancel
+                    </button>
+                )}
+              </div>
             </form>
 
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Existing Offers</h2>
@@ -1067,6 +1110,12 @@ export default function AdminCRM() {
                     <p className="text-xs text-gray-400 mt-1">Claims: {offer.current_claims} / {offer.max_claims}</p>
                   </div>
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => startEditOffer(offer)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                    >
+                      <FileText className="w-5 h-5" />
+                    </button>
                     <button
                       onClick={() => toggleOfferStatus(offer.id, offer.active)}
                       className={`px-3 py-1 rounded-full text-xs font-medium ${
