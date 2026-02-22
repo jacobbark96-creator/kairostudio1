@@ -26,6 +26,8 @@ export default function AdminCRM() {
   
   // Content State
   const [heroTitle, setHeroTitle] = useState('');
+  const [heroTitleAlt1, setHeroTitleAlt1] = useState('');
+  const [heroTitleAlt2, setHeroTitleAlt2] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('');
   const [savingContent, setSavingContent] = useState(false);
 
@@ -107,8 +109,14 @@ export default function AdminCRM() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const title = (data as any[]).find(item => item.key === 'hero_title')?.value || '';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const titleAlt1 = (data as any[]).find(item => item.key === 'hero_title_alt_1')?.value || '';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value || '';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value || '';
       setHeroTitle(title);
+      setHeroTitleAlt1(titleAlt1);
+      setHeroTitleAlt2(titleAlt2);
       setHeroSubtitle(subtitle);
     }
   };
@@ -258,6 +266,8 @@ export default function AdminCRM() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await (supabase.from('site_content') as any).upsert([
         { key: 'hero_title', value: heroTitle },
+        { key: 'hero_title_alt_1', value: heroTitleAlt1 },
+        { key: 'hero_title_alt_2', value: heroTitleAlt2 },
         { key: 'hero_subtitle', value: heroSubtitle }
       ]);
       alert('Content updated!');
@@ -555,11 +565,31 @@ export default function AdminCRM() {
             <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Edit Hero Content</h2>
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hero Title</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hero Title (Primary)</label>
                 <input
                   type="text"
                   value={heroTitle}
                   onChange={(e) => setHeroTitle(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hero Title Variation 1 (Optional)</label>
+                <input
+                  type="text"
+                  value={heroTitleAlt1}
+                  onChange={(e) => setHeroTitleAlt1(e.target.value)}
+                  placeholder="Leave empty to disable cycling"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hero Title Variation 2 (Optional)</label>
+                <input
+                  type="text"
+                  value={heroTitleAlt2}
+                  onChange={(e) => setHeroTitleAlt2(e.target.value)}
+                  placeholder="Leave empty to disable cycling"
                   className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 />
               </div>

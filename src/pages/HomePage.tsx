@@ -8,6 +8,8 @@ import SEO from '../components/SEO';
 
 export default function HomePage() {
   const [heroTitle, setHeroTitle] = useState('We craft digital experiences that inspire');
+  const [heroTitleAlt1, setHeroTitleAlt1] = useState('');
+  const [heroTitleAlt2, setHeroTitleAlt2] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
 
   useEffect(() => {
@@ -20,8 +22,14 @@ export default function HomePage() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const title = (data as any[]).find(item => item.key === 'hero_title')?.value;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const titleAlt1 = (data as any[]).find(item => item.key === 'hero_title_alt_1')?.value;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value;
       if (title) setHeroTitle(title);
+      if (titleAlt1) setHeroTitleAlt1(titleAlt1);
+      if (titleAlt2) setHeroTitleAlt2(titleAlt2);
       if (subtitle) setHeroSubtitle(subtitle);
     }
   };
@@ -63,7 +71,7 @@ export default function HomePage() {
             <div className="text-center lg:text-left">
               <div className="min-h-[160px] sm:min-h-[200px] mb-8">
                 <TypewriterHero 
-                  text={heroTitle} 
+                  texts={[heroTitle, heroTitleAlt1, heroTitleAlt2].filter(t => t && t.trim().length > 0)} 
                   className="block text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-200 dark:to-brand-300 pb-4"
                   speed={70}
                 />
