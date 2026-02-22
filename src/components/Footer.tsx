@@ -70,18 +70,13 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               </h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="mailto:hello@kairostudio.com" className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200 break-all">
-                    hello@kairostudio.com
-                  </a>
-                </li>
-                <li>
-                  <a href="tel:+1234567890" className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
-                    +1 (234) 567-890
+                  <a href="mailto:hello@kairostudio.co.uk" className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200 break-all">
+                    hello@kairostudio.co.uk
                   </a>
                 </li>
                 <li>
                   <span className="text-xs text-gray-600 dark:text-gray-400">
-                    San Francisco, CA
+                    Glasgow | Bali | Sydney
                   </span>
                 </li>
               </ul>
@@ -229,20 +224,14 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             <ul className="space-y-2">
               <li className="flex items-center gap-2 justify-center sm:justify-start">
                 <Mail className="w-4 h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                <a href="mailto:hello@kairostudio.com" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200 break-all">
-                  hello@kairostudio.com
-                </a>
-              </li>
-              <li className="flex items-center gap-2 justify-center sm:justify-start">
-                <Phone className="w-4 h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                <a href="tel:+1234567890" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
-                  +1 (234) 567-890
+                <a href="mailto:hello@kairostudio.co.uk" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200 break-all">
+                  hello@kairostudio.co.uk
                 </a>
               </li>
               <li className="flex items-center gap-2 justify-center sm:justify-start">
                 <MapPin className="w-4 h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
                 <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
-                  San Francisco, CA
+                  Glasgow | Bali | Sydney
                 </span>
               </li>
             </ul>
@@ -255,7 +244,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             </h3>
             <div className="flex gap-3 justify-center sm:justify-start">
               <a 
-                href="https://instagram.com" 
+                href="https://instagram.com/kairowebstudio" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 aria-label="Instagram"
