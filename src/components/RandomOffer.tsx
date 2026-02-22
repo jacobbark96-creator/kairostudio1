@@ -5,7 +5,7 @@ import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
 
 // Kairo Logo Component for the Slot Machine
-import logoNb from '../Logo/light/kairologo-nbg.png';
+import logoNb from '../Logo/kairologo-nbg.png';
 
 const KairoLogo = ({ className }: { className?: string }) => (
   <img src={logoNb} alt="Kairo Logo" className={className} />
