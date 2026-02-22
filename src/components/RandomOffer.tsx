@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useUI } from '../context/UIContext';
+import confetti from 'canvas-confetti';
 
 export default function RandomOffer() {
   const { openContactModal } = useUI();
@@ -29,6 +30,27 @@ export default function RandomOffer() {
           const random = availableOffers[Math.floor(Math.random() * availableOffers.length)];
           setOffer(random);
           setStep('revealed');
+          
+          // Trigger fireworks
+          const duration = 3000;
+          const animationEnd = Date.now() + duration;
+          const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+          const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+          const interval: any = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+              return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            // since particles fall down, start a bit higher than random
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+          }, 250);
+
         } else {
           // No offers available
           setOffer({ title: "All out!", description: "Check back later for more ridiculous offers.", price: 0 });
