@@ -105,45 +105,47 @@ export default function RandomOffer() {
     // Determine Offer Text/Price based on outcome
     let offerDetails = { title: "Error", description: "Something went wrong", price: 0 };
     
-    // Helper to find offer by partial title match or price (You might want to add a 'tier' column to offers table for cleaner logic)
-    // For now, we'll try to find offers that match the tiers loosely or fallback to random
-    
+    // Helper to find offer by tier
     // Tier logic:
-    // Jackpot (3 match) -> Highest value offer or specific jackpot offer
-    // Tier 2 (2 match) -> Medium value
-    // Tier 1 (1 match) -> Lower value
+    // Jackpot (3 match) -> 'jackpot' tier
+    // Tier 2 (2 match) -> 'tier2' tier
+    // Tier 1 (1 match) -> 'tier1' tier
     
-    // Sort offers by price descending to approximate tiers
+    let selectedOffer = null;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sortedOffers = [...offersData].sort((a: any, b: any) => (b.price || 0) - (a.price || 0));
-    
+    const offers = offersData as any[];
+
     if (outcomeType === '3_match') {
-        // Top tier offer (highest price)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const bestOffer = sortedOffers[0] as any;
-        offerDetails = { 
-            title: bestOffer.title, 
-            description: bestOffer.description || "", 
-            price: bestOffer.price || 0 
-        };
+        const tierOffers = offers.filter(o => o.tier === 'jackpot');
+        if (tierOffers.length > 0) {
+            selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
+        }
     } else if (outcomeType === '2_match') {
-        // Middle tier (if available, else random from top half)
-        const midIndex = Math.floor(sortedOffers.length / 2);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const midOffer = sortedOffers[midIndex > 0 ? midIndex : 0] as any;
-        offerDetails = { 
-            title: midOffer.title, 
-            description: midOffer.description || "", 
-            price: midOffer.price || 0 
-        };
+        const tierOffers = offers.filter(o => o.tier === 'tier2');
+        if (tierOffers.length > 0) {
+            selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
+        }
     } else {
-        // Lowest tier (lowest price)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const lowOffer = sortedOffers[sortedOffers.length - 1] as any;
+        // 1 match
+        const tierOffers = offers.filter(o => o.tier === 'tier1');
+        if (tierOffers.length > 0) {
+            selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
+        }
+    }
+
+    // Fallback if no specific tier offers found, use price sorting as backup
+    if (!selectedOffer && offers.length > 0) {
+        const sortedOffers = [...offers].sort((a, b) => (b.price || 0) - (a.price || 0));
+        if (outcomeType === '3_match') selectedOffer = sortedOffers[0];
+        else if (outcomeType === '2_match') selectedOffer = sortedOffers[Math.floor(sortedOffers.length / 2)];
+        else selectedOffer = sortedOffers[sortedOffers.length - 1];
+    }
+
+    if (selectedOffer) {
         offerDetails = { 
-            title: lowOffer.title, 
-            description: lowOffer.description || "", 
-            price: lowOffer.price || 0 
+            title: selectedOffer.title, 
+            description: selectedOffer.description || "", 
+            price: selectedOffer.price || 0 
         };
     }
 

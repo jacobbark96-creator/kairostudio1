@@ -53,6 +53,7 @@ export default function AdminCRM() {
   const [offerTitle, setOfferTitle] = useState('');
   const [offerDescription, setOfferDescription] = useState('');
   const [offerMaxClaims, setOfferMaxClaims] = useState(1);
+  const [offerTier, setOfferTier] = useState<'tier1' | 'tier2' | 'jackpot'>('tier1');
   const [creatingOffer, setCreatingOffer] = useState(false);
   const [editingOffer, setEditingOffer] = useState<Database['public']['Tables']['offers']['Row'] | null>(null);
   
@@ -202,6 +203,7 @@ export default function AdminCRM() {
             title: offerTitle,
             description: offerDescription,
             max_claims: offerMaxClaims,
+            tier: offerTier
           }).eq('id', editingOffer.id);
           
           if (error) throw error;
@@ -212,6 +214,7 @@ export default function AdminCRM() {
             title: offerTitle,
             description: offerDescription,
             max_claims: offerMaxClaims,
+            tier: offerTier,
             active: true
           });
           if (error) throw error;
@@ -221,6 +224,7 @@ export default function AdminCRM() {
       setOfferTitle('');
       setOfferDescription('');
       setOfferMaxClaims(1);
+      setOfferTier('tier1');
       setEditingOffer(null);
       fetchOffers();
     } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -235,6 +239,8 @@ export default function AdminCRM() {
     setOfferTitle(offer.title);
     setOfferDescription(offer.description || '');
     setOfferMaxClaims(offer.max_claims || 1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setOfferTier((offer as any).tier || 'tier1');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -243,6 +249,7 @@ export default function AdminCRM() {
     setOfferTitle('');
     setOfferDescription('');
     setOfferMaxClaims(1);
+    setOfferTier('tier1');
   };
 
   const toggleOfferStatus = async (id: string, currentStatus: boolean) => {
@@ -1079,6 +1086,18 @@ export default function AdminCRM() {
                   required
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Offer Tier</label>
+                <select
+                  value={offerTier}
+                  onChange={(e) => setOfferTier(e.target.value as 'tier1' | 'tier2' | 'jackpot')}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                >
+                  <option value="tier1">Tier 1 (1 Match)</option>
+                  <option value="tier2">Tier 2 (2 Matches)</option>
+                  <option value="jackpot">Jackpot (3 Matches)</option>
+                </select>
+              </div>
               <div className="flex gap-2">
                 <button
                     type="submit"
@@ -1107,7 +1126,13 @@ export default function AdminCRM() {
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white">{offer.title}</h3>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{offer.description}</p>
-                    <p className="text-xs text-gray-400 mt-1">Claims: {offer.current_claims} / {offer.max_claims}</p>
+                    <div className="flex gap-4 text-xs text-gray-400 mt-1">
+                      <span>Claims: {offer.current_claims} / {offer.max_claims}</span>
+                      <span className="capitalize px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700">
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                        Tier: {((offer as any).tier || 'tier1').replace('tier', 'Tier ')}
+                      </span>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
