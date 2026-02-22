@@ -81,9 +81,12 @@ export default function RandomOffer() {
     const startTime = Date.now();
     
     // Reel stop delays (in ms)
-    const newStopDelays = outcomeType === '3_match' 
-        ? [2000, 4000, 6000] // Jackpot: 2s, 4s, 6s (very slow reveal)
-        : [1500, 1500, 1500]; // Normal: all stop together/quickly
+    // Check if it's a "near miss" (2 match) or jackpot (3 match) for slow reveal
+    const isSlowReveal = outcomeType === '3_match' || outcomeType === '2_match';
+    
+    const newStopDelays = isSlowReveal
+        ? [2000, 4000, 6000] // Slow reveal for JP and 2-match
+        : [1500, 1500, 1500]; // Normal for 1-match or no match
     
     setStopDelays(newStopDelays);
     const spinStartTime = Date.now();
