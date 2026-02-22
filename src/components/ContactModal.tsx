@@ -7,7 +7,7 @@ export default function ContactModal() {
   const { isContactModalOpen: isOpen, closeContactModal: onClose, contactModalPreill: lockedSubject, offerPrice } = useUI();
   const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
-  const [description, setDescription] = useState('');
+  const [messageBody, setMessageBody] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [website, setWebsite] = useState('');
@@ -32,7 +32,7 @@ export default function ContactModal() {
     const formData = {
       name,
       business,
-      description,
+      message: messageBody,
       email,
       phone,
       website: website.trim() || undefined,
@@ -68,13 +68,15 @@ export default function ContactModal() {
       setSubmitted(true);
       setName('');
       setBusiness('');
-      setDescription('');
+      setMessageBody('');
       setEmail('');
       setPhone('');
       setWebsite('');
     } catch (err: unknown) {
       console.error('Error submitting form:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Submission failed';
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const errorMessage = err instanceof Error ? err.message : (err as any)?.message || 'Submission failed';
+      alert(`Submission error details: ${JSON.stringify(err)}`); // Temporary alert for debugging
       setSubmitError(errorMessage);
     } finally {
       setSubmitting(false);
@@ -160,8 +162,8 @@ export default function ContactModal() {
               <label className="flex flex-col text-sm sm:text-base">
                 <span className="mb-1.5 sm:mb-2 font-medium text-gray-700 dark:text-gray-200">Tell us a little about your business</span>
                 <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={messageBody}
+                  onChange={(e) => setMessageBody(e.target.value)}
                   rows={4}
                   className="px-4 py-2.5 sm:py-3 rounded-lg border bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all duration-200 text-gray-900 dark:text-gray-100 resize-none"
                 />
