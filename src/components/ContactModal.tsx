@@ -24,6 +24,11 @@ export default function ContactModal() {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    console.log('ContactModal - lockedSubject:', lockedSubject);
+    console.log('ContactModal - offerPrice:', offerPrice);
+  }, [lockedSubject, offerPrice]);
+
   async function handleSubmit(e?: React.FormEvent) {
     if (e) e.preventDefault();
     setSubmitting(true);
