@@ -49,6 +49,11 @@ export default function RandomOffer() {
 
   return (
     <div className="w-full h-full min-h-[450px] bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-[2.5rem] p-8 sm:p-12 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
+        {/* Racing Light Effect */}
+        <div className="border-beam-container">
+            <div className="border-beam-light" />
+        </div>
+
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000" />
@@ -59,7 +64,7 @@ export default function RandomOffer() {
         {step === 'initial' ? (
             <div className="relative z-10 space-y-8 animate-in fade-in zoom-in duration-500">
                 <div className="space-y-4">
-                    <h3 className="text-4xl sm:text-5xl font-display font-bold text-black dark:text-white animate-gradient-x">
+                    <h3 className="text-4xl sm:text-5xl font-display font-bold text-black dark:text-white animate-pulse-fast">
                         Feeling Lucky?
                     </h3>
                     <p className="text-lg text-gray-600 dark:text-gray-300 max-w-xs mx-auto leading-relaxed">

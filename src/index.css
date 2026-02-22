@@ -109,3 +109,94 @@
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	transition-duration: 150ms;
 }
+
+@keyframes borderBeam {
+  0% {
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+  }
+  50% {
+    top: 0;
+    left: 100%;
+    width: 0;
+    height: 2px;
+    opacity: 0;
+  }
+  51% {
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 0;
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  75% {
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+  }
+  100% {
+    top: 100%;
+    right: 0;
+    width: 2px;
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Simplified border beam for rectangle */
+.border-beam-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 2.5rem; /* Match container radius */
+}
+
+.border-beam-light {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, transparent 70%);
+  filter: blur(10px);
+  animation: raceAround 4s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes raceAround {
+  0% {
+    top: -50px;
+    left: -50px;
+  }
+  25% {
+    top: -50px;
+    left: calc(100% - 50px);
+  }
+  50% {
+    top: calc(100% - 50px);
+    left: calc(100% - 50px);
+  }
+  75% {
+    top: calc(100% - 50px);
+    left: -50px;
+  }
+  100% {
+    top: -50px;
+    left: -50px;
+  }
+}
