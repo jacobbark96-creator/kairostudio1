@@ -5,10 +5,10 @@ import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
 
 // Kairo Logo Component for the Slot Machine
+import logoNb from '../Logo/light/kairologo-nbg.png';
+
 const KairoLogo = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 100 100" className={className} fill="currentColor">
-    <path d="M50 0L93.3 25V75L50 100L6.7 75V25L50 0Z" />
-  </svg>
+  <img src={logoNb} alt="Kairo Logo" className={className} />
 );
 
 const SYMBOLS = [
@@ -74,7 +74,8 @@ export default function RandomOffer() {
     }
 
     // Animation Loop
-    const spinDuration = 2000;
+    // Slower spin for jackpot to create tension
+    const spinDuration = outcomeType === '3_match' ? 4000 : 2000;
     const intervalTime = 100;
     const startTime = Date.now();
 
@@ -126,7 +127,7 @@ export default function RandomOffer() {
         <div className="hidden sm:block absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000" />
         
         {/* Slot Machine Display */}
-        <div className="relative z-10 w-full max-w-sm mb-8">
+        <div className={`relative z-10 w-full max-w-sm mb-8 transition-all duration-[3000ms] ease-out ${step === 'spinning' && (Math.random() < 0.2) ? 'scale-110 sm:scale-125' : 'scale-100'}`}>
             <div className="flex justify-center gap-2 sm:gap-4 p-4 bg-gray-100 dark:bg-gray-900 rounded-xl border-4 border-gray-300 dark:border-gray-700 shadow-inner">
                 {slots.map((Symbol, index) => (
                     <div key={index} className="w-20 h-24 sm:w-24 sm:h-32 bg-white dark:bg-black rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden relative">
