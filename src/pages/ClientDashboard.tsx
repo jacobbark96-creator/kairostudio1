@@ -32,6 +32,33 @@ export default function ClientDashboard() {
     }
   };
 
+  const handlePayment = async (invoice: Invoice) => {
+    try {
+      // Use the remaining outstanding amount for the payment
+      const amountToPay = invoice.amount - (invoice.amount_paid || 0);
+      
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: {
+          price: amountToPay,
+          email: user?.email,
+          offer: `Invoice #${invoice.id.slice(0, 8)} - ${invoice.client_name}`,
+          invoiceId: invoice.id // Optional: Pass invoice ID for metadata/webhook handling later
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err) {
+      console.error('Payment initiation failed:', err);
+      alert('Failed to start payment process. Please try again.');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'paid': return 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400';
@@ -121,7 +148,7 @@ export default function ClientDashboard() {
                     
                     {invoice.status !== 'paid' && (
                         <button
-                            onClick={() => alert("Payment integration coming soon! Please contact admin to pay.")}
+                            onClick={() => handlePayment(invoice)}
                             className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors text-sm font-medium shadow-sm"
                         >
                             <DollarSign className="w-4 h-4" />
