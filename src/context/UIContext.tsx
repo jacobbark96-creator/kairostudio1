@@ -16,6 +16,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const [offerPrice, setOfferPrice] = useState<number | undefined>(undefined);
 
   const openContactModal = (prefill: string = '', price?: number) => {
+    console.log('UIContext - openContactModal called with:', { prefill, price });
     setContactModalPrefill(prefill);
     setOfferPrice(price);
     setIsContactModalOpen(true);

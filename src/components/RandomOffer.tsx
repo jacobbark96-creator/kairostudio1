@@ -86,7 +86,11 @@ export default function RandomOffer() {
                 
                 {offer?.title !== "All out!" && offer?.title !== "No offers right now" && offer?.title !== "Error" ? (
                     <button
-                        onClick={() => openContactModal(offer?.title, offer?.price)}
+                        onClick={() => {
+                            console.log('RandomOffer - Clicking "I want it"');
+                            console.log('RandomOffer - Current offer state:', offer);
+                            openContactModal(offer?.title, offer?.price);
+                        }}
                         className="w-full sm:w-auto inline-flex px-8 py-3.5 sm:px-10 sm:py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-full hover:from-cyan-400 hover:to-blue-400 transition-all transform hover:scale-105 active:scale-95 shadow-lg items-center justify-center gap-2 text-base sm:text-lg"
                     >
                         I want it
