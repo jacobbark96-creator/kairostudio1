@@ -57,11 +57,19 @@ export default function ContactModal() {
           }
         });
 
-        if (functionError) throw functionError;
+        if (functionError) {
+          console.error('Edge Function Error:', functionError);
+          throw functionError;
+        }
         
+        console.log('Edge Function Response:', data);
+
         if (data?.url) {
           window.location.href = data.url;
           return; // Don't reset form or show success message yet
+        } else {
+          console.error('No URL returned from checkout session');
+          throw new Error('Could not create payment session');
         }
       }
 
