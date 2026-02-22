@@ -76,17 +76,17 @@ export default function RandomOffer() {
             <div className="border-beam-light" />
         </div>
 
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000" />
+        {/* Decorative elements - Only show on desktop for performance */}
+        <div className="hidden sm:block absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+        <div className="hidden sm:block absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000" />
         
-        {/* Animated border gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+        {/* Animated border gradient - Desktop only */}
+        <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
         {step === 'initial' ? (
             <div className="relative z-10 space-y-6 sm:space-y-8 animate-in fade-in zoom-in duration-500">
                 <div className="space-y-4">
-                    <h3 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-black dark:text-white animate-pulse-fast">
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-black dark:text-white sm:animate-pulse-fast">
                         Feeling Lucky?
                     </h3>
                     <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-xs mx-auto leading-relaxed">
