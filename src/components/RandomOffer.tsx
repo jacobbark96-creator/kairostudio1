@@ -70,9 +70,9 @@ export default function RandomOffer() {
   };
 
   return (
-    <div className="w-full h-full min-h-[400px] sm:min-h-[450px] bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
+    <div className="w-full h-full min-h-[400px] sm:min-h-[450px] bg-white/80 dark:bg-black/80 backdrop-blur-none sm:backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
         {/* Racing Light Effect */}
-        <div className="border-beam-container">
+        <div className="border-beam-container hidden sm:block">
             <div className="border-beam-light" />
         </div>
 
