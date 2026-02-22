@@ -48,40 +48,39 @@ export default function RandomOffer() {
   };
 
   return (
-    <div className="w-full h-full min-h-[400px] bg-white dark:bg-black rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-xl relative overflow-hidden group border border-gray-100 dark:border-gray-800">
+    <div className="w-full h-full min-h-[450px] bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-[2.5rem] p-8 sm:p-12 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border border-white/20 dark:border-white/10 transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-100 dark:bg-brand-900/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-100 dark:bg-purple-900/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 dark:opacity-20 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000" />
+        
+        {/* Animated border gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
         {step === 'initial' ? (
             <div className="relative z-10 space-y-8 animate-in fade-in zoom-in duration-500">
-                <div className="w-16 h-16 mx-auto bg-gradient-to-tr from-brand-100 to-purple-100 dark:from-brand-900/30 dark:to-purple-900/30 rounded-2xl flex items-center justify-center rotate-3 group-hover:rotate-6 transition-transform duration-500">
-                    <Sparkles className="w-8 h-8 text-brand-600 dark:text-brand-400" />
-                </div>
-                
-                <div className="space-y-2">
-                    <h3 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
+                <div className="space-y-4">
+                    <h3 className="text-4xl sm:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-600 to-pink-600 dark:from-brand-400 dark:via-purple-400 dark:to-pink-400 animate-gradient-x">
                         Feeling Lucky?
                     </h3>
-                    <p className="text-gray-500 dark:text-gray-400 max-w-xs mx-auto">
-                        Click below to reveal a unique, limited-time offer tailored just for you.
+                    <p className="text-lg text-gray-600 dark:text-gray-300 max-w-xs mx-auto leading-relaxed">
+                        Tap into the digital ether and reveal an exclusive offer tailored for your next big idea.
                     </p>
                 </div>
 
                 <button
                     onClick={revealOffer}
                     disabled={loading}
-                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:bg-brand-600 dark:hover:bg-gray-200 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+                    className="group relative inline-flex items-center gap-3 px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-brand-500/20 overflow-hidden"
                 >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                     {loading ? (
                         <>
-                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            <span>Revealing...</span>
+                            <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                            <span>Summoning...</span>
                         </>
                     ) : (
                         <>
-                            <span>Reveal Offer</span>
+                            <span>Reveal Your Destiny</span>
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </>
                     )}
