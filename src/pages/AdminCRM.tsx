@@ -54,6 +54,15 @@ export default function AdminCRM() {
   const [offerDescription, setOfferDescription] = useState('');
   const [offerMaxClaims, setOfferMaxClaims] = useState(1);
   const [creatingOffer, setCreatingOffer] = useState(false);
+  
+  // Offer Probabilities (Client-side control for now, ideally in DB)
+  // We'll store these in site_content for persistence
+  const [probabilities, setProbabilities] = useState({
+    jackpot: 20, // 3 matches
+    tier2: 30,   // 2 matches
+    tier1: 50    // 1 match
+  });
+  const [savingProbs, setSavingProbs] = useState(false);
 
   // Invoice Filter
   const [invoiceFilter, setInvoiceFilter] = useState<'all' | 'pending' | 'paid'>('all');
@@ -137,6 +146,18 @@ export default function AdminCRM() {
       const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value || '';
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value || '';
+      
+      // Fetch probabilities
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const probData = (data as any[]).find(item => item.key === 'offer_probabilities')?.value;
+      if (probData) {
+        try {
+            setProbabilities(JSON.parse(probData));
+        } catch (e) {
+            console.error('Failed to parse probabilities', e);
+        }
+      }
+
       setHeroTitle(title);
       setHeroTitleAlt1(titleAlt1);
       setHeroTitleAlt2(titleAlt2);
@@ -147,6 +168,27 @@ export default function AdminCRM() {
   const fetchOffers = async () => {
     const { data } = await supabase.from('offers').select('*').order('created_at', { ascending: false });
     if (data) setOffers(data);
+  };
+
+  const handleSaveProbabilities = async () => {
+    const total = probabilities.jackpot + probabilities.tier2 + probabilities.tier1;
+    if (total !== 100) {
+        alert(`Probabilities must sum to 100%. Current total: ${total}%`);
+        return;
+    }
+    
+    setSavingProbs(true);
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (supabase.from('site_content') as any).upsert([
+            { key: 'offer_probabilities', value: JSON.stringify(probabilities) }
+        ]);
+        alert('Probabilities updated!');
+    } catch (error: any) {
+        alert(error.message);
+    } finally {
+        setSavingProbs(false);
+    }
   };
 
   const handleCreateOffer = async (e: React.FormEvent) => {
@@ -915,6 +957,64 @@ export default function AdminCRM() {
 
         {activeTab === 'offers' && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Win Probabilities</h2>
+            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg mb-8 border border-gray-200 dark:border-gray-600">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Jackpot (3 Matches) %
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={probabilities.jackpot}
+                            onChange={(e) => setProbabilities(p => ({...p, jackpot: parseInt(e.target.value) || 0}))}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Tier 2 (2 Matches) %
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={probabilities.tier2}
+                            onChange={(e) => setProbabilities(p => ({...p, tier2: parseInt(e.target.value) || 0}))}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Tier 1 (1 Match) %
+                        </label>
+                        <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={probabilities.tier1}
+                            onChange={(e) => setProbabilities(p => ({...p, tier1: parseInt(e.target.value) || 0}))}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        />
+                    </div>
+                </div>
+                <div className="flex justify-between items-center">
+                    <div className={`text-sm font-medium ${(probabilities.jackpot + probabilities.tier2 + probabilities.tier1) === 100 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                        Total: {probabilities.jackpot + probabilities.tier2 + probabilities.tier1}% (Must be 100%)
+                    </div>
+                    <button
+                        onClick={handleSaveProbabilities}
+                        disabled={savingProbs}
+                        className="py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center gap-2"
+                    >
+                        {savingProbs ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        Save Probabilities
+                    </button>
+                </div>
+            </div>
+
             <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Create New Offer</h2>
             <form onSubmit={handleCreateOffer} className="space-y-4 mb-8">
               <div>

@@ -54,14 +54,25 @@ export default function RandomOffer() {
     // 2 Kairos = £500 offer
     // 3 Kairos = £200 offer
     
-    // Randomly decide outcome first (weighted for excitement but realistic)
-    const rand = Math.random();
+    // Fetch probabilities from site_content if available, otherwise default
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data } = await (supabase.from('site_content').select('value').eq('key', 'offer_probabilities').single() as any);
+    let probs = { jackpot: 20, tier2: 30, tier1: 50 };
+    if (data?.value) {
+        try {
+            probs = JSON.parse(data.value);
+        } catch (e) {
+            console.error('Error parsing probabilities', e);
+        }
+    }
+
+    // Randomly decide outcome first (weighted)
+    const rand = Math.random() * 100;
     let outcomeType: '3_match' | '2_match' | '1_match' | 'no_match' = 'no_match';
     
-    // For demo purposes, let's make winning relatively likely
-    if (rand < 0.2) outcomeType = '3_match';      // 20% chance of jackpot (£200)
-    else if (rand < 0.5) outcomeType = '2_match'; // 30% chance of £500
-    else outcomeType = '1_match';                 // 50% chance of £800
+    if (rand < probs.jackpot) outcomeType = '3_match';
+    else if (rand < probs.jackpot + probs.tier2) outcomeType = '2_match';
+    else outcomeType = '1_match';
     
     // Set target symbols based on outcome
     let targetSymbols = [];
