@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, ExternalLink, Code, Palette, Zap, Users, Globe, CheckCircle, ArrowLeft, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUI } from '../context/UIContext';
 import SEO from './SEO';
+import { supabase } from '../lib/supabase';
 
 interface Project {
   id: string;
   title: string;
   category: string;
   description: string;
-  image: string | null;
-  favicon?: string | null;
+  image_url: string | null;
   color: string;
   featured: boolean;
   link?: string;
-  client?: {
-    name: string;
-    industry: string;
-    location: string;
-  };
+  client_name?: string;
+  client_industry?: string;
+  client_location?: string;
   challenge?: string;
   solution?: string;
   features?: string[];
@@ -28,6 +26,8 @@ interface Project {
 
 export default function PortfolioPage() {
   const { openContactModal } = useUI();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     client: false,
     challenge: false,
@@ -36,6 +36,19 @@ export default function PortfolioPage() {
     results: false,
   });
 
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+    if (data) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setProjects(data as any[]);
+    }
+    setLoading(false);
+  };
+
   const toggleSection = (section: string) => {
     setExpandedSections((prev: Record<string, boolean>) => ({
       ...prev,
@@ -43,86 +56,15 @@ export default function PortfolioPage() {
     }));
   };
 
-  // Load images dynamically
-  const usehyroPreviewModules = import.meta.glob('../clients/usehyro/preview/*.{png,jpg,jpeg,webp,svg}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  const usehyroFaviconModules = import.meta.glob('../clients/usehyro/favicon/*.{png,jpg,jpeg,webp,svg,ico}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  
-  const luxeModules = import.meta.glob('../clients/luxe/*.{png,jpg,jpeg,webp,svg}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  const techflowModules = import.meta.glob('../clients/techflow/*.{png,jpg,jpeg,webp,svg}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  const verdeModules = import.meta.glob('../clients/verde/*.{png,jpg,jpeg,webp,svg}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  
-  const usehyroPreview = Object.values(usehyroPreviewModules || {})[0] || null;
-  const usehyroFavicon = Object.values(usehyroFaviconModules || {})[0] || null;
-  const luxeImage = Object.values(luxeModules || {})[0] || null;
-  const techflowImage = Object.values(techflowModules || {})[0] || null;
-  const verdeImage = Object.values(verdeModules || {})[0] || null;
-
-  const projects: Project[] = [
-    {
-      id: 'usehyro',
-      title: 'UseHyro',
-      category: 'E-commerce Platform',
-      description: 'A comprehensive e-commerce solution built for modern businesses, featuring seamless ordering, inventory management, and customer engagement tools.',
-      image: usehyroPreview,
-      favicon: usehyroFavicon,
-      color: 'from-cyan-500 to-blue-600',
-      featured: true,
-      client: {
-        name: 'UseHyro',
-        industry: 'E-commerce & Retail',
-        location: 'United States',
-      },
-      challenge: 'The client needed a modern, scalable e-commerce platform that could handle high traffic volumes while providing an intuitive shopping experience. They required seamless integration with their existing inventory and payment systems.',
-      solution: 'We developed a custom e-commerce platform using cutting-edge technologies, focusing on performance, scalability, and user experience. The solution included a responsive web application, mobile optimization, and comprehensive admin dashboard.',
-      features: [
-        'Custom Product Catalog',
-        'Advanced Search & Filtering',
-        'Secure Payment Processing',
-        'Order Management System',
-        'Inventory Tracking',
-        'Customer Accounts & Profiles',
-        'Responsive Design',
-        'Admin Dashboard',
-      ],
-      technologies: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Stripe API', 'AWS'],
-      results: [
-        '40% increase in conversion rate',
-        '60% reduction in page load time',
-        '99.9% uptime achieved',
-        'Seamless mobile experience',
-      ],
-      link: 'https://usehyro.com',
-    },
-    {
-      id: 'luxe-cosmetics',
-      title: 'Luxe Cosmetics',
-      category: 'Brand Identity & Web',
-      description: 'Complete brand redesign and e-commerce website for a luxury cosmetics brand.',
-      image: luxeImage,
-      color: 'from-rose-400 to-pink-600',
-      featured: false,
-    },
-    {
-      id: 'techflow-saas',
-      title: 'TechFlow SaaS',
-      category: 'Web Application',
-      description: 'Enterprise SaaS platform for project management and team collaboration.',
-      image: techflowImage,
-      color: 'from-cyan-400 to-blue-600',
-      featured: false,
-    },
-    {
-      id: 'verde-restaurant',
-      title: 'Verde Restaurant',
-      category: 'Branding & Web',
-      description: 'Complete brand identity and online presence for an upscale restaurant chain.',
-      image: verdeImage,
-      color: 'from-emerald-400 to-teal-600',
-      featured: false,
-    },
-  ];
-
   const featuredProject = projects.find(p => p.featured) || projects[0];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-brand-500 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -171,9 +113,9 @@ export default function PortfolioPage() {
               <div className="lg:col-span-7 group relative">
                 <div className="absolute -inset-4 bg-gradient-to-r from-brand-500/10 to-purple-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <div className="relative rounded-[2rem] overflow-hidden border border-gray-200 dark:border-gray-800 shadow-2xl bg-white dark:bg-gray-900">
-                  {featuredProject.image ? (
+                  {featuredProject.image_url ? (
                     <img
-                      src={featuredProject.image}
+                      src={featuredProject.image_url}
                       alt={featuredProject.title}
                       className="w-full h-auto object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
                     />
@@ -226,7 +168,7 @@ export default function PortfolioPage() {
                 {/* Accordion Sections for Case Study Details */}
                 <div className="mt-12 space-y-4">
                     {/* Client Info */}
-                    {featuredProject.client && (
+                    {featuredProject.client_name && (
                         <div className="border-t border-gray-200 dark:border-gray-800">
                             <button
                                 onClick={() => toggleSection('client')}
@@ -239,11 +181,11 @@ export default function PortfolioPage() {
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <p className="text-gray-500">Industry</p>
-                                        <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client.industry}</p>
+                                        <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client_industry}</p>
                                     </div>
                                     <div>
                                         <p className="text-gray-500">Location</p>
-                                        <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client.location}</p>
+                                        <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client_location}</p>
                                     </div>
                                 </div>
                             </div>
@@ -300,9 +242,9 @@ export default function PortfolioPage() {
                 className="group flex flex-col gap-4"
               >
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800">
-                    {project.image ? (
+                    {project.image_url ? (
                         <img
-                        src={project.image}
+                        src={project.image_url}
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />

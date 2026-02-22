@@ -8,7 +8,24 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers'>('invoices');
+  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers' | 'portfolio'>('invoices');
+  
+  // Portfolio State
+  const [projects, setProjects] = useState<any[]>([]);
+  const [editingProject, setEditingProject] = useState<any>(null);
+  const [projectForm, setProjectForm] = useState({
+    title: '',
+    category: '',
+    description: '',
+    link: '',
+    featured: false,
+    client_name: '',
+    client_industry: '',
+    client_location: '',
+    color: 'from-cyan-500 to-blue-600'
+  });
+  const [projectImage, setProjectImage] = useState<File | null>(null);
+  const [savingProject, setSavingProject] = useState(false);
   
   // Invoice State
   const [uploading, setUploading] = useState(false);
@@ -45,8 +62,14 @@ export default function AdminCRM() {
     fetchUsers();
     fetchContent();
     fetchOffers();
+    fetchProjects();
     fetchAllInvoices();
   }, []);
+
+  const fetchProjects = async () => {
+    const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+    if (data) setProjects(data);
+  };
 
   const fetchAllInvoices = async () => {
     setLoadingInvoices(true);
@@ -279,6 +302,92 @@ export default function AdminCRM() {
     }
   };
 
+  const handleSaveProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingProject(true);
+    try {
+      let imageUrl = editingProject?.image_url;
+
+      if (projectImage) {
+        const fileExt = projectImage.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('portfolio')
+          .upload(filePath, projectImage);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('portfolio')
+          .getPublicUrl(filePath);
+        
+        imageUrl = publicUrl;
+      }
+
+      const projectData = {
+        ...projectForm,
+        image_url: imageUrl
+      };
+
+      if (editingProject) {
+        const { error } = await (supabase.from('projects') as any)
+          .update(projectData)
+          .eq('id', editingProject.id);
+        if (error) throw error;
+        alert('Project updated!');
+      } else {
+        const { error } = await (supabase.from('projects') as any)
+          .insert([projectData]);
+        if (error) throw error;
+        alert('Project created!');
+      }
+
+      setProjectForm({
+        title: '',
+        category: '',
+        description: '',
+        link: '',
+        featured: false,
+        client_name: '',
+        client_industry: '',
+        client_location: '',
+        color: 'from-cyan-500 to-blue-600'
+      });
+      setProjectImage(null);
+      setEditingProject(null);
+      fetchProjects();
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setSavingProject(false);
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+    const { error } = await (supabase.from('projects') as any).delete().eq('id', id);
+    if (error) alert(error.message);
+    else fetchProjects();
+  };
+
+  const startEditProject = (project: any) => {
+    setEditingProject(project);
+    setProjectForm({
+      title: project.title,
+      category: project.category,
+      description: project.description,
+      link: project.link || '',
+      featured: project.featured,
+      client_name: project.client_name || '',
+      client_industry: project.client_industry || '',
+      client_location: project.client_location || '',
+      color: project.color || 'from-cyan-500 to-blue-600'
+    });
+    setActiveTab('portfolio');
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto">
@@ -302,6 +411,12 @@ export default function AdminCRM() {
             className={`pb-4 px-4 ${activeTab === 'content' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
           >
             Edit Content
+          </button>
+          <button
+            onClick={() => setActiveTab('portfolio')}
+            className={`pb-4 px-4 ${activeTab === 'portfolio' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+          >
+            Portfolio
           </button>
           <button
             onClick={() => setActiveTab('offers')}
@@ -610,6 +725,190 @@ export default function AdminCRM() {
                 {savingContent ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                 {savingContent ? 'Saving...' : 'Save Changes'}
               </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'portfolio' && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+              {editingProject ? 'Edit Project' : 'Add New Project'}
+            </h2>
+            <form onSubmit={handleSaveProject} className="space-y-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Title</label>
+                  <input
+                    type="text"
+                    value={projectForm.title}
+                    onChange={(e) => setProjectForm({...projectForm, title: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+                  <input
+                    type="text"
+                    value={projectForm.category}
+                    onChange={(e) => setProjectForm({...projectForm, category: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <textarea
+                  value={projectForm.description}
+                  onChange={(e) => setProjectForm({...projectForm, description: e.target.value})}
+                  rows={3}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project Link (Optional)</label>
+                  <input
+                    type="url"
+                    value={projectForm.link}
+                    onChange={(e) => setProjectForm({...projectForm, link: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files && setProjectImage(e.target.files[0])}
+                    className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"
+                  />
+                  {editingProject?.image_url && !projectImage && (
+                    <p className="text-xs text-gray-500 mt-1">Current image: <a href={editingProject.image_url} target="_blank" rel="noreferrer" className="text-cyan-600 underline">View</a></p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client Name</label>
+                  <input
+                    type="text"
+                    value={projectForm.client_name}
+                    onChange={(e) => setProjectForm({...projectForm, client_name: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Industry</label>
+                  <input
+                    type="text"
+                    value={projectForm.client_industry}
+                    onChange={(e) => setProjectForm({...projectForm, client_industry: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location</label>
+                  <input
+                    type="text"
+                    value={projectForm.client_location}
+                    onChange={(e) => setProjectForm({...projectForm, client_location: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <input
+                    type="checkbox"
+                    checked={projectForm.featured}
+                    onChange={(e) => setProjectForm({...projectForm, featured: e.target.checked})}
+                    className="rounded text-cyan-600 focus:ring-cyan-500"
+                  />
+                  Featured Project
+                </label>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={savingProject}
+                  className="flex-1 py-3 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {savingProject ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                  {savingProject ? 'Saving...' : (editingProject ? 'Update Project' : 'Create Project')}
+                </button>
+                {editingProject && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingProject(null);
+                      setProjectForm({
+                        title: '',
+                        category: '',
+                        description: '',
+                        link: '',
+                        featured: false,
+                        client_name: '',
+                        client_industry: '',
+                        client_location: '',
+                        color: 'from-cyan-500 to-blue-600'
+                      });
+                      setProjectImage(null);
+                    }}
+                    className="py-3 px-4 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Existing Projects</h2>
+            <div className="space-y-4">
+              {projects.map((project) => (
+                <div key={project.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {project.image_url ? (
+                      <img src={project.image_url} alt={project.title} className="w-16 h-16 object-cover rounded-lg" />
+                    ) : (
+                      <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                        <FileText className="w-6 h-6 text-gray-400" />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                        {project.title}
+                        {project.featured && <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">Featured</span>}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{project.category}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={() => startEditProject(project)}
+                      className="flex-1 sm:flex-none py-2 px-3 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProject(project.id)}
+                      className="flex-1 sm:flex-none py-2 px-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {projects.length === 0 && (
+                <p className="text-center text-gray-500 py-4">No projects found.</p>
+              )}
             </div>
           </div>
         )}
