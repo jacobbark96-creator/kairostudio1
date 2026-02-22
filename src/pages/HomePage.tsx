@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, Palette, Code, Zap } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RandomOffer from '../components/RandomOffer';
@@ -61,13 +61,6 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto w-full relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-sm mb-8 animate-fade-in">
-                <Sparkles className="w-4 h-4 text-brand-500 animate-pulse" />
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-300 tracking-wide uppercase">
-                  Creative Design Studio
-                </span>
-              </div>
-              
               <div className="min-h-[160px] sm:min-h-[200px] mb-8">
                 <TypewriterHero 
                   text={heroTitle} 
