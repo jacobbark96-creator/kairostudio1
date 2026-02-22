@@ -65,7 +65,7 @@ export default function Layout({ children }: LayoutProps) {
               className="cursor-pointer flex-shrink-0 flex items-center group"
             >
               {kairoLogo && (
-                <div className="h-10 sm:h-12 w-auto flex items-center justify-center overflow-hidden">
+                <div className="h-20 sm:h-24 w-auto flex items-center justify-center overflow-hidden">
                   <img 
                     src={kairoLogo} 
                     alt="Kairo Studio" 

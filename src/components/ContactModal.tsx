@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { X, Send, Loader2, Check, User, Mail, MessageSquare, Rocket, AlertCircle, CreditCard } from 'lucide-react';
+import { useUI } from '../context/UIContext';
+import { supabase } from '../lib/supabase';
 
-export default function ContactModal({
-  isOpen,
-  onClose,
-  lockedSubject,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  lockedSubject?: string;
-}) {
+export default function ContactModal() {
+  const { isContactModalOpen: isOpen, closeContactModal: onClose, contactModalPreill: lockedSubject, offerPrice } = useUI();
   const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
   const [description, setDescription] = useState('');
@@ -32,31 +28,52 @@ export default function ContactModal({
     if (e) e.preventDefault();
     setSubmitting(true);
     setSubmitError(null);
-    try {
-      const payload: Record<string, string | undefined> = {
-        name,
-        business,
-        description,
-        email,
-        phone,
-        website: website.trim() || undefined,
-        subject: lockedSubject || undefined,
-      };
-      // POST to backend endpoint that will process contact
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
 
-      if (!res.ok) {
-        // try to parse error
-        const text = await res.text();
-        throw new Error(text || 'Submission failed');
+    const formData = {
+      name,
+      business,
+      description,
+      email,
+      phone,
+      website: website.trim() || undefined,
+      subject: lockedSubject || undefined,
+      offer_price: offerPrice || null,
+      deposit_amount: offerPrice ? offerPrice * 0.1 : null
+    };
+
+    try {
+      const { error } = await (supabase.from('contact_submissions') as any)
+        .insert([formData]);
+
+      if (error) throw error;
+      
+      if (offerPrice) {
+        // Redirect to Stripe checkout for deposit
+        const { data, error: functionError } = await supabase.functions.invoke('create-checkout-session', {
+          body: {
+            price: offerPrice * 0.1, // 10% deposit
+            email: formData.email,
+            offer: lockedSubject || formData.subject
+          }
+        });
+
+        if (functionError) throw functionError;
+        
+        if (data?.url) {
+          window.location.href = data.url;
+          return; // Don't reset form or show success message yet
+        }
       }
 
       setSubmitted(true);
+      setName('');
+      setBusiness('');
+      setDescription('');
+      setEmail('');
+      setPhone('');
+      setWebsite('');
     } catch (err: unknown) {
+      console.error('Error submitting form:', err);
       const errorMessage = err instanceof Error ? err.message : 'Submission failed';
       setSubmitError(errorMessage);
     } finally {
@@ -88,20 +105,38 @@ export default function ContactModal({
             </button>
           </div>
 
+          {/* Locked Subject Field */}
           {lockedSubject && (
-            <div className="mb-6 p-4 bg-cyan-50 dark:bg-cyan-900/20 border border-cyan-100 dark:border-cyan-800 rounded-lg">
-              <span className="block text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider mb-1">
-                Regarding Offer
-              </span>
-              <p className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                {lockedSubject}
-              </p>
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-900/30 rounded-2xl flex items-center gap-4">
+                <div className="w-10 h-10 bg-brand-100 dark:bg-brand-900/40 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Rocket className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-0.5">Selected Offer</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{lockedSubject}</p>
+                </div>
+              </div>
+
+              {offerPrice && (
+                <div className="p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-2xl flex items-start gap-4">
+                  <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-amber-800 dark:text-amber-200 mb-1">Upfront Deposit Required</p>
+                    <p className="text-sm text-amber-700 dark:text-amber-300 leading-relaxed">
+                      To cover domain registration, hosting setup, and initial costs, we require a <span className="font-bold">10% deposit (£{(offerPrice * 0.1).toFixed(2)})</span>. You'll be redirected to a secure checkout after submitting.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {!submitted ? (
             <form onSubmit={(e) => handleSubmit(e)} className="mt-4 sm:mt-6 grid grid-cols-1 gap-4 sm:gap-5">
-              <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <label className="flex flex-col text-sm sm:text-base">
                   <span className="mb-1.5 sm:mb-2 font-medium text-gray-700 dark:text-gray-200">Your name</span>
                   <input

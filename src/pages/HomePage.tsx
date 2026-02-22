@@ -71,7 +71,7 @@ export default function HomePage() {
               <div className="min-h-[160px] sm:min-h-[200px] mb-8">
                 <TypewriterHero 
                   text={heroTitle} 
-                  className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-200 dark:to-brand-300 pb-4"
+                  className="block text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-200 dark:to-brand-300 pb-4"
                   speed={70}
                 />
               </div>

@@ -6,7 +6,7 @@ import { useUI } from '../context/UIContext';
 export default function RandomOffer() {
   const { openContactModal } = useUI();
   const [step, setStep] = useState<'initial' | 'revealed'>('initial');
-  const [offer, setOffer] = useState<{ title: string; description: string } | null>(null);
+  const [offer, setOffer] = useState<{ title: string; description: string; price: number } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const revealOffer = async () => {
@@ -31,16 +31,16 @@ export default function RandomOffer() {
           setStep('revealed');
         } else {
           // No offers available
-          setOffer({ title: "All out!", description: "Check back later for more ridiculous offers." });
+          setOffer({ title: "All out!", description: "Check back later for more ridiculous offers.", price: 0 });
           setStep('revealed');
         }
       } else {
-         setOffer({ title: "No offers right now", description: "Catch us next time!" });
+         setOffer({ title: "No offers right now", description: "Catch us next time!", price: 0 });
          setStep('revealed');
       }
     } catch (err) {
       console.error('Error fetching offer:', err);
-      setOffer({ title: "Error", description: "Something went wrong. Try again." });
+      setOffer({ title: "Error", description: "Something went wrong. Try again.", price: 0 });
       setStep('revealed');
     } finally {
       setLoading(false);
@@ -86,7 +86,7 @@ export default function RandomOffer() {
                 
                 {offer?.title !== "All out!" && offer?.title !== "No offers right now" && offer?.title !== "Error" ? (
                     <button
-                        onClick={() => openContactModal(offer?.title)}
+                        onClick={() => openContactModal(offer?.title, offer?.price)}
                         className="w-full sm:w-auto inline-flex px-8 py-3.5 sm:px-10 sm:py-4 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold rounded-full hover:from-cyan-400 hover:to-blue-400 transition-all transform hover:scale-105 active:scale-95 shadow-lg items-center justify-center gap-2 text-base sm:text-lg"
                     >
                         I want it
