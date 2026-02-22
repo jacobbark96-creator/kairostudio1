@@ -43,7 +43,7 @@ export default function ContactModal() {
       website: website.trim() || undefined,
       subject: lockedSubject || undefined,
       offer_price: offerPrice || null,
-      deposit_amount: offerPrice ? offerPrice * 0.1 : null
+      deposit_amount: offerPrice ? offerPrice * 0.5 : null
     };
 
     try {
@@ -56,7 +56,7 @@ export default function ContactModal() {
         // Redirect to Stripe checkout for deposit
         const { data, error: functionError } = await supabase.functions.invoke('create-checkout-session', {
           body: {
-            price: offerPrice * 0.1, // 10% deposit
+            price: offerPrice * 0.5, // 50% deposit
             email: formData.email,
             offer: lockedSubject || formData.subject
           }
@@ -141,7 +141,7 @@ export default function ContactModal() {
                   <div>
                     <p className="text-sm font-bold text-amber-800 dark:text-amber-200 mb-1">Upfront Deposit Required</p>
                     <p className="text-sm text-amber-700 dark:text-amber-300 leading-relaxed">
-                      To cover domain registration, hosting setup, and initial costs, we require a <span className="font-bold">10% deposit (£{(offerPrice * 0.1).toFixed(2)})</span>. You'll be redirected to a secure checkout after submitting.
+                      To cover domain registration, hosting setup, and initial costs, we require a <span className="font-bold">50% deposit (£{(offerPrice * 0.5).toFixed(2)})</span>. You'll be redirected to a secure checkout after submitting.
                     </p>
                   </div>
                 </div>
