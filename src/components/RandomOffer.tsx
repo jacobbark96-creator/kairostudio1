@@ -27,10 +27,22 @@ export default function RandomOffer() {
   const [isLeverPulled, setIsLeverPulled] = useState(false);
   const [startTime, setStartTime] = useState<number>(0);
   const [stopDelays, setStopDelays] = useState<number[]>([1500, 1500, 1500]);
+  
+  // Spin Limiter Logic
+  const MAX_SPINS = 3;
+  const [spinsRemaining, setSpinsRemaining] = useState(() => {
+    const saved = localStorage.getItem('kairo_spins_remaining');
+    return saved ? parseInt(saved, 10) : MAX_SPINS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('kairo_spins_remaining', spinsRemaining.toString());
+  }, [spinsRemaining]);
 
   const spinSlots = async () => {
-    if (step === 'spinning') return;
+    if (step === 'spinning' || spinsRemaining <= 0) return;
     
+    setSpinsRemaining(prev => prev - 1);
     setStep('spinning');
     setIsLeverPulled(true);
     
@@ -204,18 +216,33 @@ export default function RandomOffer() {
                     <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 max-w-xs mx-auto">
                         Match Kairo logos to unlock exclusive website offers.
                     </p>
+                    
+                    {/* Spins Remaining Indicator */}
+                    <div className="flex items-center justify-center gap-1 mt-2">
+                        {[...Array(MAX_SPINS)].map((_, i) => (
+                            <div 
+                                key={i} 
+                                className={`w-2 h-2 rounded-full transition-colors duration-300 ${i < spinsRemaining ? 'bg-brand-500' : 'bg-gray-300 dark:bg-gray-700'}`}
+                            />
+                        ))}
+                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                            {spinsRemaining} spins left
+                        </span>
+                    </div>
                 </div>
 
                 <button
                     onClick={spinSlots}
-                    disabled={step === 'spinning'}
-                    className={`group relative inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-sm sm:text-base hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-brand-500/20 overflow-hidden ${step === 'spinning' ? 'cursor-not-allowed opacity-80' : ''}`}
+                    disabled={step === 'spinning' || spinsRemaining === 0}
+                    className={`group relative inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-sm sm:text-base hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-brand-500/20 overflow-hidden ${step === 'spinning' || spinsRemaining === 0 ? 'cursor-not-allowed opacity-80' : ''}`}
                 >
                     {step === 'spinning' ? (
                         <>
                             <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                             <span>Spinning...</span>
                         </>
+                    ) : spinsRemaining === 0 ? (
+                        <span>No Spins Left</span>
                     ) : (
                         <>
                             <span>PULL THE LEVER</span>
