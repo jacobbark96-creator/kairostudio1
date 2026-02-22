@@ -43,56 +43,65 @@ export default function Layout({ children }: LayoutProps) {
   }, [location]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-brand-50/50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 selection:bg-brand-500/30">
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg shadow-lg'
-            : 'bg-transparent'
+            ? 'py-2 sm:py-3'
+            : 'py-4 sm:py-6'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
+        <div className={`mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
+          scrolled ? 'max-w-7xl' : 'max-w-7xl'
+        }`}>
+          <div className={`rounded-2xl transition-all duration-300 ${
+            scrolled 
+              ? 'glass shadow-lg shadow-black/5 bg-white/80 dark:bg-dark-surface/80 px-4 py-2' 
+              : 'bg-transparent px-0'
+          }`}>
+            <div className="flex items-center justify-between">
             <Link 
               to="/"
-              className="cursor-pointer flex-shrink-0 flex items-center"
+              className="cursor-pointer flex-shrink-0 flex items-center group"
             >
               {kairoLogo && (
-                <div className="h-12 sm:h-16 md:h-20 lg:h-24 xl:h-28 w-auto max-w-[200px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] flex items-center justify-center">
+                <div className="h-10 sm:h-12 w-auto flex items-center justify-center overflow-hidden">
                   <img 
                     src={kairoLogo} 
                     alt="Kairo Studio" 
-                    className="h-full w-auto max-w-full object-contain object-left transition-all duration-300 hover:opacity-80" 
-                    style={{ maxHeight: '100%', width: 'auto' }}
+                    className="h-full w-auto object-contain object-left transition-transform duration-500 group-hover:scale-105" 
                   />
                 </div>
               )}
             </Link>
             
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-3 lg:gap-4">
+            <div className="hidden md:flex items-center gap-2">
               <Link
                 to="/dashboard"
-                className="px-5 py-2 text-sm font-medium rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-h-[44px] flex items-center"
+                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Client Portal
               </Link>
+              <div className="w-px h-6 bg-gray-200 dark:bg-gray-800 mx-2" />
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                aria-pressed={theme === 'dark'}
-                aria-label="Toggle color scheme"
-                className="relative inline-flex items-center h-9 w-14 rounded-full px-1 transition-colors duration-200 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 min-w-[44px] min-h-[44px]"
+                className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Toggle theme"
               >
-                <span
-                  className={`absolute top-1 left-1 w-7 h-7 bg-white rounded-full shadow-md transform transition-transform duration-200 ${
-                    theme === 'dark' ? 'translate-x-5' : 'translate-x-0'
-                  }`}
-                />
-                <span className="sr-only">Toggle dark mode</span>
+                 {theme === 'dark' ? (
+                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                   </svg>
+                 ) : (
+                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                   </svg>
+                 )}
               </button>
               <button
                 onClick={() => openContactModal()}
-                className="px-4 sm:px-5 lg:px-6 py-2 sm:py-2.5 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 transition-all duration-300 text-sm sm:text-base font-medium shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 min-h-[44px]"
+                className="ml-2 px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition-all duration-300 text-sm font-bold shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-0.5"
               >
                 Get in Touch
               </button>
@@ -101,9 +110,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
-              aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
+              className="md:hidden p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -111,39 +118,39 @@ export default function Layout({ children }: LayoutProps) {
                 <Menu className="w-6 h-6" />
               )}
             </button>
+            </div>
           </div>
+        </div>
 
           {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden absolute top-full left-0 w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-xl animate-in slide-in-from-top-5 duration-200">
-              <div className="flex flex-col gap-2 p-4">
-                <Link
-                  to="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors flex items-center"
-                >
-                  Client Portal
-                </Link>
-                <button 
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full"
-                >
-                  <span className="text-base font-medium">Theme</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{theme === 'dark' ? 'Dark' : 'Light'}</span>
-                </button>
-                <button
-                  onClick={() => {
-                    openContactModal();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="mt-2 w-full px-4 py-3.5 bg-cyan-600 text-white rounded-xl hover:bg-cyan-500 transition-all duration-300 text-base font-semibold shadow-lg active:scale-95"
-                >
-                  Get in Touch
-                </button>
-              </div>
+          <div className={`md:hidden fixed inset-0 z-40 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-xl transition-transform duration-500 ease-in-out ${
+            mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}>
+            <div className="flex flex-col items-center justify-center h-full gap-8 p-8">
+              <Link
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+              >
+                Client Portal
+              </Link>
+              <button 
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-2"
+              >
+                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+              </button>
+              <button
+                onClick={() => {
+                  openContactModal();
+                  setMobileMenuOpen(false);
+                }}
+                className="px-8 py-4 bg-brand-600 text-white rounded-full text-xl font-bold shadow-xl hover:scale-105 transition-transform"
+              >
+                Get in Touch
+              </button>
             </div>
-          )}
-        </div>
+          </div>
       </nav>
 
       <main>

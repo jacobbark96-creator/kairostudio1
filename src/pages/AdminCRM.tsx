@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
+type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
   const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers'>('invoices');
   
   // Invoice State
   const [uploading, setUploading] = useState(false);
+  const [allInvoices, setAllInvoices] = useState<Invoice[]>([]);
+  const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [clientName, setClientName] = useState('');
   const [amount, setAmount] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [targetUserId, setTargetUserId] = useState('');
   const [users, setUsers] = useState<Profile[]>([]);
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPassword, setNewUserPassword] = useState('');
+  const [creatingUser, setCreatingUser] = useState(false);
   
   // Content State
   const [heroTitle, setHeroTitle] = useState('');
@@ -29,11 +36,40 @@ export default function AdminCRM() {
   const [offerMaxClaims, setOfferMaxClaims] = useState(1);
   const [creatingOffer, setCreatingOffer] = useState(false);
 
+  // Invoice Filter
+  const [invoiceFilter, setInvoiceFilter] = useState<'all' | 'pending' | 'paid'>('all');
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
     fetchOffers();
+    fetchAllInvoices();
   }, []);
+
+  const fetchAllInvoices = async () => {
+    setLoadingInvoices(true);
+    const { data } = await supabase
+      .from('invoices')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (data) setAllInvoices(data);
+    setLoadingInvoices(false);
+  };
+
+  const markInvoiceAsPaid = async (id: string) => {
+    if (!confirm('Mark this invoice as paid?')) return;
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.from('invoices') as any)
+      .update({ status: 'paid' })
+      .eq('id', id);
+
+    if (error) alert(error.message);
+    else {
+      fetchAllInvoices();
+    }
+  };
 
   const fetchUsers = async () => {
     const { data } = await supabase.from('profiles').select('*');
@@ -139,6 +175,47 @@ export default function AdminCRM() {
     }
   };
 
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newUserEmail || !newUserPassword) return;
+
+    setCreatingUser(true);
+    try {
+      // Create a temporary client to sign up without logging out the admin
+      const tempSupabase = createClient(
+        import.meta.env.VITE_SUPABASE_URL,
+        import.meta.env.VITE_SUPABASE_ANON_KEY,
+        {
+          auth: {
+            persistSession: false, // Don't persist the session
+            autoRefreshToken: false, // Don't refresh tokens
+            detectSessionInUrl: false, // Don't look for session in URL
+          },
+        }
+      );
+
+      const { data, error } = await tempSupabase.auth.signUp({
+        email: newUserEmail,
+        password: newUserPassword,
+      });
+
+      if (error) throw error;
+
+      if (data.user) {
+        alert('User created successfully!');
+        setNewUserEmail('');
+        setNewUserPassword('');
+        // Refresh users list after a short delay to allow trigger to run
+        setTimeout(fetchUsers, 1000);
+      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setCreatingUser(false);
+    }
+  };
+
   const handlePromoteAdmin = async (userId: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { error } = await (supabase.from('profiles') as any).update({ role: 'admin' }).eq('id', userId);
@@ -200,7 +277,8 @@ export default function AdminCRM() {
         </div>
 
         {activeTab === 'invoices' && (
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+          <>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg mb-8">
             <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Upload Invoice for Client</h2>
             <form onSubmit={handleInvoiceUpload} className="space-y-4">
               <div>
@@ -269,10 +347,127 @@ export default function AdminCRM() {
               </button>
             </form>
           </div>
+
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">All Invoices</h2>
+              <div className="flex items-center gap-4">
+                <select
+                  value={invoiceFilter}
+                  onChange={(e) => setInvoiceFilter(e.target.value as 'all' | 'pending' | 'paid')}
+                  className="rounded-lg border-gray-300 dark:border-gray-600 text-sm focus:ring-cyan-500 focus:border-cyan-500 dark:bg-gray-700 dark:text-white"
+                >
+                  <option value="all">All Status</option>
+                  <option value="pending">Outstanding (Pending/Overdue)</option>
+                  <option value="paid">Paid</option>
+                </select>
+                <button onClick={fetchAllInvoices} className="text-sm text-cyan-600 hover:text-cyan-500">Refresh</button>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Client</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Details</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {allInvoices
+                    .filter(inv => {
+                      if (invoiceFilter === 'all') return true;
+                      if (invoiceFilter === 'paid') return inv.status === 'paid';
+                      return inv.status === 'pending' || inv.status === 'overdue';
+                    })
+                    .map((invoice) => {
+                    const client = users.find(u => u.id === invoice.user_id);
+                    return (
+                      <tr key={invoice.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{client?.email || 'Unknown'}</div>
+                          <div className="text-xs text-gray-500">{invoice.client_name}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {invoice.file_url && (
+                            <a href={invoice.file_url} target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:text-cyan-800 flex items-center gap-1">
+                              <FileText className="w-4 h-4" /> View
+                            </a>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                          ${invoice.amount.toFixed(2)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                            ${invoice.status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}`}>
+                            {invoice.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          {invoice.status !== 'paid' && (
+                            <button
+                              onClick={() => markInvoiceAsPaid(invoice.id)}
+                              className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 flex items-center gap-1 ml-auto"
+                            >
+                              <CheckCircle className="w-4 h-4" /> Mark Paid
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                  {allInvoices.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                        No invoices found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </>
         )}
 
         {activeTab === 'users' && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Create New User</h2>
+            <form onSubmit={handleCreateUser} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-8 border-b border-gray-200 dark:border-gray-700 pb-8">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                <input
+                  type="email"
+                  value={newUserEmail}
+                  onChange={(e) => setNewUserEmail(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
+                <input
+                  type="password"
+                  value={newUserPassword}
+                  onChange={(e) => setNewUserPassword(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={creatingUser}
+                className="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 h-[42px]"
+              >
+                {creatingUser ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
+                {creatingUser ? 'Creating...' : 'Create User'}
+              </button>
+            </form>
+
             <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">User Management</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

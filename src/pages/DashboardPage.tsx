@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import { FileText, LogOut, Loader2, AlertCircle, Plus } from 'lucide-react';
 import { Database } from '../types/supabase';
+import SEO from '../components/SEO';
 
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
@@ -20,9 +21,16 @@ export default function DashboardPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showForm, setShowForm] = useState(false);
 
+  const [activeTab, setActiveTab] = useState<'pending' | 'paid'>('pending');
+
   useEffect(() => {
     if (user) fetchInvoices();
   }, [user]);
+
+  const filteredInvoices = invoices.filter(invoice => {
+    if (activeTab === 'pending') return invoice.status === 'pending' || invoice.status === 'overdue';
+    return invoice.status === 'paid';
+  });
 
   const fetchInvoices = async () => {
     try {
@@ -136,6 +144,10 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-12">
+      <SEO 
+        title="Client Dashboard" 
+        description="Manage your invoices and project details in the Kairo Studio Client Portal." 
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
           {/* Header */}
@@ -167,6 +179,36 @@ export default function DashboardPage() {
           </div>
 
           <div className="p-6">
+            {/* Tabs */}
+            <div className="flex space-x-4 mb-6 border-b border-gray-200 dark:border-gray-700">
+              <button
+                onClick={() => setActiveTab('pending')}
+                className={`pb-2 px-4 text-sm font-medium transition-colors relative ${
+                  activeTab === 'pending' 
+                    ? 'text-cyan-600 dark:text-cyan-400' 
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                Pending
+                {activeTab === 'pending' && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-600 dark:bg-cyan-400" />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab('paid')}
+                className={`pb-2 px-4 text-sm font-medium transition-colors relative ${
+                  activeTab === 'paid' 
+                    ? 'text-cyan-600 dark:text-cyan-400' 
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                Paid History
+                {activeTab === 'paid' && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-600 dark:bg-cyan-400" />
+                )}
+              </button>
+            </div>
+
             {/* Upload Form */}
             {showForm && (
               <div className="mb-8 bg-gray-50 dark:bg-gray-700/30 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
@@ -255,12 +297,14 @@ export default function DashboardPage() {
                 <div className="flex justify-center py-12">
                   <Loader2 className="animate-spin h-8 w-8 text-cyan-600" />
                 </div>
-              ) : invoices.length === 0 ? (
+              ) : filteredInvoices.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
                   <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">No invoices yet</h3>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
+                    No {activeTab} invoices
+                  </h3>
                   <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    Get started by adding a new invoice.
+                    {activeTab === 'pending' ? "You're all caught up!" : "No payment history found."}
                   </p>
                 </div>
               ) : (
@@ -278,7 +322,7 @@ export default function DashboardPage() {
                         </tr>
                       </thead>
                       <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {invoices.map((invoice) => (
+                        {filteredInvoices.map((invoice) => (
                           <tr key={invoice.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                             <td className="px-6 py-4 whitespace-nowrap">
                               <div className="text-sm font-medium text-gray-900 dark:text-white">{invoice.client_name}</div>
@@ -325,7 +369,7 @@ export default function DashboardPage() {
 
                   {/* Mobile Card View */}
                   <div className="md:hidden space-y-4">
-                    {invoices.map((invoice) => (
+                    {filteredInvoices.map((invoice) => (
                       <div key={invoice.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700">
                         <div className="flex justify-between items-start mb-2">
                           <div>

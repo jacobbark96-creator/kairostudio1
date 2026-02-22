@@ -12,9 +12,12 @@ import { ThemeProvider } from './hooks/useTheme';
 import { AuthProvider } from './context/AuthContext';
 import { UIProvider } from './context/UIContext';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 function App() {
   return (
-    <ThemeProvider>
+    <HelmetProvider>
+      <ThemeProvider>
       <AuthProvider>
         <UIProvider>
           <BrowserRouter>
@@ -41,6 +44,7 @@ function App() {
         </UIProvider>
       </AuthProvider>
     </ThemeProvider>
+    </HelmetProvider>
   );
 }
 

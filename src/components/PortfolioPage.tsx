@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowRight, ExternalLink, Code, Palette, Zap, Users, Globe, CheckCircle, ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
+import { ArrowRight, ExternalLink, Code, Palette, Zap, Users, Globe, CheckCircle, ArrowLeft, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUI } from '../context/UIContext';
+import SEO from './SEO';
 
 interface Project {
   id: string;
@@ -125,28 +126,42 @@ export default function PortfolioPage() {
 
   return (
     <>
-      <section className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-8 sm:pb-10 md:pb-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white via-gray-50 to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-7xl mx-auto">
+      <SEO 
+        title="Portfolio" 
+        description="View our latest projects and success stories. See how Kairo Studio transforms ideas into digital reality." 
+      />
+      <section className="relative pt-32 sm:pt-40 md:pt-48 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
+        {/* Background Blobs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
+           <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
+        </div>
+
+        <div className="max-w-7xl mx-auto w-full relative z-10">
           <Link
             to="/"
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-300 mb-4 sm:mb-5 group"
+            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-300 mb-8 group"
           >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="text-sm sm:text-base font-medium">Back to Home</span>
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="font-medium">Back to Home</span>
           </Link>
-
+          
           <div className="text-center max-w-4xl mx-auto mb-6 sm:mb-8">
-            <div className="inline-block px-4 py-2 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 text-xs sm:text-sm font-semibold rounded-full mb-3 sm:mb-4">
-              Our Portfolio
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50/50 dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 backdrop-blur-sm mb-8 animate-fade-in">
+              <span className="text-sm font-medium text-brand-900 dark:text-brand-100 tracking-wide uppercase">
+                Our Portfolio
+              </span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-3 sm:mb-4">
+            
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-8 tracking-tight text-gray-900 dark:text-white">
               Work That
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-400 dark:to-purple-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-blue-600 to-purple-600 dark:from-brand-400 dark:via-blue-400 dark:to-purple-400">
                 Speaks for Itself
               </span>
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-300 leading-relaxed px-4">
+            
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
               Explore our recent projects and see how we've helped businesses transform their digital presence.
             </p>
           </div>
@@ -155,33 +170,35 @@ export default function PortfolioPage() {
 
       {/* Featured Project - UseHyro */}
       {featuredProject && (
-        <section className="py-6 sm:py-8 md:py-10 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-4 sm:mb-5">
-              <span className="text-xs sm:text-sm font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider">
+        <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark-bg relative overflow-hidden">
+          <div className="max-w-7xl mx-auto relative z-10">
+            <div className="mb-8">
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 text-sm font-semibold uppercase tracking-wider">
+                <Sparkles className="w-4 h-4" />
                 Featured Project
               </span>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-10 md:mb-12">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
               {/* Project Image */}
-              <div>
-                <div className={`relative rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br ${featuredProject.color} p-0.5 sm:p-1 shadow-xl sm:shadow-2xl`}>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl overflow-hidden">
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-500/20 to-purple-500/20 rounded-[2rem] blur-2xl -z-10 group-hover:blur-3xl transition-all duration-500" />
+                <div className={`relative rounded-[2rem] overflow-hidden bg-gradient-to-br ${featuredProject.color} p-1 shadow-2xl`}>
+                  <div className="bg-white dark:bg-gray-800 rounded-[1.8rem] overflow-hidden">
                     {featuredProject.image ? (
                       <img
                         src={featuredProject.image}
                         alt={featuredProject.title}
-                        className="w-full h-auto object-cover"
+                        className="w-full h-auto object-cover transform group-hover:scale-[1.02] transition-transform duration-500"
                       />
                     ) : (
-                      <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-cyan-100 to-blue-100 dark:from-cyan-900/30 dark:to-blue-900/30">
-                        <div className="text-center p-4 sm:p-6 md:p-8">
-                          <div className={`w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-xl sm:rounded-2xl bg-gradient-to-br ${featuredProject.color} flex items-center justify-center mx-auto mb-3 sm:mb-4 shadow-lg`}>
-                            <Globe className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-white" />
+                      <div className="aspect-video flex items-center justify-center bg-gradient-to-br from-brand-50 to-blue-50 dark:from-brand-900/30 dark:to-blue-900/30">
+                        <div className="text-center p-8">
+                          <div className={`w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br ${featuredProject.color} flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+                            <Globe className="w-12 h-12 sm:w-16 sm:h-16 text-white" />
                           </div>
-                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">{featuredProject.title}</h3>
-                          <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400">Project Preview</p>
+                          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{featuredProject.title}</h3>
+                          <p className="text-gray-600 dark:text-gray-400">Project Preview</p>
                         </div>
                       </div>
                     )}
@@ -190,28 +207,28 @@ export default function PortfolioPage() {
               </div>
 
               {/* Project Details */}
-              <div>
-                <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
-                  <div className={`w-9 h-9 sm:w-11 sm:h-11 md:w-14 md:h-14 rounded-lg sm:rounded-xl bg-gradient-to-br ${featuredProject.color} flex items-center justify-center overflow-hidden flex-shrink-0`}>
+              <div className="flex flex-col justify-center">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${featuredProject.color} flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg`}>
                     {featuredProject.favicon ? (
                       <img 
                         src={featuredProject.favicon} 
                         alt={`${featuredProject.title} icon`}
-                        className="w-full h-full object-contain p-1.5 sm:p-2"
+                        className="w-full h-full object-contain p-3"
                       />
                     ) : (
-                      <Globe className="w-4 h-4 sm:w-5 sm:h-5 md:w-7 md:h-7 text-white" />
+                      <Globe className="w-8 h-8 text-white" />
                     )}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">
+                  <div>
+                    <h2 className="text-3xl sm:text-4xl font-display font-bold text-gray-900 dark:text-white mb-1">
                       {featuredProject.title}
                     </h2>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{featuredProject.category}</p>
+                    <p className="text-lg text-brand-600 dark:text-brand-400 font-medium">{featuredProject.category}</p>
                   </div>
                 </div>
 
-                <p className="text-xs sm:text-sm md:text-base text-gray-700 dark:text-gray-300 mb-3 sm:mb-4 leading-relaxed">
+                <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed font-light">
                   {featuredProject.description}
                 </p>
 
@@ -220,253 +237,212 @@ export default function PortfolioPage() {
                     href={featuredProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-cyan-600 text-white rounded-full hover:bg-cyan-500 transition-all duration-300 font-medium text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 mb-4 sm:mb-5 min-h-[44px] sm:min-h-[48px]"
+                    className="inline-flex items-center gap-2 text-lg font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors group mb-8"
                   >
                     Visit Website
-                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <ExternalLink className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </a>
                 )}
+                
+                <div className="space-y-4">
+                {/* Client Spec */}
+                {featuredProject.client && (
+                  <div className="bg-gray-50/50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('client')}
+                      className="w-full p-6 flex items-center justify-between hover:bg-gray-100/50 dark:hover:bg-white/10 transition-colors"
+                    >
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
+                          <Users className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                        </div>
+                        Client Information
+                      </h3>
+                      {expandedSections.client ? (
+                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                      )}
+                    </button>
+                    <div className={`px-6 pb-6 transition-all duration-300 ${expandedSections.client ? 'block opacity-100' : 'hidden opacity-0'}`}>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-gray-100 dark:border-white/5">
+                        <div>
+                          <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Client</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client.name}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Industry</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client.industry}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Location</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{featuredProject.client.location}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Challenge & Solution */}
+                {featuredProject.challenge && (
+                  <div className="bg-gray-50/50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/10 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('challenge')}
+                      className="w-full p-6 flex items-center justify-between hover:bg-gray-100/50 dark:hover:bg-white/10 transition-colors"
+                    >
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
+                          <Zap className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+                        </div>
+                        Challenge & Solution
+                      </h3>
+                      {expandedSections.challenge ? (
+                        <ChevronUp className="w-5 h-5 text-gray-400" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-gray-400" />
+                      )}
+                    </button>
+                    <div className={`px-6 pb-6 transition-all duration-300 ${expandedSections.challenge ? 'block opacity-100' : 'hidden opacity-0'}`}>
+                      <div className="grid md:grid-cols-2 gap-6 pt-4 border-t border-gray-100 dark:border-white/5">
+                        <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/20">
+                          <h4 className="font-bold text-red-900 dark:text-red-300 mb-2 flex items-center gap-2">
+                            <Zap className="w-4 h-4" /> The Challenge
+                          </h4>
+                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{featuredProject.challenge}</p>
+                        </div>
+                        <div className="p-4 rounded-xl bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-900/20">
+                          <h4 className="font-bold text-green-900 dark:text-green-300 mb-2 flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4" /> Our Solution
+                          </h4>
+                          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{featuredProject.solution}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                </div>
               </div>
             </div>
-
-            {/* Client Spec */}
-            {featuredProject.client && (
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl md:rounded-2xl mb-3 sm:mb-4 md:mb-6 overflow-hidden border border-gray-200 dark:border-gray-700">
-                <button
-                  onClick={() => toggleSection('client')}
-                  className="w-full p-3 sm:p-5 md:p-7 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors"
-                >
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                    <span className="text-sm sm:text-base md:text-lg">Client Information</span>
-                  </h3>
-                  {expandedSections.client ? (
-                    <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                  )}
-                </button>
-                <div className={expandedSections.client ? 'block md:block px-3 sm:px-5 md:px-7 pb-3 sm:pb-5 md:pb-7' : 'hidden md:block px-3 sm:px-5 md:px-7 pb-3 sm:pb-5 md:pb-7'}>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 md:gap-4">
-                    <div>
-                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                        Client Name
-                      </p>
-                      <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-gray-100 break-words">
-                        {featuredProject.client.name}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                        Industry
-                      </p>
-                      <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-gray-100 break-words">
-                        {featuredProject.client.industry}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                        Location
-                      </p>
-                      <p className="text-sm sm:text-base font-medium text-gray-900 dark:text-gray-100 break-words">
-                        {featuredProject.client.location}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Challenge & Solution */}
-            {featuredProject.challenge && (
-              <div className="mb-3 sm:mb-4 md:mb-6">
-                <button
-                  onClick={() => toggleSection('challenge')}
-                  className="w-full p-3 sm:p-4 md:p-5 bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors border border-gray-200 dark:border-gray-700 mb-2 md:hidden"
-                >
-                  <h3 className="text-sm sm:text-base font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                    <span>Challenge & Solution</span>
-                  </h3>
-                  {expandedSections.challenge ? (
-                    <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  )}
-                </button>
-                <div className={expandedSections.challenge ? 'block md:block grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5' : 'hidden md:block grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5'}>
-                  <div className="bg-red-50 dark:bg-red-900/10 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-red-200 dark:border-red-900/30">
-                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
-                      <Zap className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0" />
-                      <span>The Challenge</span>
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                      {featuredProject.challenge}
-                    </p>
-                  </div>
-                  <div className="bg-green-50 dark:bg-green-900/10 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border border-green-200 dark:border-green-900/30">
-                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 flex-shrink-0" />
-                      <span>Our Solution</span>
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                      {featuredProject.solution}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Features */}
-            {featuredProject.features && (
-              <div className="mb-3 sm:mb-4 md:mb-6">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
-                  <button
-                    onClick={() => toggleSection('features')}
-                    className="w-full p-3 sm:p-4 md:p-5 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors"
-                  >
-                    <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <Code className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                      <span className="text-sm sm:text-base md:text-lg">Key Features</span>
-                    </h3>
-                    {expandedSections.features ? (
-                      <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                    )}
-                  </button>
-                  <div className={expandedSections.features ? 'block md:block px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 md:pb-5' : 'hidden md:block px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 md:pb-5'}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                      {featuredProject.features.map((feature, index) => (
-                        <div
-                          key={index}
-                          className="flex items-start gap-2 p-2 sm:p-2.5 md:p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600"
-                        >
-                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-600 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{feature}</span>
+            
+            {/* Features & Tech Grid */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {featuredProject.features && (
+                <div className="p-8 bg-gray-50/50 dark:bg-white/5 rounded-[2rem] border border-gray-100 dark:border-white/10">
+                   <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
+                        <Code className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                      </div>
+                      Key Features
+                   </h3>
+                   <div className="grid sm:grid-cols-2 gap-4">
+                      {featuredProject.features.map((feature, i) => (
+                        <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white dark:bg-white/5 border border-gray-100 dark:border-white/5">
+                          <CheckCircle className="w-5 h-5 text-brand-600 dark:text-brand-400 flex-shrink-0" />
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{feature}</span>
                         </div>
                       ))}
-                    </div>
-                  </div>
+                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Technologies */}
-            {featuredProject.technologies && (
-              <div className="mb-3 sm:mb-4 md:mb-6">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg sm:rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
-                  <button
-                    onClick={() => toggleSection('technologies')}
-                    className="w-full p-3 sm:p-4 md:p-5 flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-700/50 transition-colors"
-                  >
-                    <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                      <Palette className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                      <span className="text-sm sm:text-base md:text-lg">Technologies Used</span>
+              )}
+              
+              <div className="space-y-6">
+                {featuredProject.technologies && (
+                  <div className="p-8 bg-gray-50/50 dark:bg-white/5 rounded-[2rem] border border-gray-100 dark:border-white/10">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
+                          <Palette className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                        </div>
+                        Technologies
                     </h3>
-                    {expandedSections.technologies ? (
-                      <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                    )}
-                  </button>
-                  <div className={expandedSections.technologies ? 'block md:block px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 md:pb-5' : 'hidden md:block px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 md:pb-5'}>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {featuredProject.technologies.map((tech, index) => (
-                        <span
-                          key={index}
-                          className="px-2.5 sm:px-3 py-1 sm:py-1.5 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 rounded-full text-xs sm:text-sm font-medium"
-                        >
+                    <div className="flex flex-wrap gap-2">
+                      {featuredProject.technologies.map((tech, i) => (
+                        <span key={i} className="px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-sm font-semibold text-gray-700 dark:text-gray-300">
                           {tech}
                         </span>
                       ))}
                     </div>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {/* Results */}
-            {featuredProject.results && (
-              <div className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden border-2 border-cyan-200 dark:border-cyan-800">
-                <button
-                  onClick={() => toggleSection('results')}
-                  className="w-full p-3 sm:p-4 md:p-6 flex items-center justify-between hover:bg-cyan-100/50 dark:hover:bg-cyan-900/30 transition-colors"
-                >
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
-                    <span className="text-sm sm:text-base md:text-lg">Results & Impact</span>
-                  </h3>
-                  {expandedSections.results ? (
-                    <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400 md:hidden" />
-                  )}
-                </button>
-                <div className={`${expandedSections.results ? 'block' : 'hidden'} md:block px-3 sm:px-4 md:p-6 pb-3 sm:pb-4 md:pb-6`}>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
-                    {featuredProject.results.map((result, index) => (
-                      <div key={index} className="flex items-start gap-2">
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-cyan-600 dark:bg-cyan-500 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
+                )}
+                
+                {featuredProject.results && (
+                  <div className="p-8 bg-gradient-to-br from-brand-50 to-blue-50 dark:from-brand-900/20 dark:to-blue-900/20 rounded-[2rem] border border-brand-100 dark:border-brand-900/20">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/10 flex items-center justify-center">
+                          <Zap className="w-5 h-5 text-brand-600 dark:text-brand-400" />
                         </div>
-                        <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium leading-relaxed">{result}</p>
-                      </div>
-                    ))}
+                        Impact & Results
+                    </h3>
+                    <div className="space-y-3">
+                      {featuredProject.results.map((result, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <div className="w-6 h-6 rounded-full bg-brand-600 dark:bg-brand-500 flex items-center justify-center flex-shrink-0">
+                            <CheckCircle className="w-3.5 h-3.5 text-white" />
+                          </div>
+                          <span className="font-medium text-gray-800 dark:text-gray-200">{result}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </section>
       )}
 
       {/* Other Projects */}
-      <section className="py-6 sm:py-8 md:py-10 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50">
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50/50 dark:bg-gray-800/20">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-4 sm:mb-5 md:mb-6">
-            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100 px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-display font-bold mb-4 text-gray-900 dark:text-white">
               More Projects
             </h2>
-            <p className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               Explore additional work we've completed for clients across various industries.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.filter(p => !p.featured).map((project) => (
               <div
                 key={project.id}
-                className="group bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-cyan-500 dark:hover:border-cyan-500 hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                className="group glass-card rounded-[2rem] overflow-hidden hover:-translate-y-2"
               >
-                <div className={`h-32 sm:h-40 md:h-48 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
+                <div className={`h-48 sm:h-56 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
                   {project.image ? (
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Globe className="w-12 h-12 sm:w-16 sm:h-16 text-white/50" />
+                      <Globe className="w-16 h-16 text-white/50" />
                     </div>
                   )}
-                </div>
-                <div className="p-3 sm:p-4">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wider">
-                      {project.category}
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                    <span className="text-white font-medium flex items-center gap-2">
+                      View Details <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
-                  <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 mb-1.5">
+                </div>
+                
+                <div className="p-8">
+                  <div className="inline-block px-3 py-1 rounded-full bg-brand-50 dark:bg-white/5 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider mb-4">
+                    {project.category}
+                  </div>
+                  
+                  <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-3">
                     {project.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-2.5">
+                  
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6 line-clamp-3">
                     {project.description}
                   </p>
-                  <button className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors duration-300 group-hover:gap-2">
-                    View Details
-                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+                  
+                  <button className="text-sm font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors uppercase tracking-wide flex items-center gap-2">
+                    Learn More <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -476,20 +452,23 @@ export default function PortfolioPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-6 sm:py-8 md:py-10 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-black via-gray-900 to-black dark:from-gray-900 dark:via-black dark:to-gray-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold mb-2.5 sm:mb-3 leading-tight px-4">
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-900 dark:bg-black text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/20 rounded-full blur-[100px]" />
+        
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-6 leading-tight">
             Ready to Start Your Project?
           </h2>
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-300 dark:text-gray-400 mb-3 sm:mb-4 md:mb-5 leading-relaxed max-w-2xl mx-auto px-4">
+          <p className="text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
             Let's discuss how we can bring your vision to life with a custom solution tailored to your needs.
           </p>
           <button
             onClick={() => openContactModal()}
-            className="group px-5 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-3.5 md:py-4 lg:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 min-h-[44px] sm:min-h-[48px] md:min-h-[52px] lg:min-h-[56px] mx-auto"
+            className="group px-8 py-4 bg-white text-black rounded-full hover:bg-brand-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 text-lg font-bold shadow-2xl hover:scale-105 active:scale-95 mx-auto"
           >
             Get Started Today
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </section>
