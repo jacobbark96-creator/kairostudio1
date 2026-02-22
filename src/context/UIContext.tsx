@@ -6,6 +6,8 @@ interface UIContextType {
   offerPrice?: number;
   openContactModal: (prefill?: string, price?: number) => void;
   closeContactModal: () => void;
+  isJackpot: boolean;
+  triggerJackpot: (status: boolean) => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -14,12 +16,17 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactModalPreill, setContactModalPrefill] = useState('');
   const [offerPrice, setOfferPrice] = useState<number | undefined>(undefined);
+  const [isJackpot, setIsJackpot] = useState(false);
 
   const openContactModal = (prefill: string = '', price?: number) => {
     console.log('UIContext - openContactModal called with:', { prefill, price });
     setContactModalPrefill(prefill);
     setOfferPrice(price);
     setIsContactModalOpen(true);
+  };
+
+  const triggerJackpot = (status: boolean) => {
+    setIsJackpot(status);
   };
 
   const closeContactModal = () => {
@@ -36,6 +43,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
         offerPrice,
         openContactModal,
         closeContactModal,
+        isJackpot,
+        triggerJackpot
       }}
     >
       {children}

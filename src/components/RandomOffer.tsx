@@ -20,7 +20,7 @@ const SYMBOLS = [
 ];
 
 export default function RandomOffer() {
-  const { openContactModal } = useUI();
+  const { openContactModal, triggerJackpot } = useUI();
   const [step, setStep] = useState<'initial' | 'spinning' | 'revealed'>('initial');
   const [offer, setOffer] = useState<{ title: string; description: string; price: number } | null>(null);
   const [slots, setSlots] = useState([SYMBOLS[1], SYMBOLS[2], SYMBOLS[3]]);
@@ -93,8 +93,13 @@ export default function RandomOffer() {
             setStep('revealed');
             
             // Celebration effects
-            if (outcomeType === '3_match') triggerConfetti(true);
-            else triggerConfetti(false);
+            if (outcomeType === '3_match') {
+                triggerConfetti(true);
+                triggerJackpot(true);
+            }
+            else {
+                triggerConfetti(false);
+            }
         }
     }, intervalTime);
   };

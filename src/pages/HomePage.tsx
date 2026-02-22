@@ -6,11 +6,42 @@ import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
 import SEO from '../components/SEO';
 
+import { useUI } from '../context/UIContext';
+import confetti from 'canvas-confetti';
+
 export default function HomePage() {
+  const { isJackpot, triggerJackpot } = useUI();
   const [heroTitle, setHeroTitle] = useState('We craft digital experiences that inspire');
   const [heroTitleAlt1, setHeroTitleAlt1] = useState('');
   const [heroTitleAlt2, setHeroTitleAlt2] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
+
+  // Handle Jackpot Celebration
+  useEffect(() => {
+    if (isJackpot) {
+      // Fire confetti from multiple angles for a "fill the screen" effect
+      const duration = 5000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 45, spread: 360, ticks: 100, zIndex: 100 };
+
+      const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          triggerJackpot(false); // Reset jackpot state after celebration
+          return;
+        }
+
+        const particleCount = 100 * (timeLeft / duration);
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.4, 0.6), y: Math.random() - 0.2 } });
+      }, 250);
+    }
+  }, [isJackpot, triggerJackpot]);
 
   useEffect(() => {
     fetchContent();
@@ -70,11 +101,17 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="text-center lg:text-left">
               <div className="min-h-[140px] sm:min-h-[200px] mb-2 sm:mb-8">
-                <TypewriterHero 
-                  texts={[heroTitle, heroTitleAlt1, heroTitleAlt2].filter(t => t && t.trim().length > 0)} 
-                  className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-200 dark:to-brand-300 pb-2 sm:pb-4"
-                  speed={70}
-                />
+                {isJackpot ? (
+                    <h1 className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-pulse pb-2 sm:pb-4 scale-110 origin-left transition-all duration-500">
+                        JACKPOT!!!
+                    </h1>
+                ) : (
+                    <TypewriterHero 
+                      texts={[heroTitle, heroTitleAlt1, heroTitleAlt2].filter(t => t && t.trim().length > 0)} 
+                      className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-200 dark:to-brand-300 pb-2 sm:pb-4"
+                      speed={70}
+                    />
+                )}
               </div>
               
               <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed font-light">
