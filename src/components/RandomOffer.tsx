@@ -70,7 +70,7 @@ export default function RandomOffer() {
   };
 
   return (
-    <div className="w-full h-full min-h-[450px] bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-[2.5rem] p-8 sm:p-12 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
+    <div className="w-full h-full min-h-[400px] sm:min-h-[450px] bg-white/80 dark:bg-black/80 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-12 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
         {/* Racing Light Effect */}
         <div className="border-beam-container">
             <div className="border-beam-light" />
@@ -84,12 +84,12 @@ export default function RandomOffer() {
         <div className="absolute inset-0 bg-gradient-to-r from-brand-500/0 via-brand-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
         {step === 'initial' ? (
-            <div className="relative z-10 space-y-8 animate-in fade-in zoom-in duration-500">
+            <div className="relative z-10 space-y-6 sm:space-y-8 animate-in fade-in zoom-in duration-500">
                 <div className="space-y-4">
-                    <h3 className="text-4xl sm:text-5xl font-display font-bold text-black dark:text-white animate-pulse-fast">
+                    <h3 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-black dark:text-white animate-pulse-fast">
                         Feeling Lucky?
                     </h3>
-                    <p className="text-lg text-gray-600 dark:text-gray-300 max-w-xs mx-auto leading-relaxed">
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-xs mx-auto leading-relaxed">
                         Tap into the digital ether and reveal an exclusive offer tailored for your next big idea.
                     </p>
                 </div>
@@ -97,7 +97,7 @@ export default function RandomOffer() {
                 <button
                     onClick={revealOffer}
                     disabled={loading}
-                    className="group relative inline-flex items-center gap-3 px-10 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-brand-500/20 overflow-hidden"
+                    className="group relative inline-flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-base sm:text-lg hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-brand-500/20 overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000" />
                     {loading ? (

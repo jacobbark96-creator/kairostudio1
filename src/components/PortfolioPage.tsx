@@ -147,7 +147,7 @@ export default function PortfolioPage() {
           </Link>
           
           <div className="max-w-4xl">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold leading-[0.9] mb-8 tracking-tight text-black dark:text-white">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold leading-[1] sm:leading-[0.9] mb-6 sm:mb-8 tracking-tight text-black dark:text-white">
               Selected
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-gray-900 dark:from-gray-400 dark:to-white">
@@ -155,7 +155,7 @@ export default function PortfolioPage() {
               </span>
             </h1>
             
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl font-light">
+            <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl font-light">
               A collection of digital experiences crafted with precision, passion, and purpose.
             </p>
           </div>

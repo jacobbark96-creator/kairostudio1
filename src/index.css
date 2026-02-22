@@ -72,22 +72,13 @@
 /* Enable scrolling and animation on mobile */
 @media (max-width: 767px) {
 	.marquee {
-		overflow-x: auto;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
-		-ms-overflow-style: none;
-		scroll-snap-type: x proximity;
-	}
-	.marquee::-webkit-scrollbar {
-		display: none;
+		/* Disable native scrolling to prevent conflict with animation */
+		overflow-x: hidden;
 	}
 	.marquee__inner {
-		animation: marquee 25s linear infinite;
+		animation: marquee 20s linear infinite;
 		will-change: transform;
 		min-width: max-content;
-	}
-	.marquee__inner > * {
-		scroll-snap-align: start;
 	}
 }
 .marquee:hover .marquee__inner {
@@ -165,7 +156,7 @@
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  border-radius: 2.5rem; /* Match container radius */
+  /* border-radius is handled by parent overflow-hidden */
 }
 
 .border-beam-light {
