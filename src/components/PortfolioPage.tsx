@@ -237,9 +237,13 @@ export default function PortfolioPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.filter(p => !p.featured).map((project) => (
-              <div
+              <a
                 key={project.id}
-                className="group flex flex-col gap-4"
+                href={project.link || '#'}
+                target={project.link ? "_blank" : "_self"}
+                rel={project.link ? "noopener noreferrer" : ""}
+                className={`group flex flex-col gap-4 ${!project.link ? 'cursor-default' : 'cursor-pointer'}`}
+                onClick={(e) => !project.link && e.preventDefault()}
               >
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800">
                     {project.image_url ? (
@@ -255,11 +259,13 @@ export default function PortfolioPage() {
                     )}
                     
                     {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                         <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                             <ArrowRight className="w-5 h-5" />
-                         </div>
-                    </div>
+                    {project.link && (
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                           <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                               <ArrowRight className="w-5 h-5" />
+                           </div>
+                      </div>
+                    )}
                 </div>
                 
                 <div>
@@ -275,7 +281,7 @@ export default function PortfolioPage() {
                     {project.description}
                   </p>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
