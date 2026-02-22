@@ -88,14 +88,63 @@ export default function RandomOffer() {
         targetSymbols.sort(() => Math.random() - 0.5);
     }
 
-    // Determine Offer Text/Price
+    // Fetch available offers from DB
+    const { data: offersData, error: offersError } = await supabase
+        .from('offers')
+        .select('*')
+        .eq('active', true);
+
+    if (offersError || !offersData || offersData.length === 0) {
+        // Fallback if no offers found
+        console.error('No offers found or error fetching:', offersError);
+        setOffer({ title: "No Offer Available", description: "Please check back later!", price: 0 });
+        setStep('revealed');
+        return;
+    }
+
+    // Determine Offer Text/Price based on outcome
     let offerDetails = { title: "Error", description: "Something went wrong", price: 0 };
+    
+    // Helper to find offer by partial title match or price (You might want to add a 'tier' column to offers table for cleaner logic)
+    // For now, we'll try to find offers that match the tiers loosely or fallback to random
+    
+    // Tier logic:
+    // Jackpot (3 match) -> Highest value offer or specific jackpot offer
+    // Tier 2 (2 match) -> Medium value
+    // Tier 1 (1 match) -> Lower value
+    
+    // Sort offers by price descending to approximate tiers
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sortedOffers = [...offersData].sort((a: any, b: any) => (b.price || 0) - (a.price || 0));
+    
     if (outcomeType === '3_match') {
-        offerDetails = { title: "JACKPOT! £200 Site", description: "You matched 3 Kairo Logos! Get a full website for just £200.", price: 200 };
+        // Top tier offer (highest price)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const bestOffer = sortedOffers[0] as any;
+        offerDetails = { 
+            title: bestOffer.title, 
+            description: bestOffer.description || "", 
+            price: bestOffer.price || 0 
+        };
     } else if (outcomeType === '2_match') {
-        offerDetails = { title: "£500 Website Offer", description: "Two matches! Get a premium website for only £500.", price: 500 };
+        // Middle tier (if available, else random from top half)
+        const midIndex = Math.floor(sortedOffers.length / 2);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const midOffer = sortedOffers[midIndex > 0 ? midIndex : 0] as any;
+        offerDetails = { 
+            title: midOffer.title, 
+            description: midOffer.description || "", 
+            price: midOffer.price || 0 
+        };
     } else {
-        offerDetails = { title: "£800 Website Offer", description: "You got a match! Claim your professional website for £800.", price: 800 };
+        // Lowest tier (lowest price)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const lowOffer = sortedOffers[sortedOffers.length - 1] as any;
+        offerDetails = { 
+            title: lowOffer.title, 
+            description: lowOffer.description || "", 
+            price: lowOffer.price || 0 
+        };
     }
 
     // Animation Loop
