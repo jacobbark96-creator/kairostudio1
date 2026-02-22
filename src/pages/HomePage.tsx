@@ -20,7 +20,7 @@ export default function HomePage() {
   useEffect(() => {
     if (isJackpot) {
       // Fire confetti from multiple angles for a "fill the screen" effect
-      const duration = 5000;
+      const duration = 10000; // Increased duration
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 45, spread: 360, ticks: 100, zIndex: 100 };
 
@@ -31,7 +31,8 @@ export default function HomePage() {
 
         if (timeLeft <= 0) {
           clearInterval(interval);
-          triggerJackpot(false); // Reset jackpot state after celebration
+          // Don't reset jackpot automatically, keep the "JACKPOT!!!" text
+          // triggerJackpot(false); 
           return;
         }
 
@@ -102,9 +103,11 @@ export default function HomePage() {
             <div className="text-center lg:text-left">
               <div className="min-h-[140px] sm:min-h-[200px] mb-2 sm:mb-8">
                 {isJackpot ? (
-                    <h1 className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-pulse pb-2 sm:pb-4 scale-110 origin-left transition-all duration-500">
-                        JACKPOT!!!
-                    </h1>
+                    <TypewriterHero 
+                      texts={["JACKPOT!!!"]} 
+                      className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 pb-2 sm:pb-4 scale-110 origin-left transition-all duration-500"
+                      speed={150}
+                    />
                 ) : (
                     <TypewriterHero 
                       texts={[heroTitle, heroTitleAlt1, heroTitleAlt2].filter(t => t && t.trim().length > 0)} 

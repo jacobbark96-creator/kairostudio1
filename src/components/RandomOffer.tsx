@@ -25,6 +25,8 @@ export default function RandomOffer() {
   const [offer, setOffer] = useState<{ title: string; description: string; price: number } | null>(null);
   const [slots, setSlots] = useState([SYMBOLS[1], SYMBOLS[2], SYMBOLS[3]]);
   const [isLeverPulled, setIsLeverPulled] = useState(false);
+  const [startTime, setStartTime] = useState<number>(0);
+  const [stopDelays, setStopDelays] = useState<number[]>([1500, 1500, 1500]);
 
   const spinSlots = async () => {
     if (step === 'spinning') return;
@@ -75,20 +77,52 @@ export default function RandomOffer() {
 
     // Animation Loop
     // Slower spin for jackpot to create tension
-    const spinDuration = outcomeType === '3_match' ? 4000 : 2000;
     const intervalTime = 100;
     const startTime = Date.now();
+    
+    // Reel stop delays (in ms)
+    const newStopDelays = outcomeType === '3_match' 
+        ? [2000, 4000, 6000] // Jackpot: 2s, 4s, 6s (very slow reveal)
+        : [1500, 1500, 1500]; // Normal: all stop together/quickly
+    
+    setStopDelays(newStopDelays);
+    const spinStartTime = Date.now();
+    setStartTime(spinStartTime);
 
     const spinInterval = setInterval(() => {
-        setSlots([
-            SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-            SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
-            SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]
-        ]);
+        const elapsedTime = Date.now() - spinStartTime;
+        
+        // Update slots state
+        setSlots(prevSlots => {
+            const newSlots = [...prevSlots];
+            
+            // Reel 1 - Stops first
+            if (elapsedTime < newStopDelays[0]) {
+                newSlots[0] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+            } else {
+                newSlots[0] = targetSymbols[0];
+            }
+            
+            // Reel 2 - Stops second
+            if (elapsedTime < newStopDelays[1]) {
+                newSlots[1] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+            } else {
+                newSlots[1] = targetSymbols[1];
+            }
+            
+            // Reel 3 - Stops last
+            if (elapsedTime < newStopDelays[2]) {
+                newSlots[2] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+            } else {
+                newSlots[2] = targetSymbols[2];
+            }
+            
+            return newSlots;
+        });
 
-        if (Date.now() - startTime > spinDuration) {
+        // Check if all reels have stopped
+        if (elapsedTime > Math.max(...newStopDelays)) {
             clearInterval(spinInterval);
-            setSlots(targetSymbols);
             setOffer(offerDetails);
             setStep('revealed');
             
@@ -135,12 +169,14 @@ export default function RandomOffer() {
         <div className={`relative z-10 w-full max-w-sm mb-8 transition-all duration-[3000ms] ease-out ${step === 'spinning' && (Math.random() < 0.2) ? 'scale-110 sm:scale-125' : 'scale-100'}`}>
             <div className="flex justify-center gap-2 sm:gap-4 p-4 bg-gray-100 dark:bg-gray-900 rounded-xl border-4 border-gray-300 dark:border-gray-700 shadow-inner">
                 {slots.map((Symbol, index) => (
-                    <div key={index} className="w-20 h-24 sm:w-24 sm:h-32 bg-white dark:bg-black rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden relative">
-                         {/* Blur effect while spinning */}
-                         {step === 'spinning' && (
+                    <div key={index} className={`w-20 h-24 sm:w-24 sm:h-32 bg-white dark:bg-black rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden relative transition-all duration-500 
+                        ${step === 'spinning' && index === 1 && Date.now() - startTime > stopDelays[0] ? 'scale-110 border-brand-500 z-20' : ''} 
+                        ${step === 'spinning' && index === 2 && Date.now() - startTime > stopDelays[1] ? 'scale-125 border-brand-500 shadow-brand-500/50 z-30' : ''}`}>
+                         {/* Blur effect while spinning - remove blur when reel stops */}
+                         {step === 'spinning' && (Date.now() - startTime < stopDelays[index]) && (
                              <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/50 to-white/0 dark:via-white/10 animate-pulse z-10" />
                          )}
-                        <Symbol.component className={`w-10 h-10 sm:w-12 sm:h-12 ${Symbol.color} transform transition-all duration-100 ${step === 'spinning' ? 'blur-sm scale-90' : 'scale-100'}`} />
+                        <Symbol.component className={`w-10 h-10 sm:w-12 sm:h-12 ${Symbol.color} transform transition-all duration-100 ${step === 'spinning' && (Date.now() - startTime < stopDelays[index]) ? 'blur-sm scale-90' : 'scale-100'}`} />
                     </div>
                 ))}
             </div>
