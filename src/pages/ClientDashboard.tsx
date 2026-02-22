@@ -35,6 +35,7 @@ export default function ClientDashboard() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'paid': return 'text-green-600 bg-green-100 dark:bg-green-900/30 dark:text-green-400';
+      case 'partial': return 'text-blue-600 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400';
       case 'overdue': return 'text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400';
       default: return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-400';
     }
@@ -43,6 +44,7 @@ export default function ClientDashboard() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'paid': return <CheckCircle className="w-4 h-4" />;
+      case 'partial': return <Clock className="w-4 h-4" />;
       case 'overdue': return <AlertCircle className="w-4 h-4" />;
       default: return <Clock className="w-4 h-4" />;
     }
@@ -99,13 +101,33 @@ export default function ClientDashboard() {
                       <DollarSign className="w-5 h-5 text-gray-400" />
                       {invoice.amount.toFixed(2)}
                     </div>
+                    {invoice.amount_paid > 0 && (
+                      <div className="text-sm text-green-600 dark:text-green-400 mt-1">
+                        Paid: ${invoice.amount_paid.toFixed(2)}
+                      </div>
+                    )}
+                    {(invoice.amount - (invoice.amount_paid || 0) > 0) && (
+                      <div className="text-sm text-red-500 font-medium mt-1">
+                        Outstanding: ${(invoice.amount - (invoice.amount_paid || 0)).toFixed(2)}
+                      </div>
+                    )}
                   </div>
 
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-3 mb-6">
                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                       <Calendar className="w-4 h-4 mr-2" />
                       Due: {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString() : 'No due date'}
                     </div>
+                    
+                    {invoice.status !== 'paid' && (
+                        <button
+                            onClick={() => alert("Payment integration coming soon! Please contact admin to pay.")}
+                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors text-sm font-medium shadow-sm"
+                        >
+                            <DollarSign className="w-4 h-4" />
+                            Pay Now
+                        </button>
+                    )}
                   </div>
 
                   {invoice.file_url && (

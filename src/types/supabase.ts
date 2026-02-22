@@ -16,7 +16,8 @@ export interface Database {
           user_id: string
           client_name: string
           amount: number
-          status: 'pending' | 'paid' | 'overdue'
+          amount_paid: number
+          status: 'pending' | 'paid' | 'overdue' | 'partial'
           due_date: string | null
           file_url: string | null
           file_path: string | null
@@ -38,7 +39,8 @@ export interface Database {
           user_id?: string
           client_name?: string
           amount?: number
-          status?: 'pending' | 'paid' | 'overdue'
+          amount_paid?: number
+          status?: 'pending' | 'paid' | 'overdue' | 'partial'
           due_date?: string | null
           file_url?: string | null
           file_path?: string | null

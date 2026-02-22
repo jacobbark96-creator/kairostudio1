@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -58,17 +58,42 @@ export default function AdminCRM() {
   };
 
   const markInvoiceAsPaid = async (id: string) => {
-    if (!confirm('Mark this invoice as paid?')) return;
+    if (!confirm('Mark this invoice as fully paid?')) return;
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const invoice = allInvoices.find(i => i.id === id);
+    if (!invoice) return;
+
     const { error } = await (supabase.from('invoices') as any)
-      .update({ status: 'paid' })
+      .update({ status: 'paid', amount_paid: invoice.amount })
       .eq('id', id);
 
     if (error) alert(error.message);
     else {
       fetchAllInvoices();
     }
+  };
+
+  const addPayment = async (id: string, currentPaid: number, totalAmount: number) => {
+    const paymentStr = prompt('Enter payment amount:');
+    if (!paymentStr) return;
+    
+    const payment = parseFloat(paymentStr);
+    if (isNaN(payment) || payment <= 0) {
+      alert('Invalid amount');
+      return;
+    }
+
+    const newPaid = (currentPaid || 0) + payment;
+    const newStatus = newPaid >= totalAmount ? 'paid' : 'partial';
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase.from('invoices') as any)
+      .update({ status: newStatus, amount_paid: newPaid })
+      .eq('id', id);
+
+    if (error) alert(error.message);
+    else fetchAllInvoices();
   };
 
   const fetchUsers = async () => {
@@ -398,22 +423,42 @@ export default function AdminCRM() {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
-                          ${invoice.amount.toFixed(2)}
+                          <div>${invoice.amount.toFixed(2)}</div>
+                          {(invoice.amount_paid > 0) && (
+                            <div className="text-xs text-green-600 dark:text-green-400">
+                              Paid: ${invoice.amount_paid.toFixed(2)}
+                            </div>
+                          )}
+                          {(invoice.amount - (invoice.amount_paid || 0) > 0) && (
+                             <div className="text-xs text-red-500">
+                               Left: ${(invoice.amount - (invoice.amount_paid || 0)).toFixed(2)}
+                             </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                            ${invoice.status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}`}>
+                            ${invoice.status === 'paid' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' : 
+                              invoice.status === 'partial' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' :
+                              'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'}`}>
                             {invoice.status}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           {invoice.status !== 'paid' && (
-                            <button
-                              onClick={() => markInvoiceAsPaid(invoice.id)}
-                              className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 flex items-center gap-1 ml-auto"
-                            >
-                              <CheckCircle className="w-4 h-4" /> Mark Paid
-                            </button>
+                            <div className="flex flex-col gap-2 items-end">
+                                <button
+                                onClick={() => addPayment(invoice.id, invoice.amount_paid || 0, invoice.amount)}
+                                className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1"
+                                >
+                                <DollarSign className="w-4 h-4" /> Add Payment
+                                </button>
+                                <button
+                                onClick={() => markInvoiceAsPaid(invoice.id)}
+                                className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 flex items-center gap-1"
+                                >
+                                <CheckCircle className="w-4 h-4" /> Full Pay
+                                </button>
+                            </div>
                           )}
                         </td>
                       </tr>
