@@ -51,7 +51,7 @@ export default function AboutPage() {
         </div>
 
         <div className="max-w-7xl mx-auto w-full relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50/50 dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 backdrop-blur-sm mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/20 sm:bg-brand-50/50 sm:dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 sm:backdrop-blur-sm mb-8 animate-fade-in">
             <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400 animate-pulse" />
             <span className="text-sm font-medium text-brand-900 dark:text-brand-100 tracking-wide uppercase">
               Who We Are
@@ -73,7 +73,7 @@ export default function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 sm:py-16 border-y border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm">
+      <section className="py-12 sm:py-16 border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-dark-bg sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
             {stats.map((stat, index) => (

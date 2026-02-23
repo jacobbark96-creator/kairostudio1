@@ -89,7 +89,7 @@ export default function ServicesPage() {
           </Link>
           
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50/50 dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 backdrop-blur-sm mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/20 sm:bg-brand-50/50 sm:dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 sm:backdrop-blur-sm mb-8 animate-fade-in">
               <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400 animate-pulse" />
               <span className="text-sm font-medium text-brand-900 dark:text-brand-100 tracking-wide uppercase">
                 Our Services
@@ -120,7 +120,7 @@ export default function ServicesPage() {
               </button>
               <a 
                 href="#services" 
-                className="w-full sm:w-auto px-8 py-4 bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 transition-all duration-300 flex items-center justify-center gap-3 text-lg font-medium hover:text-brand-600 dark:hover:text-brand-400"
+                className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-gray-800 sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 transition-all duration-300 flex items-center justify-center gap-3 text-lg font-medium hover:text-brand-600 dark:hover:text-brand-400"
               >
                 Explore Services
                 <ArrowDown className="w-5 h-5" />
@@ -301,7 +301,7 @@ export default function ServicesPage() {
             </button>
             <a 
               href="mailto:hello@kairostudio.com"
-              className="px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-white/10 backdrop-blur-sm text-white rounded-full border-2 border-white/20 hover:border-white/40 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
+              className="px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-white/5 dark:bg-white/5 sm:bg-white/10 sm:backdrop-blur-sm text-white rounded-full border-2 border-white/20 hover:border-white/40 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
             >
               Email Us Directly
             </a>

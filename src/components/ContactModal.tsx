@@ -105,7 +105,7 @@ export default function ContactModal() {
       aria-modal="true"
       aria-label="Contact form"
     >
-      <div className="fixed inset-0 bg-black/60 dark:bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/60 dark:bg-black/70 sm:backdrop-blur-sm" onClick={onClose} />
 
       <div className="relative max-w-3xl w-full mx-auto bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden my-auto max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
         <div className="p-4 sm:p-6 md:p-8">

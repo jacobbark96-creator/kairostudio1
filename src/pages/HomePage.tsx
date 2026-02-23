@@ -131,7 +131,7 @@ export default function HomePage() {
                 </Link>
                 <Link 
                   to="/services"
-                  className="w-full sm:w-auto px-8 py-4 border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-white/5 backdrop-blur-sm text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all duration-300 flex items-center justify-center gap-2 text-lg font-medium"
+                  className="w-full sm:w-auto px-8 py-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all duration-300 flex items-center justify-center gap-2 text-lg font-medium"
                 >
                   Our Services
                 </Link>

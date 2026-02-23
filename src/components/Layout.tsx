@@ -56,7 +56,7 @@ export default function Layout({ children }: LayoutProps) {
         }`}>
           <div className={`rounded-2xl transition-all duration-300 ${
             scrolled 
-              ? 'glass shadow-lg shadow-black/5 bg-white/80 dark:bg-dark-surface/80 px-4 py-2' 
+              ? 'glass shadow-lg shadow-black/5 bg-white dark:bg-dark-surface sm:bg-white/80 sm:dark:bg-dark-surface/80 px-4 py-2' 
               : 'bg-transparent px-0'
           }`}>
             <div className="flex items-center justify-between">
@@ -123,7 +123,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
           {/* Mobile Menu */}
-          <div className={`md:hidden fixed inset-0 z-40 bg-white/95 dark:bg-dark-bg/95 backdrop-blur-xl transition-transform duration-500 ease-in-out ${
+          <div className={`md:hidden fixed inset-0 z-40 bg-white dark:bg-dark-bg transition-transform duration-500 ease-in-out ${
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}>
             <div className="flex flex-col items-center justify-center h-full gap-8 p-8">
@@ -162,11 +162,7 @@ export default function Layout({ children }: LayoutProps) {
         onShowContact={() => openContactModal()}
       />
 
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={closeContactModal} 
-        lockedSubject={contactModalPreill}
-      />
+      <ContactModal />
     </div>
   );
 }

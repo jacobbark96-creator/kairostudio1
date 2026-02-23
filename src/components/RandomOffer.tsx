@@ -231,7 +231,7 @@ export default function RandomOffer() {
   };
 
   return (
-    <div className="w-full h-full min-h-[350px] sm:min-h-[400px] bg-white/80 dark:bg-black/80 backdrop-blur-none sm:backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-visible group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
+    <div className="w-full h-full min-h-[350px] sm:min-h-[400px] bg-white dark:bg-black sm:bg-white/80 sm:dark:bg-black/80 backdrop-blur-none sm:backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-visible group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
         
         {/* Racing Light Effect (Desktop Only) */}
         <div className="border-beam-container hidden sm:block">
