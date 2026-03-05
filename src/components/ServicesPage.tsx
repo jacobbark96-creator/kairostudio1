@@ -250,26 +250,29 @@ export default function ServicesPage() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className="group p-8 bg-white dark:bg-dark-card rounded-[2rem] border border-gray-100 dark:border-gray-800 hover:border-brand-200 dark:hover:border-brand-800 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden"
+                className="group p-8 bg-white dark:bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/20 dark:border-white/10 hover:border-brand-500/30 dark:hover:border-brand-500/30 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-50 to-transparent dark:from-brand-900/10 dark:to-transparent rounded-bl-[100px] transition-all duration-500 group-hover:scale-150" />
+                {/* Elegant Gradient Background on Hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
-                <div className="w-14 h-14 bg-brand-50 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <service.icon className="w-7 h-7 text-brand-600 dark:text-brand-400" />
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-brand-500/10 to-transparent rounded-bl-[100px] transition-all duration-500 group-hover:scale-125" />
+                
+                <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-white dark:from-white/10 dark:to-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg border border-white/50 dark:border-white/10 relative z-10">
+                  <service.icon className="w-8 h-8 text-gray-900 dark:text-white" />
                 </div>
                 
-                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white">
+                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10">
                   {service.title}
                 </h3>
                 
-                <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed relative z-10 font-light">
                   {service.description}
                 </p>
                 
-                <ul className="space-y-3">
+                <ul className="space-y-4 relative z-10 border-t border-gray-100 dark:border-white/5 pt-6">
                   {service.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-400" />
+                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300 group/item">
+                      <div className="w-1.5 h-1.5 rounded-full bg-brand-400 group-hover/item:scale-150 transition-transform duration-300" />
                       {feature}
                     </li>
                   ))}
