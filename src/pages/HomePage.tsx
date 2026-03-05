@@ -71,16 +71,19 @@ export default function HomePage() {
       icon: Palette,
       title: 'Brand Identity',
       description: 'Crafting memorable brands that resonate with your audience and stand the test of time.',
+      bgClass: 'bg-brand-500/5 dark:bg-brand-500/10',
     },
     {
       icon: Code,
       title: 'Web Development',
       description: 'Building fast, responsive websites with cutting-edge technologies and seamless experiences.',
+      bgClass: 'bg-blue-500/5 dark:bg-blue-500/10',
     },
     {
       icon: Zap,
       title: 'Digital Strategy',
       description: 'Strategic planning and execution to elevate your digital presence and drive growth.',
+      bgClass: 'bg-purple-500/5 dark:bg-purple-500/10',
     },
   ];
 
@@ -180,18 +183,19 @@ export default function HomePage() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className="group p-8 sm:p-10 glass-card rounded-[2rem] hover:-translate-y-2 relative overflow-hidden"
+                className={`group p-8 sm:p-10 rounded-[2rem] hover:-translate-y-2 relative overflow-hidden transition-all duration-300 ${service.bgClass} backdrop-blur-sm border border-white/10`}
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/5 rounded-bl-[100px] transition-all duration-500 group-hover:scale-150 group-hover:bg-brand-500/10" />
+                {/* Abstract Background Blob per card */}
+                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-white/20 to-transparent dark:from-white/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
                 
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-brand-50 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-brand-100 dark:border-white/10">
-                  <service.icon className="w-7 h-7 sm:w-8 sm:h-8 text-brand-600 dark:text-brand-400" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white dark:bg-white/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-white/20 dark:border-white/10 shadow-lg relative z-10">
+                  <service.icon className="w-7 h-7 sm:w-8 sm:h-8 text-gray-900 dark:text-white" />
                 </div>
                 
-                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10">
                   {service.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-base leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed relative z-10">
                   {service.description}
                 </p>
               </div>
