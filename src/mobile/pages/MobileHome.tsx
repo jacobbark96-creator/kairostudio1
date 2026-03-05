@@ -11,31 +11,40 @@ export default function MobileHome() {
   return (
     <div className="space-y-8 pb-20">
       {/* Mobile Hero */}
-      <section className="text-center space-y-4 pt-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider">
+      <section className="text-center space-y-6 pt-8 px-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-900/30 dark:to-purple-900/30 border border-brand-100 dark:border-brand-800/50 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider shadow-sm">
           <Sparkles className="w-3 h-3" />
-          Digital Agency
+          Creative Digital Studio
         </div>
-        <h1 className="text-4xl font-display font-bold text-gray-900 dark:text-white leading-tight">
-          We Build <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600">Digital Brands</span>
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm max-w-xs mx-auto">
-          Transform your vision into reality with Kairo Studio. Web, Brand, & Growth.
+        
+        <div className="relative">
+            {/* Abstract Background Shapes */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-400/20 rounded-full blur-3xl -z-10 animate-pulse" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl -z-10 animate-pulse animation-delay-2000" />
+            
+            <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.95] tracking-tight">
+              We Craft <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-600 to-pink-500 animate-gradient-x">Digital Magic</span>
+            </h1>
+        </div>
+
+        <p className="text-gray-600 dark:text-gray-300 text-base font-medium max-w-xs mx-auto leading-relaxed">
+          Turning bold ideas into stunning digital realities. Fast, fun, and future-proof.
         </p>
         
-        <div className="flex justify-center gap-3 pt-2">
+        <div className="flex flex-col gap-3 pt-4 px-4">
             <button 
                 onClick={() => openContactModal()}
-                className="px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full font-bold text-sm shadow-lg hover:scale-105 active:scale-95 transition-transform"
+                className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-brand-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
-                Start Project
+                <Zap className="w-5 h-5 fill-current" />
+                Start Your Project
             </button>
             <Link 
                 to="/portfolio"
-                className="px-6 py-3 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-full font-bold text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                className="w-full py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-2xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
-                View Work
+                Explore Our Work
             </Link>
         </div>
       </section>

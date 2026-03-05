@@ -4,30 +4,40 @@ import { Target, Heart, Zap, Award } from 'lucide-react';
 
 export default function MobileAbout() {
   return (
-    <div className="space-y-6 pb-20 pt-4 px-2">
-      <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">About Kairo</h1>
-      <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-        We are a team of creators, strategists, and developers transforming digital presence into powerful assets.
-      </p>
+    <div className="space-y-8 pb-24 pt-8 px-4">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">About Kairo</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-base font-medium">Digital craftsmen & strategic thinkers.</p>
+      </div>
+
+      <div className="bg-gradient-to-br from-gray-900 to-black dark:from-white dark:to-gray-200 text-white dark:text-black rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-40 h-40 bg-brand-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+        <h3 className="text-2xl font-bold mb-4 relative z-10">Our Mission</h3>
+        <p className="text-lg leading-relaxed font-light opacity-90 relative z-10">
+          To bridge the gap between stunning design and robust functionality, creating digital ecosystems that drive real growth.
+        </p>
+      </div>
       
       <div className="grid grid-cols-2 gap-4">
         {[
-          { label: '5+ Years', icon: Target },
-          { label: '50+ Projects', icon: Zap },
-          { label: '30+ Clients', icon: Heart },
-          { label: 'Award Winning', icon: Award },
+          { label: 'Years Experience', value: '5+', icon: Target },
+          { label: 'Projects Done', value: '50+', icon: Zap },
+          { label: 'Happy Clients', value: '30+', icon: Heart },
+          { label: 'Awards Won', value: '12', icon: Award },
         ].map((s, i) => (
-          <div key={i} className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center gap-2 shadow-sm">
-            <s.icon className="w-6 h-6 text-brand-600 dark:text-brand-400" />
-            <span className="font-bold text-sm text-gray-900 dark:text-white">{s.label}</span>
+          <div key={i} className="bg-white dark:bg-gray-800 p-5 rounded-3xl border border-gray-100 dark:border-gray-700 flex flex-col items-center justify-center text-center gap-2 shadow-sm hover:shadow-md transition-shadow">
+            <div className="w-10 h-10 bg-brand-50 dark:bg-brand-900/20 rounded-full flex items-center justify-center text-brand-600 dark:text-brand-400 mb-1">
+                <s.icon className="w-5 h-5" />
+            </div>
+            <span className="text-2xl font-black text-gray-900 dark:text-white">{s.value}</span>
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">{s.label}</span>
           </div>
         ))}
       </div>
 
-      <div className="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-3xl border border-brand-100 dark:border-brand-800">
-        <h3 className="text-xl font-bold text-brand-900 dark:text-brand-100 mb-2">Our Mission</h3>
-        <p className="text-sm text-brand-700 dark:text-brand-300">
-          To bridge the gap between stunning design and robust functionality, creating digital ecosystems that drive growth.
+      <div className="bg-brand-50 dark:bg-brand-900/10 p-6 rounded-3xl border border-brand-100 dark:border-brand-800/30 text-center">
+        <p className="text-brand-800 dark:text-brand-200 font-medium">
+          "We don't just build websites; we build businesses."
         </p>
       </div>
     </div>

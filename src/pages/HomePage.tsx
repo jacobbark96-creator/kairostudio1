@@ -91,11 +91,21 @@ export default function HomePage() {
         description="Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert." 
       />
       <section className="relative pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
+        {/* Night Sky Background */}
+        <div className="absolute inset-0 w-full h-full -z-20">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="w-full h-full object-cover opacity-90 dark:opacity-60"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-white dark:from-black/60 dark:via-black/40 dark:to-black" />
+        </div>
+
         {/* Background Blobs - Static on mobile, animated on desktop */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-30 sm:opacity-100">
-          <div className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob will-change-transform" />
-          <div className="absolute top-[20%] right-[-10%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob sm:animation-delay-2000 will-change-transform" />
-          <div className="absolute bottom-[-10%] left-[20%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-blue-400/20 dark:bg-blue-500/10 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob sm:animation-delay-4000 will-change-transform" />
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-30 sm:opacity-80 mix-blend-overlay">
+          <div className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-brand-400/40 dark:bg-brand-500/30 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob will-change-transform" />
+          <div className="absolute top-[20%] right-[-10%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-purple-400/40 dark:bg-purple-500/30 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob sm:animation-delay-2000 will-change-transform" />
+          <div className="absolute bottom-[-10%] left-[20%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-blue-400/40 dark:bg-blue-500/30 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob sm:animation-delay-4000 will-change-transform" />
         </div>
 
         <div className="max-w-7xl mx-auto w-full relative z-10">

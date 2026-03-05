@@ -15,38 +15,56 @@ export default function MobilePortfolio() {
   }, []);
 
   return (
-    <div className="space-y-6 pb-20 pt-4">
-      <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white px-2">Our Work</h1>
-      <div className="space-y-4 px-2">
+    <div className="space-y-8 pb-24 pt-8 px-4">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Our Work</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-base font-medium">Selected projects and case studies.</p>
+      </div>
+
+      <div className="space-y-6">
         {projects.map((p) => (
-          <div key={p.id} className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg border border-gray-100 dark:border-gray-700">
-            <div className="h-48 bg-gray-100 dark:bg-gray-700 relative">
+          <div key={p.id} className="group bg-white dark:bg-gray-800 rounded-[2rem] overflow-hidden shadow-lg shadow-black/5 border border-gray-100 dark:border-gray-700 transition-transform hover:scale-[1.02]">
+            <div className="h-56 bg-gray-100 dark:bg-gray-700 relative overflow-hidden">
               {p.image_url ? (
-                <img src={p.image_url} alt={p.title} className="w-full h-full object-cover" />
+                <img src={p.image_url} alt={p.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <FileText className="w-12 h-12" />
+                <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50 dark:bg-gray-800">
+                  <FileText className="w-12 h-12 opacity-50" />
                 </div>
               )}
               {p.featured && (
-                <span className="absolute top-4 right-4 bg-yellow-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-md">
-                  Featured
+                <span className="absolute top-4 right-4 bg-white/90 backdrop-blur-md text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                  ★ Featured
                 </span>
               )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60" />
             </div>
-            <div className="p-6">
-              <span className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider">{p.category}</span>
-              <h3 className="text-2xl font-bold mt-2 mb-2 text-gray-900 dark:text-white">{p.title}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{p.description}</p>
+            
+            <div className="p-6 relative">
+              <div className="absolute -top-6 right-6 w-12 h-12 bg-brand-600 text-white rounded-2xl flex items-center justify-center shadow-lg transform rotate-3 group-hover:rotate-12 transition-all">
+                <FileText className="w-6 h-6" />
+              </div>
+              
+              <span className="inline-block px-3 py-1 rounded-lg bg-brand-50 dark:bg-brand-900/20 text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-3">
+                {p.category}
+              </span>
+              
+              <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-2 leading-tight">{p.title}</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-6 line-clamp-3">{p.description}</p>
+              
               {p.link && (
-                <a href={p.link} target="_blank" rel="noopener noreferrer" className="block w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black text-center font-bold rounded-xl hover:opacity-90 transition-opacity">
+                <a href={p.link} target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 bg-gray-900 dark:bg-white text-white dark:text-black text-center font-bold rounded-xl hover:opacity-90 transition-opacity shadow-md">
                   View Project
                 </a>
               )}
             </div>
           </div>
         ))}
-        {projects.length === 0 && <p className="text-center text-gray-500 py-10">Loading projects...</p>}
+        {projects.length === 0 && (
+            <div className="text-center py-20 bg-gray-50 dark:bg-gray-800/50 rounded-3xl border border-dashed border-gray-300 dark:border-gray-700">
+                <p className="text-gray-500 font-medium">Loading amazing projects...</p>
+            </div>
+        )}
       </div>
     </div>
   );
