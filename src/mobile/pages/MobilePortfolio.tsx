@@ -15,7 +15,7 @@ export default function MobilePortfolio() {
   }, []);
 
   return (
-    <div className="space-y-8 pb-24 relative overflow-hidden">
+    <div className="space-y-8 pb-24 relative overflow-hidden z-0">
        {/* Night Sky Background */}
        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 

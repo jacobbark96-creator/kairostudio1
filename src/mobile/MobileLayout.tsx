@@ -22,7 +22,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-20">
+    <div className="min-h-screen pb-20">
       {/* Mobile Header */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
