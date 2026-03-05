@@ -96,9 +96,9 @@ export default function HomePage() {
         title="Digital Experiences That Inspire" 
         description="Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert." 
       />
-      <section className="relative pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
+      <section className="relative z-0 pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Night Sky Background */}
-        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+        <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
             <img 
                 src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
                 alt="Night Sky" 
