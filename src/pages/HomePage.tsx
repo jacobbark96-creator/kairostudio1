@@ -5,6 +5,7 @@ import RandomOffer from '../components/RandomOffer';
 import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
 import SEO from '../components/SEO';
+import FeaturedProjects from '../components/FeaturedProjects';
 
 import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
@@ -163,6 +164,23 @@ export default function HomePage() {
                 <RandomOffer />
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16 sm:mb-24">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold mb-6 text-gray-900 dark:text-white tracking-tight">
+              Selected Work
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 font-light">
+              See how we help brands grow through digital innovation.
+            </p>
+          </div>
+          
+          <div className="w-full">
+            <FeaturedProjects />
           </div>
         </div>
       </section>
