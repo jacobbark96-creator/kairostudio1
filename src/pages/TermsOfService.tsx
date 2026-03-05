@@ -9,7 +9,18 @@ export default function TermsOfService() {
         title="Terms of Service | Kairo Studio" 
         description="Terms and conditions for working with Kairo Studio, including deposits, refunds, and maintenance." 
       />
-      <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative z-10">
+        {/* Night Sky Background */}
+        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
         <h1 className="text-4xl sm:text-5xl font-display font-bold text-gray-900 dark:text-white mb-8">
           Terms of Service
         </h1>
