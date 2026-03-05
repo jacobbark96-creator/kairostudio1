@@ -44,6 +44,17 @@ export default function AboutPage() {
       
       {/* Hero Section */}
       <section className="relative pt-32 sm:pt-40 md:pt-48 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
+        {/* Night Sky Background */}
+        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
         {/* Background Blobs */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
