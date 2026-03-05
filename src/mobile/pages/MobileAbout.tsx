@@ -4,13 +4,24 @@ import { Target, Heart, Zap, Award } from 'lucide-react';
 
 export default function MobileAbout() {
   return (
-    <div className="space-y-8 pb-24 pt-8 px-4">
-      <div className="space-y-2">
+    <div className="space-y-8 pb-24 relative overflow-hidden">
+       {/* Night Sky Background */}
+       <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
+      <div className="space-y-2 pt-8 px-4 relative z-10">
         <h1 className="text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">About Kairo</h1>
         <p className="text-gray-600 dark:text-gray-400 text-base font-medium">Digital craftsmen & strategic thinkers.</p>
       </div>
 
-      <div className="bg-gradient-to-br from-gray-900 to-black dark:from-white dark:to-gray-200 text-white dark:text-black rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-gray-900 to-black dark:from-white dark:to-gray-200 text-white dark:text-black rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden mx-4 z-10">
         <div className="absolute top-0 right-0 w-40 h-40 bg-brand-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <h3 className="text-2xl font-bold mb-4 relative z-10">Our Mission</h3>
         <p className="text-lg leading-relaxed font-light opacity-90 relative z-10">
@@ -18,7 +29,7 @@ export default function MobileAbout() {
         </p>
       </div>
       
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 px-4 z-10 relative">
         {[
           { label: 'Years Experience', value: '5+', icon: Target },
           { label: 'Projects Done', value: '50+', icon: Zap },
@@ -35,7 +46,7 @@ export default function MobileAbout() {
         ))}
       </div>
 
-      <div className="bg-brand-50 dark:bg-brand-900/10 p-6 rounded-3xl border border-brand-100 dark:border-brand-800/30 text-center">
+      <div className="bg-brand-50 dark:bg-brand-900/10 p-6 rounded-3xl border border-brand-100 dark:border-brand-800/30 text-center mx-4 relative z-10">
         <p className="text-brand-800 dark:text-brand-200 font-medium">
           "We don't just build websites; we build businesses."
         </p>

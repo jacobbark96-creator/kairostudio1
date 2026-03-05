@@ -15,13 +15,24 @@ export default function MobilePortfolio() {
   }, []);
 
   return (
-    <div className="space-y-8 pb-24 pt-8 px-4">
-      <div className="space-y-2">
+    <div className="space-y-8 pb-24 relative overflow-hidden">
+       {/* Night Sky Background */}
+       <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
+      <div className="space-y-2 pt-8 px-4 relative z-10">
         <h1 className="text-4xl font-display font-black text-gray-900 dark:text-white tracking-tight">Our Work</h1>
         <p className="text-gray-600 dark:text-gray-400 text-base font-medium">Selected projects and case studies.</p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 px-4 z-10 relative">
         {projects.map((p) => (
           <div key={p.id} className="group bg-white dark:bg-gray-800 rounded-[2rem] overflow-hidden shadow-lg shadow-black/5 border border-gray-100 dark:border-gray-700 transition-transform hover:scale-[1.02]">
             <div className="h-56 bg-gray-100 dark:bg-gray-700 relative overflow-hidden">
