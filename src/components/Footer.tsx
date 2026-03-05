@@ -291,12 +291,12 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             © {new Date().getFullYear()} Kairo Studio. All rights reserved.
           </p>
           <div className="hidden sm:flex justify-center gap-5 mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-500">
-            <a href="#" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
+            <Link to="/privacy-policy" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
               Privacy Policy
-            </a>
-            <a href="#" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
+            </Link>
+            <Link to="/terms-of-service" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
               Terms of Service
-            </a>
+            </Link>
           </div>
         </div>
       </div>

@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import ClientDashboard from './pages/ClientDashboard';
 import AdminCRM from './pages/AdminCRM';
 import ProtectedRoute from './components/ProtectedRoute';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import { ThemeProvider } from './hooks/useTheme';
 import { AuthProvider } from './context/AuthContext';
 import { UIProvider } from './context/UIContext';
@@ -33,6 +35,8 @@ function AppContent() {
           <Route path="/services" element={<MobileServices />} />
           <Route path="/portfolio" element={<MobilePortfolio />} />
           <Route path="/about" element={<MobileAbout />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           
           {/* Shared Routes */}
           <Route path="/login" element={<LoginPage />} />
@@ -54,6 +58,8 @@ function AppContent() {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/login" element={<LoginPage />} />
         
         {/* Protected Routes */}
