@@ -135,9 +135,9 @@ export default function RandomOffer() {
       }
 
       if (isKairoLogo) {
-          return <KairoLogo className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce" />;
+          return <KairoLogo className="w-12 h-12 sm:w-14 sm:h-14 animate-bounce" />;
       } else {
-           return <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 animate-pulse" />;
+           return <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-500 animate-pulse" />;
       }
   };
 
@@ -158,13 +158,13 @@ export default function RandomOffer() {
                     {/* Card Back (Face Down) */}
                     <div className="absolute inset-0 w-full h-full bg-gray-900 dark:bg-white rounded-xl shadow-lg border-2 border-brand-500/50 flex items-center justify-center backface-hidden z-20">
                         <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 absolute inset-0" />
-                        <KairoLogo className="w-8 h-8 sm:w-10 sm:h-10 opacity-50 grayscale invert dark:invert-0" />
+                        <KairoLogo className="w-12 h-12 sm:w-14 sm:h-14 opacity-50 grayscale invert dark:invert-0" />
                     </div>
 
                     {/* Card Front (Face Up - Revealed) */}
                     <div className="absolute inset-0 w-full h-full bg-white dark:bg-gray-900 rounded-xl shadow-xl border-2 border-brand-500 flex items-center justify-center backface-hidden rotate-y-180 z-10 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-purple-500/10" />
-                        {outcome ? getCardContent(index) : <Sparkles className="w-6 h-6 text-gray-400" />}
+                        {outcome ? getCardContent(index) : <Sparkles className="w-8 h-8 text-gray-400" />}
                     </div>
                 </div>
             ))}
