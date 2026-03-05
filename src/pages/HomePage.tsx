@@ -72,18 +72,21 @@ export default function HomePage() {
       title: 'Brand Identity',
       description: 'Crafting memorable brands that resonate with your audience and stand the test of time.',
       bgClass: 'bg-brand-500/5 dark:bg-brand-500/10',
+      image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', // Pinkish abstract
     },
     {
       icon: Code,
       title: 'Web Development',
       description: 'Building fast, responsive websites with cutting-edge technologies and seamless experiences.',
       bgClass: 'bg-blue-500/5 dark:bg-blue-500/10',
+      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop', // Coding/Tech
     },
     {
       icon: Zap,
       title: 'Digital Strategy',
       description: 'Strategic planning and execution to elevate your digital presence and drive growth.',
       bgClass: 'bg-purple-500/5 dark:bg-purple-500/10',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop', // Strategy/Graph
     },
   ];
 
@@ -183,19 +186,30 @@ export default function HomePage() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`group p-8 sm:p-10 rounded-[2rem] hover:-translate-y-2 relative overflow-hidden transition-all duration-300 ${service.bgClass} backdrop-blur-sm border border-white/10`}
+                className={`group p-8 sm:p-10 rounded-[2rem] hover:-translate-y-2 relative overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl`}
               >
+                {/* Background Image with Overlay */}
+                <div className="absolute inset-0 w-full h-full -z-10 transition-transform duration-700 group-hover:scale-110">
+                    <img 
+                        src={service.image} 
+                        alt={service.title} 
+                        className="w-full h-full object-cover opacity-20 dark:opacity-30 group-hover:opacity-30 dark:group-hover:opacity-40 transition-opacity"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${service.bgClass.replace('/5', '/80').replace('/10', '/90')} mix-blend-multiply dark:mix-blend-multiply`} />
+                    <div className="absolute inset-0 bg-white/40 dark:bg-black/40" />
+                </div>
+
                 {/* Abstract Background Blob per card */}
-                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-white/20 to-transparent dark:from-white/5 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-white/30 to-transparent dark:from-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
                 
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white dark:bg-white/10 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-white/20 dark:border-white/10 shadow-lg relative z-10">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-white/40 dark:border-white/20 shadow-lg relative z-10">
                   <service.icon className="w-7 h-7 sm:w-8 sm:h-8 text-gray-900 dark:text-white" />
                 </div>
                 
-                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10">
+                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10 drop-shadow-sm">
                   {service.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed relative z-10">
+                <p className="text-gray-800 dark:text-gray-200 font-medium text-base leading-relaxed relative z-10 drop-shadow-sm">
                   {service.description}
                 </p>
               </div>
