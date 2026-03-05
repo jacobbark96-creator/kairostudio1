@@ -105,7 +105,11 @@ export default function HomePage() {
                 alt="Night Sky" 
                 className="absolute inset-0 w-full h-full object-cover opacity-90 dark:opacity-100 transition-opacity duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-white dark:from-transparent dark:via-transparent dark:to-transparent" />
+            {/* Dark Mode Gradient Overlay - Only visible in Dark Mode to ensure text contrast without hiding image */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-transparent dark:from-black/40 dark:via-transparent dark:to-black/60" />
+            
+            {/* Light Mode Gradient Overlay - White fade for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:opacity-0 transition-opacity duration-500" />
         </div>
 
         {/* Background Blobs - Static on mobile, animated on desktop */}
