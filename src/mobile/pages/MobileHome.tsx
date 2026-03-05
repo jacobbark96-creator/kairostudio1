@@ -9,26 +9,37 @@ export default function MobileHome() {
   const { openContactModal } = useUI();
 
   return (
-    <div className="space-y-8 pb-20">
+    <div className="space-y-8 pb-20 relative overflow-hidden">
+        {/* Night Sky Background */}
+        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
       {/* Mobile Hero */}
-      <section className="text-center space-y-6 pt-8 px-4">
+      <section className="text-center space-y-6 pt-8 px-4 relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-900/30 dark:to-purple-900/30 border border-brand-100 dark:border-brand-800/50 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider shadow-sm">
           <Sparkles className="w-3 h-3" />
           Creative Digital Studio
         </div>
         
         <div className="relative">
-            {/* Abstract Background Shapes */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-400/20 rounded-full blur-3xl -z-10 animate-pulse" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-400/20 rounded-full blur-3xl -z-10 animate-pulse animation-delay-2000" />
+            {/* Abstract Background Shapes - Kept for extra flair but reduced opacity */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-400/10 rounded-full blur-3xl -z-10 animate-pulse mix-blend-screen" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl -z-10 animate-pulse animation-delay-2000 mix-blend-screen" />
             
-            <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.95] tracking-tight">
+            <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.95] tracking-tight drop-shadow-sm">
               We Craft <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-600 to-pink-500 animate-gradient-x">Digital Magic</span>
             </h1>
         </div>
 
-        <p className="text-gray-600 dark:text-gray-300 text-base font-medium max-w-xs mx-auto leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-200 text-base font-medium max-w-xs mx-auto leading-relaxed drop-shadow-sm">
           Turning bold ideas into stunning digital realities. Fast, fun, and future-proof.
         </p>
         
@@ -50,7 +61,7 @@ export default function MobileHome() {
       </section>
 
       {/* Slot Machine - Prominent Feature */}
-      <section className="px-2">
+      <section className="px-2 relative z-10">
         <div className="bg-gradient-to-br from-brand-500/10 to-purple-500/10 rounded-[2rem] p-4 border border-brand-100 dark:border-brand-900/30">
             <div className="text-center mb-4">
                 <h3 className="font-bold text-lg text-gray-900 dark:text-white">Spin for a Discount</h3>
@@ -63,7 +74,7 @@ export default function MobileHome() {
       </section>
 
       {/* Quick Services */}
-      <section className="space-y-4">
+      <section className="space-y-4 relative z-10">
         <div className="flex justify-between items-end px-2">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Services</h2>
             <Link to="/services" className="text-xs text-brand-600 font-medium">View All</Link>
@@ -86,7 +97,7 @@ export default function MobileHome() {
       </section>
 
       {/* Recent Work Teaser */}
-      <section className="space-y-4 px-2">
+      <section className="space-y-4 px-2 relative z-10">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Work</h2>
         <div className="bg-gray-900 rounded-[2rem] p-6 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/20 rounded-full blur-2xl" />
