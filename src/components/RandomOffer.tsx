@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, X, Gift } from 'lucide-react';
+import { ArrowRight, Sparkles, Gift } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
@@ -18,8 +18,9 @@ export default function RandomOffer() {
   const [offer, setOffer] = useState<{ title: string; description: string; price: number } | null>(null);
   const [cards, setCards] = useState([0, 1, 2]); // Array representing 3 cards
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [outcome, setOutcome] = useState<'jackpot' | 'tier2' | 'tier1' | null>(null);
   
-  // Fetch available offers logic (simplified for card reveal)
+  // Fetch available offers logic
   const fetchOffer = async () => {
     // 1. Fetch probabilities
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +41,8 @@ export default function RandomOffer() {
     if (rand < probs.jackpot) outcomeType = 'jackpot';
     else if (rand < probs.jackpot + probs.tier2) outcomeType = 'tier2';
     else outcomeType = 'tier1';
+    
+    setOutcome(outcomeType);
 
     // 3. Fetch Offers from DB
     const { data: offersData } = await supabase.from('offers').select('*').eq('active', true);
@@ -109,6 +112,33 @@ export default function RandomOffer() {
     setIsFlipped(false);
     setFlippedCards([]);
     setOffer(null);
+    setOutcome(null);
+  };
+
+  // Helper to determine card content based on outcome
+  const getCardContent = (index: number) => {
+      // Logic:
+      // Jackpot = 3 Kairo Logos
+      // Tier 2 = 2 Kairo Logos
+      // Tier 1 = 1 Kairo Logo
+      
+      let isKairoLogo = false;
+      
+      if (outcome === 'jackpot') {
+          isKairoLogo = true;
+      } else if (outcome === 'tier2') {
+          // Show logos on card 0 and 2 (visual preference) or random
+          isKairoLogo = index !== 1; 
+      } else if (outcome === 'tier1') {
+          // Show logo on middle card only
+          isKairoLogo = index === 1;
+      }
+
+      if (isKairoLogo) {
+          return <KairoLogo className="w-8 h-8 sm:w-10 sm:h-10 animate-bounce" />;
+      } else {
+           return <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 animate-pulse" />;
+      }
   };
 
   return (
@@ -134,11 +164,7 @@ export default function RandomOffer() {
                     {/* Card Front (Face Up - Revealed) */}
                     <div className="absolute inset-0 w-full h-full bg-white dark:bg-gray-900 rounded-xl shadow-xl border-2 border-brand-500 flex items-center justify-center backface-hidden rotate-y-180 z-10 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-purple-500/10" />
-                        {index === 1 ? (
-                            <Gift className="w-8 h-8 sm:w-10 sm:h-10 text-brand-600 dark:text-brand-400 animate-bounce" />
-                        ) : (
-                            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 animate-pulse" />
-                        )}
+                        {outcome ? getCardContent(index) : <Sparkles className="w-6 h-6 text-gray-400" />}
                     </div>
                 </div>
             ))}
