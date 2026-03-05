@@ -105,10 +105,10 @@ export default function HomePage() {
                 className="absolute inset-0 w-full h-full object-cover"
             />
             {/* Dark Mode Overlay: Adds contrast but keeps image visible */}
-            <div className="absolute inset-0 bg-black/40 dark:bg-black/60 transition-colors duration-500" />
+            <div className="absolute inset-0 bg-black/40 dark:bg-black/40 transition-colors duration-500 pointer-events-none" />
             
             {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:opacity-0 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
         </div>
 
         {/* Background Blobs - Static on mobile, animated on desktop */}
