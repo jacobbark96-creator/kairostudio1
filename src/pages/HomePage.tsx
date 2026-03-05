@@ -168,7 +168,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden block md:hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16 sm:mb-24">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold mb-6 text-gray-900 dark:text-white tracking-tight">
