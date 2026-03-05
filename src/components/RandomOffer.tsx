@@ -1,60 +1,27 @@
+
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Heart, Diamond, Club, Spade } from 'lucide-react';
+import { ArrowRight, Sparkles, X, Gift } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
 
-// Kairo Logo Component for the Slot Machine
+// Kairo Logo Component
 import logoNb from '../Logo/kairologo-nbg.png';
 
 const KairoLogo = ({ className }: { className?: string }) => (
   <img src={logoNb} alt="Kairo Logo" className={className} />
 );
 
-const SYMBOLS = [
-  { id: 'kairo', component: KairoLogo, color: 'text-brand-500' },
-  { id: 'heart', component: Heart, color: 'text-red-500' },
-  { id: 'diamond', component: Diamond, color: 'text-blue-500' },
-  { id: 'club', component: Club, color: 'text-green-500' },
-  { id: 'spade', component: Spade, color: 'text-purple-500' },
-];
-
 export default function RandomOffer() {
   const { openContactModal, triggerJackpot } = useUI();
-  const [step, setStep] = useState<'initial' | 'spinning' | 'revealed'>('initial');
+  const [isFlipped, setIsFlipped] = useState(false);
   const [offer, setOffer] = useState<{ title: string; description: string; price: number } | null>(null);
-  const [slots, setSlots] = useState([SYMBOLS[1], SYMBOLS[2], SYMBOLS[3]]);
-  const [isLeverPulled, setIsLeverPulled] = useState(false);
-  const [startTime, setStartTime] = useState<number>(0);
-  const [stopDelays, setStopDelays] = useState<number[]>([1500, 1500, 1500]);
+  const [cards, setCards] = useState([0, 1, 2]); // Array representing 3 cards
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
   
-  // Spin Limiter Logic
-  const MAX_SPINS = 3;
-  const [spinsRemaining, setSpinsRemaining] = useState(() => {
-    const saved = localStorage.getItem('kairo_spins_remaining');
-    return saved ? parseInt(saved, 10) : MAX_SPINS;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('kairo_spins_remaining', spinsRemaining.toString());
-  }, [spinsRemaining]);
-
-  const spinSlots = async () => {
-    if (step === 'spinning' || spinsRemaining <= 0) return;
-    
-    setSpinsRemaining(prev => prev - 1);
-    setStep('spinning');
-    setIsLeverPulled(true);
-    
-    // Animate lever return
-    setTimeout(() => setIsLeverPulled(false), 500);
-
-    // Determine outcome based on logic
-    // 1 Kairo = £800 offer
-    // 2 Kairos = £500 offer
-    // 3 Kairos = £200 offer
-    
-    // Fetch probabilities from site_content if available, otherwise default
+  // Fetch available offers logic (simplified for card reveal)
+  const fetchOffer = async () => {
+    // 1. Fetch probabilities
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data } = await (supabase.from('site_content').select('value').eq('key', 'offer_probabilities').single() as any);
     let probs = { jackpot: 20, tier2: 30, tier1: 50 };
@@ -66,157 +33,65 @@ export default function RandomOffer() {
         }
     }
 
-    // Randomly decide outcome first (weighted)
+    // 2. Determine Outcome
     const rand = Math.random() * 100;
-    let outcomeType: '3_match' | '2_match' | '1_match' | 'no_match' = 'no_match';
+    let outcomeType: 'jackpot' | 'tier2' | 'tier1' = 'tier1';
     
-    if (rand < probs.jackpot) outcomeType = '3_match';
-    else if (rand < probs.jackpot + probs.tier2) outcomeType = '2_match';
-    else outcomeType = '1_match';
+    if (rand < probs.jackpot) outcomeType = 'jackpot';
+    else if (rand < probs.jackpot + probs.tier2) outcomeType = 'tier2';
+    else outcomeType = 'tier1';
+
+    // 3. Fetch Offers from DB
+    const { data: offersData } = await supabase.from('offers').select('*').eq('active', true);
     
-    // Set target symbols based on outcome
-    let targetSymbols = [];
-    if (outcomeType === '3_match') {
-        targetSymbols = [SYMBOLS[0], SYMBOLS[0], SYMBOLS[0]];
-    } else if (outcomeType === '2_match') {
-        targetSymbols = [SYMBOLS[0], SYMBOLS[0], SYMBOLS[Math.floor(Math.random() * 4) + 1]];
-        // Shuffle to randomize position of non-match
-        targetSymbols.sort(() => Math.random() - 0.5);
-    } else {
-        // 1 match
-        targetSymbols = [SYMBOLS[0], SYMBOLS[Math.floor(Math.random() * 4) + 1], SYMBOLS[Math.floor(Math.random() * 4) + 1]];
-        targetSymbols.sort(() => Math.random() - 0.5);
-    }
-
-    // Fetch available offers from DB
-    const { data: offersData, error: offersError } = await supabase
-        .from('offers')
-        .select('*')
-        .eq('active', true);
-
-    if (offersError || !offersData || offersData.length === 0) {
-        // Fallback if no offers found
-        console.error('No offers found or error fetching:', offersError);
-        setOffer({ title: "No Offer Available", description: "Please check back later!", price: 0 });
-        setStep('revealed');
+    if (!offersData || offersData.length === 0) {
+        setOffer({ title: "Special Discount", description: "Get 10% off your first project!", price: 0 });
         return;
     }
 
-    // Determine Offer Text/Price based on outcome
-    let offerDetails = { title: "Error", description: "Something went wrong", price: 0 };
-    
-    // Helper to find offer by tier
-    // Tier logic:
-    // Jackpot (3 match) -> 'jackpot' tier
-    // Tier 2 (2 match) -> 'tier2' tier
-    // Tier 1 (1 match) -> 'tier1' tier
-    
-    let selectedOffer = null;
+    // 4. Select Offer based on outcome
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const offers = offersData as any[];
+    let selectedOffer = null;
 
-    if (outcomeType === '3_match') {
-        const tierOffers = offers.filter(o => o.tier === 'jackpot');
-        if (tierOffers.length > 0) {
-            selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
-        }
-    } else if (outcomeType === '2_match') {
-        const tierOffers = offers.filter(o => o.tier === 'tier2');
-        if (tierOffers.length > 0) {
-            selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
-        }
+    const tierOffers = offers.filter(o => o.tier === outcomeType);
+    if (tierOffers.length > 0) {
+        selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
     } else {
-        // 1 match
-        const tierOffers = offers.filter(o => o.tier === 'tier1');
-        if (tierOffers.length > 0) {
-            selectedOffer = tierOffers[Math.floor(Math.random() * tierOffers.length)];
-        }
-    }
-
-    // Fallback if no specific tier offers found, use price sorting as backup
-    if (!selectedOffer && offers.length > 0) {
-        const sortedOffers = [...offers].sort((a, b) => (b.price || 0) - (a.price || 0));
-        if (outcomeType === '3_match') selectedOffer = sortedOffers[0];
-        else if (outcomeType === '2_match') selectedOffer = sortedOffers[Math.floor(sortedOffers.length / 2)];
-        else selectedOffer = sortedOffers[sortedOffers.length - 1];
+        // Fallback
+        selectedOffer = offers[Math.floor(Math.random() * offers.length)];
     }
 
     if (selectedOffer) {
-        offerDetails = { 
-            title: selectedOffer.title, 
-            description: selectedOffer.description || "", 
-            price: selectedOffer.price || 0 
-        };
-    }
-
-    // Animation Loop
-    // Slower spin for jackpot to create tension
-    const intervalTime = 100;
-    const startTime = Date.now();
-    
-    // Reel stop delays (in ms)
-    // Check if it's a "near miss" (2 match) or jackpot (3 match) for slow reveal
-    const isSlowReveal = outcomeType === '3_match' || outcomeType === '2_match';
-    
-    const newStopDelays = isSlowReveal
-        ? [2000, 4000, 6000] // Slow reveal for JP and 2-match
-        : [1500, 1500, 1500]; // Normal for 1-match or no match
-    
-    setStopDelays(newStopDelays);
-    const spinStartTime = Date.now();
-    setStartTime(spinStartTime);
-
-    const spinInterval = setInterval(() => {
-        const elapsedTime = Date.now() - spinStartTime;
-        
-        // Update slots state
-        setSlots(prevSlots => {
-            const newSlots = [...prevSlots];
-            
-            // Reel 1 - Stops first
-            if (elapsedTime < newStopDelays[0]) {
-                newSlots[0] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-            } else {
-                newSlots[0] = targetSymbols[0];
-            }
-            
-            // Reel 2 - Stops second
-            if (elapsedTime < newStopDelays[1]) {
-                newSlots[1] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-            } else {
-                newSlots[1] = targetSymbols[1];
-            }
-            
-            // Reel 3 - Stops last
-            if (elapsedTime < newStopDelays[2]) {
-                newSlots[2] = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-            } else {
-                newSlots[2] = targetSymbols[2];
-            }
-            
-            return newSlots;
+        setOffer({
+            title: selectedOffer.title,
+            description: selectedOffer.description || "",
+            price: selectedOffer.price || 0
         });
-
-        // Check if all reels have stopped
-        if (elapsedTime > Math.max(...newStopDelays)) {
-            clearInterval(spinInterval);
-            setOffer(offerDetails);
-            setStep('revealed');
-            
-            // Celebration effects
-            if (outcomeType === '3_match') {
-                triggerConfetti(true);
-                triggerJackpot(true);
-            }
-            else {
-                triggerConfetti(false);
-            }
+        
+        if (outcomeType === 'jackpot') {
+            triggerJackpot(true);
         }
-    }, intervalTime);
+    }
   };
 
-  const triggerConfetti = (isJackpot: boolean) => {
-    const duration = isJackpot ? 3000 : 1500;
+  const handleReveal = async () => {
+    if (isFlipped) return;
+    
+    setIsFlipped(true);
+    await fetchOffer();
+    
+    // Animate cards flipping one by one
+    setTimeout(() => setFlippedCards(prev => [...prev, 0]), 100);
+    setTimeout(() => setFlippedCards(prev => [...prev, 1]), 600);
+    setTimeout(() => {
+        setFlippedCards(prev => [...prev, 2]);
+        triggerConfetti();
+    }, 1100);
+  };
+
+  const triggerConfetti = () => {
+    const duration = 2000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
     const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -230,123 +105,97 @@ export default function RandomOffer() {
     }, 250);
   };
 
+  const resetCards = () => {
+    setIsFlipped(false);
+    setFlippedCards([]);
+    setOffer(null);
+  };
+
   return (
-    <div className="w-full h-full min-h-[350px] sm:min-h-[400px] bg-white dark:bg-black sm:bg-white/80 sm:dark:bg-black/80 backdrop-blur-none sm:backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-4 sm:p-8 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-visible group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30">
+    <div className="w-full h-full min-h-[350px] sm:min-h-[400px] bg-white dark:bg-black sm:bg-white/80 sm:dark:bg-black/80 backdrop-blur-none sm:backdrop-blur-xl rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-visible group border-2 border-black dark:border-white transition-all hover:border-brand-500/30 dark:hover:border-brand-500/30 perspective-1000">
         
-        {/* Racing Light Effect (Desktop Only) */}
-        <div className="border-beam-container hidden sm:block">
-            <div className="border-beam-light" />
-        </div>
-
-        {/* Decorative elements (Desktop Only) */}
-        <div className="hidden sm:block absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 animate-pulse" />
-        <div className="hidden sm:block absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000" />
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-400/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2 animate-pulse pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-400/10 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2 animate-pulse animation-delay-2000 pointer-events-none" />
         
-        {/* Slot Machine Display */}
-        <div className={`relative z-10 w-full max-w-sm mb-6 transition-all duration-[3000ms] ease-out ${step === 'spinning' && (Math.random() < 0.2) ? 'scale-110 sm:scale-125' : 'scale-100'}`}>
-            <div className="flex justify-center gap-1 sm:gap-3 p-3 bg-gray-100 dark:bg-gray-900 rounded-xl border-4 border-gray-300 dark:border-gray-700 shadow-inner">
-                {slots.map((Symbol, index) => (
-                    <div key={index} className={`w-16 h-20 sm:w-20 sm:h-28 bg-white dark:bg-black rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden relative transition-all duration-500 
-                        ${step === 'spinning' && index === 1 && Date.now() - startTime > stopDelays[0] ? 'scale-110 border-brand-500 z-20' : ''} 
-                        ${step === 'spinning' && index === 2 && Date.now() - startTime > stopDelays[1] ? 'scale-125 border-brand-500 shadow-brand-500/50 z-30' : ''}`}>
-                         {/* Blur effect while spinning - remove blur when reel stops */}
-                         {step === 'spinning' && (Date.now() - startTime < stopDelays[index]) && (
-                             <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-white/50 to-white/0 dark:via-white/10 animate-pulse z-10" />
-                         )}
-                        <Symbol.component className={`w-8 h-8 sm:w-10 sm:h-10 ${Symbol.color} transform transition-all duration-100 ${step === 'spinning' && (Date.now() - startTime < stopDelays[index]) ? 'blur-sm scale-90' : 'scale-100'}`} />
-                    </div>
-                ))}
-            </div>
-            
-            {/* Slot Machine Lever (Visual Representation) */}
-            <div className="absolute top-1/2 -right-10 sm:-right-14 -translate-y-1/2 w-8 h-24 sm:w-10 sm:h-32 pointer-events-none hidden sm:block">
-                 {/* Base */}
-                 <div className="absolute bottom-0 left-0 w-full h-10 bg-gray-300 dark:bg-gray-700 rounded-lg border-2 border-gray-400 dark:border-gray-600"></div>
-                 {/* Stick */}
-                 <div className={`absolute left-1/2 -translate-x-1/2 w-2 bg-gray-400 dark:bg-gray-500 transition-all duration-300 origin-bottom ${isLeverPulled ? 'h-8 rotate-[180deg] top-[60%]' : 'h-20 top-0'}`}></div>
-                 {/* Knob */}
-                 <div className={`absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-red-600 shadow-lg border-2 border-red-700 transition-all duration-300 ${isLeverPulled ? 'top-[90%]' : '-top-3'}`}></div>
-            </div>
-        </div>
-
-        {step === 'initial' || step === 'spinning' ? (
-            <div className="relative z-10 space-y-4 sm:space-y-6 animate-in fade-in zoom-in duration-500">
-                <div className="space-y-2">
-                    <h3 className="text-xl sm:text-2xl font-display font-bold text-black dark:text-white">
-                        Spin to Win
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 max-w-xs mx-auto">
-                        Match Kairo logos to unlock exclusive website offers.
-                    </p>
-                    
-                    {/* Spins Remaining Indicator */}
-                    <div className="flex items-center justify-center gap-1 mt-2">
-                        {[...Array(MAX_SPINS)].map((_, i) => (
-                            <div 
-                                key={i} 
-                                className={`w-2 h-2 rounded-full transition-colors duration-300 ${i < spinsRemaining ? 'bg-brand-500' : 'bg-gray-300 dark:bg-gray-700'}`}
-                            />
-                        ))}
-                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                            {spinsRemaining} spins left
-                        </span>
-                    </div>
-                </div>
-
-                <button
-                    onClick={spinSlots}
-                    disabled={step === 'spinning' || spinsRemaining === 0}
-                    className={`group relative inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-sm sm:text-base hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-brand-500/20 overflow-hidden ${step === 'spinning' || spinsRemaining === 0 ? 'cursor-not-allowed opacity-80' : ''}`}
+        {/* Card Container */}
+        <div className="flex justify-center gap-4 mb-8 perspective-1000">
+            {cards.map((index) => (
+                <div 
+                    key={index}
+                    className={`relative w-20 h-28 sm:w-24 sm:h-36 transition-all duration-700 transform-style-3d ${flippedCards.includes(index) ? 'rotate-y-180' : ''}`}
                 >
-                    {step === 'spinning' ? (
-                        <>
-                            <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                            <span>Spinning...</span>
-                        </>
-                    ) : spinsRemaining === 0 ? (
-                        <span>No Spins Left</span>
-                    ) : (
-                        <>
-                            <span>PULL THE LEVER</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </>
-                    )}
-                </button>
-            </div>
-        ) : (
-            <div className="relative z-10 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-md">
-                <div className="relative p-4 bg-brand-50 dark:bg-brand-900/20 rounded-xl border border-brand-100 dark:border-brand-800">
-                    <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 dark:text-white mb-1 leading-tight">
-                        {offer?.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {offer?.description}
-                    </p>
+                    {/* Card Back (Face Down) */}
+                    <div className="absolute inset-0 w-full h-full bg-gray-900 dark:bg-white rounded-xl shadow-lg border-2 border-brand-500/50 flex items-center justify-center backface-hidden z-20">
+                        <div className="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 absolute inset-0" />
+                        <KairoLogo className="w-8 h-8 sm:w-10 sm:h-10 opacity-50 grayscale invert dark:invert-0" />
+                    </div>
+
+                    {/* Card Front (Face Up - Revealed) */}
+                    <div className="absolute inset-0 w-full h-full bg-white dark:bg-gray-900 rounded-xl shadow-xl border-2 border-brand-500 flex items-center justify-center backface-hidden rotate-y-180 z-10 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-brand-500/10 to-purple-500/10" />
+                        {index === 1 ? (
+                            <Gift className="w-8 h-8 sm:w-10 sm:h-10 text-brand-600 dark:text-brand-400 animate-bounce" />
+                        ) : (
+                            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-500 animate-pulse" />
+                        )}
+                    </div>
                 </div>
-                
-                <div className="flex flex-col gap-2">
+            ))}
+        </div>
+
+        {/* Content Area */}
+        <div className="relative z-10 w-full max-w-sm min-h-[120px] flex flex-col items-center justify-center">
+            {!isFlipped ? (
+                <div className="space-y-4 animate-in fade-in zoom-in duration-500">
+                    <div>
+                        <h3 className="text-2xl sm:text-3xl font-display font-bold text-black dark:text-white mb-2">
+                            Pick a Card
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                            Reveal your exclusive project offer.
+                        </p>
+                    </div>
+                    
                     <button
-                        onClick={() => {
-                            const finalPrice = offer?.price !== undefined ? offer.price : 0;
-                            openContactModal(offer?.title, finalPrice);
-                        }}
-                        className="w-full py-3 bg-gradient-to-r from-brand-600 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2 text-base"
+                        onClick={handleReveal}
+                        className="group relative inline-flex items-center gap-2 px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-brand-500/20"
                     >
-                        Claim This Offer
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
-                    <button
-                        onClick={() => {
-                            setStep('initial');
-                            setSlots([SYMBOLS[1], SYMBOLS[2], SYMBOLS[3]]);
-                        }}
-                        className="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                    >
-                        Spin Again
+                        <span>Reveal Offer</span>
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                 </div>
-            </div>
-        )}
+            ) : (
+                <div className={`space-y-4 w-full transition-opacity duration-500 ${flippedCards.length === 3 ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className="p-4 bg-brand-50 dark:bg-brand-900/20 rounded-2xl border border-brand-100 dark:border-brand-800/50">
+                        <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 dark:text-white mb-1">
+                            {offer?.title || "Loading..."}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                            {offer?.description}
+                        </p>
+                    </div>
+                    
+                    <div className="flex flex-col gap-2 w-full">
+                        <button
+                            onClick={() => {
+                                const finalPrice = offer?.price !== undefined ? offer.price : 0;
+                                openContactModal(offer?.title, finalPrice);
+                            }}
+                            className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-black font-bold rounded-xl shadow-lg hover:scale-[1.02] transition-transform flex items-center justify-center gap-2"
+                        >
+                            Claim Offer
+                        </button>
+                        <button
+                            onClick={resetCards}
+                            className="text-xs font-medium text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+                        >
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
     </div>
   );
 }
