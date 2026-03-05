@@ -98,13 +98,20 @@ export default function HomePage() {
       />
       <section className="relative pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Night Sky Background */}
-        <div className="absolute inset-0 w-full h-full -z-20">
+        <div className="absolute inset-0 w-full h-full -z-20 bg-white dark:bg-black transition-colors duration-500">
+            {/* Base Night Sky - Visible in Light Mode (faded) and Dark Mode */}
             <img 
                 src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
                 alt="Night Sky" 
-                className="w-full h-full object-cover opacity-90 dark:opacity-60"
+                className="absolute inset-0 w-full h-full object-cover opacity-10 dark:opacity-40 transition-opacity duration-500"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-white dark:from-black/60 dark:via-black/40 dark:to-black" />
+             {/* Galaxy Image - Only visible in Dark Mode */}
+             <img 
+                src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2048&auto=format&fit=crop" 
+                alt="Galaxy" 
+                className="absolute inset-0 w-full h-full object-cover opacity-0 dark:opacity-60 mix-blend-screen transition-opacity duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:from-black/70 dark:via-black/50 dark:to-black" />
         </div>
 
         {/* Background Blobs - Static on mobile, animated on desktop */}
