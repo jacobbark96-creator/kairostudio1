@@ -104,46 +104,10 @@ export default function ServicesPage() {
               </span>
             </h1>
             
-            <div className="prose dark:prose-invert max-w-3xl mx-auto mb-12 text-left bg-white/50 dark:bg-black/50 backdrop-blur-sm p-6 sm:p-8 rounded-2xl border border-gray-100 dark:border-gray-800">
-                <p className="text-lg text-gray-700 dark:text-gray-300 font-medium italic mb-4">
-                    "We're honest. So here's the story..."
-                </p>
-                <div className="text-base text-gray-600 dark:text-gray-400 space-y-4 leading-relaxed font-light">
-                    <p>
-                        We wanted to build a website. A business. We contacted a company that was highly rated. 
-                        We were told they were "the best" - and we were quoted over <strong className="text-brand-600 dark:text-brand-400">£70,000</strong> for just the first "stages".
-                    </p>
-                    <p>
-                        That wasn't the end. We decided we couldn't afford that, so we went elsewhere. 
-                        The next quote? <strong className="text-brand-600 dark:text-brand-400">£600,000</strong>.
-                    </p>
-                    <p>
-                        So the search continued. Stress mounted. Until the famous words arrived:
-                        <br />
-                        <span className="font-bold text-gray-900 dark:text-white block mt-2 pl-4 border-l-2 border-brand-500">
-                            "F@!K IT! Let's do it ourselves. I'll take online courses at the university. It'll take longer, but let's try."
-                        </span>
-                    </p>
-                    <p>
-                        And that's exactly what we did. Our business is going steady, but we're still disappointed to see that our negative experience is still alive and well in the industry today.
-                    </p>
-                    <p className="font-medium text-gray-900 dark:text-white text-lg">
-                        We're gonna kill that attitude.
-                    </p>
-                    <p>
-                        No more jargon. No more confusion. No more hidden fees. No more pressure. No more stress.
-                    </p>
-                    <p>
-                        We do everything we can, including funding our time from our other ventures, to make sure that we destroy our competition in price, service, and quality.
-                    </p>
-                    <p>
-                        We work remotely, not only because we want to work on the beach, but because it allows at least one of our team to be available 24 hours a day. Meaning no more stress calling and emailing your web manager with no response.
-                    </p>
-                    <p className="font-display font-bold text-xl text-brand-600 dark:text-brand-400 pt-2">
-                        Kairo is here for you, because it was created for us.
-                    </p>
-                </div>
-            </div>
+            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
+              Whether you're a startup with a 3-figure monthly budget or launching a 6-figure project, 
+              we have the expertise and flexibility to bring your vision to life.
+            </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <button 
