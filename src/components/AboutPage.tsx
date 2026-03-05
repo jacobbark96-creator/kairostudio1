@@ -104,55 +104,67 @@ export default function AboutPage() {
       {/* Story Section */}
       <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="relative">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+            <div className="relative sticky top-32">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-[2rem] blur-2xl -z-10" />
               <img 
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800&h=600" 
                 alt="Our Team" 
-                className="rounded-[2rem] shadow-2xl w-full transform hover:scale-[1.02] transition-transform duration-500"
+                className="rounded-[2rem] shadow-2xl w-full transform hover:scale-[1.02] transition-transform duration-500 mb-8"
               />
+              <div className="bg-brand-50 dark:bg-brand-900/10 p-8 rounded-3xl border border-brand-100 dark:border-brand-800/30">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Why Kairo?</h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                      Because we've been in your shoes. We know the frustration of overpriced, under-delivered services. We built Kairo to be the antidote.
+                  </p>
+              </div>
             </div>
             
             <div>
-              <h2 className="text-3xl sm:text-4xl font-display font-bold mb-6 text-gray-900 dark:text-white">
+              <h2 className="text-3xl sm:text-4xl font-display font-bold mb-8 text-gray-900 dark:text-white">
                 Driven by Passion, <br/>
                 <span className="text-brand-600 dark:text-brand-400">Defined by Quality</span>
               </h2>
-              <div className="space-y-6 text-lg text-gray-600 dark:text-gray-300 font-light leading-relaxed">
-                <p>
-                  Founded with a vision to bridge the gap between stunning design and robust functionality, 
-                  Kairo Studio has grown into a full-service digital agency. We believe that every brand 
-                  has a unique story, and our mission is to tell that story through immersive digital experiences.
-                </p>
-                <p>
-                  We don't just build websites; we create digital ecosystems that engage users, drive conversions, 
-                  and help businesses scale. Our approach combines creative innovation with data-driven strategy 
-                  to deliver results that matter.
-                </p>
-              </div>
               
-              <div className="mt-10 pt-10 border-t border-gray-100 dark:border-gray-800">
-                <div className="flex flex-col sm:flex-row gap-6">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center">
-                      <Code className="w-6 h-6 text-brand-600 dark:text-brand-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">Clean Code</h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Scalable & Maintainable</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                      <Users className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 dark:text-white">User Centric</h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Experience First</p>
-                    </div>
-                  </div>
-                </div>
+              <div className="prose dark:prose-invert max-w-none text-left bg-gray-50 dark:bg-white/5 p-8 rounded-3xl border border-gray-100 dark:border-gray-800">
+                 <p className="text-lg text-gray-700 dark:text-gray-300 font-medium italic mb-6">
+                     "We're honest. So here's the story..."
+                 </p>
+                 <div className="text-base text-gray-600 dark:text-gray-400 space-y-5 leading-relaxed font-light">
+                     <p>
+                         We wanted to build a website. A business. We contacted a company that was highly rated. 
+                         We were told they were "the best" - and we were quoted over <strong className="text-brand-600 dark:text-brand-400">£70,000</strong> for just the first "stages".
+                     </p>
+                     <p>
+                         That wasn't the end. We decided we couldn't afford that, so we went elsewhere. 
+                         The next quote? <strong className="text-brand-600 dark:text-brand-400">£600,000</strong>.
+                     </p>
+                     <p>
+                         So the search continued. Stress mounted. Until the famous words arrived:
+                         <br />
+                         <span className="font-bold text-gray-900 dark:text-white block mt-4 pl-4 border-l-4 border-brand-500 bg-white dark:bg-black/20 p-4 rounded-r-xl italic">
+                             "F@!K IT! Let's do it ourselves. I'll take online courses at the university. It'll take longer, but let's try."
+                         </span>
+                     </p>
+                     <p>
+                         And that's exactly what we did. Our business is going steady, but we're still disappointed to see that our negative experience is still alive and well in the industry today.
+                     </p>
+                     <p className="font-bold text-gray-900 dark:text-white text-lg">
+                         We're gonna kill that attitude.
+                     </p>
+                     <p>
+                         No more jargon. No more confusion. No more hidden fees. No more pressure. No more stress.
+                     </p>
+                     <p>
+                         We do everything we can, including funding our time from our other ventures, to make sure that we destroy our competition in price, service, and quality.
+                     </p>
+                     <p>
+                         We work remotely, not only because we want to work on the beach, but because it allows at least one of our team to be available 24 hours a day. Meaning no more stress calling and emailing your web manager with no response.
+                     </p>
+                     <p className="font-display font-bold text-xl text-brand-600 dark:text-brand-400 pt-4 border-t border-gray-200 dark:border-gray-700 mt-4">
+                         Kairo is here for you, because it was created for us.
+                     </p>
+                 </div>
               </div>
             </div>
           </div>
