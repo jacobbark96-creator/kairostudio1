@@ -53,6 +53,23 @@
 	.scrollbar-hide::-webkit-scrollbar {
 		display: none;
 	}
+
+  /* 3D Card Transforms */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
 }
 
 /* Carousel marquee styles */
@@ -96,7 +113,7 @@
 
 /* Smooth transitions for theme changes */
 * {
-	transition-property: background-color, border-color, color, fill, stroke;
+	transition-property: background-color, border-color, color, fill, stroke, transform, opacity;
 	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	transition-duration: 150ms;
 }
