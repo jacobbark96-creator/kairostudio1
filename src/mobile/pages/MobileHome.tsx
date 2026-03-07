@@ -79,41 +79,46 @@ export default function MobileHome() {
             <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
         </div>
 
-      {/* Mobile Hero */}
-      <section className="text-center space-y-6 pt-12 px-4 relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-brand-600 dark:text-brand-300 text-xs font-bold uppercase tracking-wider shadow-lg animate-fade-in-up">
-          <Sparkles className="w-3 h-3 animate-pulse" />
-          Creative Digital Studio
+      {/* Mobile Hero - Premium Editorial Redesign */}
+      <section className="relative z-10 pt-16 px-6 pb-12 flex flex-col justify-end min-h-[60vh]">
+        {/* Status Pill */}
+        <div className="self-start mb-6 animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10 backdrop-blur-md border border-black/5 dark:border-white/10">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900 dark:text-white">Available Now</span>
+            </div>
         </div>
-        
-        <div className="relative">
-            <h1 className="text-[3.5rem] leading-[0.9] font-display font-black text-gray-900 dark:text-white tracking-tight drop-shadow-xl animate-fade-in-up animation-delay-200">
-              We Craft <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-purple-500 to-pink-500 animate-gradient-x">
-                Digital Magic
-              </span>
+
+        {/* Main Headline */}
+        <div className="space-y-2 mb-6 animate-fade-in-up animation-delay-200">
+            <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.85] tracking-tight">
+                BEYOND <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-500 to-brand-400">IMAGINATION</span>
             </h1>
         </div>
 
-        <p className="text-lg text-gray-600 dark:text-gray-300 font-light max-w-xs mx-auto leading-relaxed drop-shadow-md animate-fade-in-up animation-delay-400">
-          Turning bold ideas into stunning digital realities. Fast, fun, and future-proof.
-        </p>
-        
-        <div className="flex flex-col gap-4 pt-8 px-4 animate-fade-in-up animation-delay-600">
+        {/* Description with side line */}
+        <div className="flex gap-4 mb-8 animate-fade-in-up animation-delay-400">
+            <div className="w-1 bg-gradient-to-b from-brand-500 to-transparent rounded-full" />
+            <p className="text-base text-gray-600 dark:text-gray-300 font-medium leading-relaxed max-w-[80%]">
+                We design digital experiences that define the future of your brand. Unapologetically bold.
+            </p>
+        </div>
+
+        {/* CTAs */}
+        <div className="grid grid-cols-[1fr,auto] gap-3 animate-fade-in-up animation-delay-600">
             <button 
                 onClick={() => openContactModal()}
-                className="w-full py-4 bg-gradient-to-r from-gray-900 to-black dark:from-white dark:to-gray-200 text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-black/10 dark:shadow-white/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 relative overflow-hidden group"
+                className="h-14 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-transform"
             >
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                <Zap className="w-5 h-5 fill-current" />
-                Start Your Project
+                Start Project
+                <ArrowRight className="w-4 h-4" />
             </button>
             <Link 
                 to="/portfolio"
-                className="w-full py-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-2xl font-bold text-lg hover:bg-white dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 shadow-sm"
+                className="h-14 w-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-gray-900 dark:text-white active:scale-95 transition-transform"
             >
-                Explore Our Work
-                <ArrowRight className="w-5 h-5" />
+                <Zap className="w-5 h-5" />
             </Link>
         </div>
       </section>
