@@ -70,12 +70,15 @@ export default function MobileHome() {
   return (
     <div className="space-y-8 pb-20 relative overflow-hidden z-0">
         {/* Night Sky Background */}
-        <div className="absolute inset-0 w-full h-full -z-20">
+        <div className="absolute top-0 left-0 w-full h-[100vh] -z-20">
             <img 
                 src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
                 alt="Night Sky" 
-                className="absolute inset-0 w-full h-full object-cover"
+                className="w-full h-full object-cover"
             />
+            {/* Fade at the bottom to blend into plain background */}
+            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent" />
+            
             {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
         </div>
