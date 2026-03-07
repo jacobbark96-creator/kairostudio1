@@ -81,14 +81,6 @@ export default function MobileHome() {
 
       {/* Mobile Hero - Premium Editorial Redesign */}
       <section className="relative z-10 pt-16 px-6 pb-12 flex flex-col justify-end min-h-[60vh]">
-        {/* Status Pill */}
-        <div className="self-start mb-6 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/10 backdrop-blur-md border border-black/5 dark:border-white/10">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900 dark:text-white">Available Now</span>
-            </div>
-        </div>
-
         {/* Main Headline */}
         <div className="space-y-2 mb-6 animate-fade-in-up animation-delay-200">
             <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.85] tracking-tight">
