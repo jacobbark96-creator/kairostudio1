@@ -70,7 +70,7 @@ export default function MobileHome() {
   return (
     <div className="space-y-8 pb-20 relative overflow-hidden z-0">
         {/* Night Sky Background */}
-        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+        <div className="absolute inset-0 w-full h-full -z-20">
             <img 
                 src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
                 alt="Night Sky" 
