@@ -121,15 +121,33 @@ export default function MobileHome() {
       </section>
 
       {/* Slot Machine - Prominent Feature */}
-      <section className="px-2 relative z-10">
-        <div className="bg-gradient-to-br from-brand-500/10 to-purple-500/10 rounded-[2rem] p-4 border border-brand-100 dark:border-brand-900/30">
-            <div className="text-center mb-4">
-                <h3 className="font-bold text-lg text-gray-900 dark:text-white">Spin for a Discount</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Win up to £800 off your next project</p>
+      <section className="px-4 relative z-10">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-900 to-purple-900 dark:from-white dark:to-gray-200 shadow-2xl shadow-brand-500/20">
+            {/* Animated Border/Glow Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer" />
+            
+            <div className="relative z-10 p-6 sm:p-8 text-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-black/10 text-white dark:text-black text-[10px] font-bold uppercase tracking-wider mb-4">
+                    <Sparkles className="w-3 h-3 animate-pulse" />
+                    Limited Time Offer
+                </div>
+                
+                <h3 className="text-2xl sm:text-3xl font-display font-black text-white dark:text-black mb-2 leading-tight">
+                    Spin & Win <br/> 
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-200 to-purple-200 dark:from-brand-600 dark:to-purple-600">Exclusive Discounts</span>
+                </h3>
+                
+                <p className="text-white/80 dark:text-black/60 text-sm font-medium mb-6 max-w-xs mx-auto">
+                    Try your luck for up to £800 off your next digital project.
+                </p>
+                
+                <div className="transform scale-100 origin-center bg-white/5 dark:bg-black/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10 dark:border-black/5">
+                    <RandomOffer />
+                </div>
             </div>
-            <div className="transform scale-90 origin-top">
-                <RandomOffer />
-            </div>
+            
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         </div>
       </section>
 
