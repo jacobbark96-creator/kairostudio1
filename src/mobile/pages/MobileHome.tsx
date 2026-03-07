@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award } from '
 import RandomOffer from '../../components/RandomOffer';
 import { useUI } from '../../context/UIContext';
 import { supabase } from '../../lib/supabase';
+import logoNb from '../../Logo/kairologo-nbg.png';
 
 interface Project {
   id: string;
@@ -82,7 +83,14 @@ export default function MobileHome() {
       {/* Mobile Hero - Premium Editorial Redesign */}
       <section className="relative z-10 pt-16 px-6 pb-12 flex flex-col justify-end min-h-[60vh]">
         {/* Main Headline */}
-        <div className="space-y-2 mb-6 animate-fade-in-up animation-delay-200">
+        <div className="space-y-4 mb-6 animate-fade-in-up animation-delay-200">
+            <div className="w-24 h-auto">
+                <img 
+                    src={logoNb} 
+                    alt="Kairo" 
+                    className="w-full h-auto object-contain brightness-0 dark:brightness-100" 
+                />
+            </div>
             <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.85] tracking-tight">
                 BEYOND <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-500 to-brand-400">IMAGINATION</span>
