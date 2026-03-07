@@ -160,33 +160,35 @@ export default function MobileHome() {
         </div>
         
         {projects.length > 0 ? (
-            <div className="flex overflow-x-auto gap-4 px-4 pb-8 snap-x snap-mandatory scrollbar-hide">
-                {projects.map((project) => (
-                    <Link 
-                        key={project.id} 
-                        to="/portfolio"
-                        className="flex-shrink-0 w-[85vw] snap-center relative rounded-[2rem] overflow-hidden aspect-[4/3] group"
-                    >
-                        {project.image_url ? (
-                            <img 
-                                src={project.image_url} 
-                                alt={project.title} 
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                            />
-                        ) : (
-                            <div className={`absolute inset-0 w-full h-full bg-gradient-to-br ${project.color || 'from-gray-800 to-black'}`} />
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80" />
-                        
-                        <div className="absolute bottom-0 left-0 p-6 w-full">
-                            <span className="inline-block px-2 py-1 rounded-md bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-white mb-2">
-                                {project.category}
-                            </span>
-                            <h3 className="text-2xl font-bold text-white mb-1">{project.title}</h3>
-                            <p className="text-sm text-gray-300 line-clamp-2">{project.description}</p>
-                        </div>
-                    </Link>
-                ))}
+            <div className="marquee">
+                <div className="marquee__inner">
+                    {[...projects, ...projects].map((project, index) => (
+                        <Link 
+                            key={`${project.id}-${index}`} 
+                            to="/portfolio"
+                            className="flex-shrink-0 w-[85vw] relative rounded-[2rem] overflow-hidden aspect-[4/3] group"
+                        >
+                            {project.image_url ? (
+                                <img 
+                                    src={project.image_url} 
+                                    alt={project.title} 
+                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                            ) : (
+                                <div className={`absolute inset-0 w-full h-full bg-gradient-to-br ${project.color || 'from-gray-800 to-black'}`} />
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80" />
+                            
+                            <div className="absolute bottom-0 left-0 p-6 w-full">
+                                <span className="inline-block px-2 py-1 rounded-md bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-white mb-2">
+                                    {project.category}
+                                </span>
+                                <h3 className="text-2xl font-bold text-white mb-1">{project.title}</h3>
+                                <p className="text-sm text-gray-300 line-clamp-2">{project.description}</p>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
             </div>
         ) : (
              <div className="px-4">
