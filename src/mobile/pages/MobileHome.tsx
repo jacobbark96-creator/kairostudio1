@@ -80,28 +80,26 @@ export default function MobileHome() {
         </div>
 
       {/* Mobile Hero */}
-      <section className="text-center space-y-6 pt-8 px-4 relative z-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-900/30 dark:to-purple-900/30 border border-brand-100 dark:border-brand-800/50 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-wider shadow-sm">
-          <Sparkles className="w-3 h-3" />
+      <section className="text-center space-y-6 pt-12 px-4 relative z-10">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-brand-600 dark:text-brand-300 text-xs font-bold uppercase tracking-wider shadow-lg animate-fade-in-up">
+          <Sparkles className="w-3 h-3 animate-pulse" />
           Creative Digital Studio
         </div>
         
         <div className="relative">
-            {/* Abstract Background Shapes - Kept for extra flair but reduced opacity */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-400/10 rounded-full blur-3xl -z-10 animate-pulse mix-blend-screen" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl -z-10 animate-pulse animation-delay-2000 mix-blend-screen" />
-            
-            <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.95] tracking-tight drop-shadow-sm">
+            <h1 className="text-[3.5rem] leading-[0.9] font-display font-black text-gray-900 dark:text-white tracking-tight drop-shadow-xl animate-fade-in-up animation-delay-200">
               We Craft <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-600 to-pink-500 animate-gradient-x">Digital Magic</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-purple-500 to-pink-500 animate-gradient-x">
+                Digital Magic
+              </span>
             </h1>
         </div>
 
-        <p className="text-gray-600 dark:text-gray-200 text-base font-medium max-w-xs mx-auto leading-relaxed drop-shadow-sm">
+        <p className="text-lg text-gray-600 dark:text-gray-300 font-light max-w-xs mx-auto leading-relaxed drop-shadow-md animate-fade-in-up animation-delay-400">
           Turning bold ideas into stunning digital realities. Fast, fun, and future-proof.
         </p>
         
-        <div className="flex flex-col gap-3 pt-6 px-4">
+        <div className="flex flex-col gap-4 pt-8 px-4 animate-fade-in-up animation-delay-600">
             <button 
                 onClick={() => openContactModal()}
                 className="w-full py-4 bg-gradient-to-r from-gray-900 to-black dark:from-white dark:to-gray-200 text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-black/10 dark:shadow-white/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 relative overflow-hidden group"
