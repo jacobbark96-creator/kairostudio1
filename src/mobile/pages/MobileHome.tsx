@@ -87,7 +87,7 @@ export default function MobileHome() {
       <section className="relative z-10 pt-16 px-6 pb-12 flex flex-col justify-end min-h-[60vh]">
         {/* Main Headline */}
         <div className="space-y-4 mb-6 animate-fade-in-up animation-delay-200 relative">
-            <div className="absolute inset-0 bg-black/30 dark:bg-black/50 blur-2xl -z-10 rounded-full scale-150" />
+            <div className="absolute inset-0 bg-black/30 dark:bg-black/50 blur-2xl -z-10 rounded-full scale-150 hidden dark:block" />
             <div className="w-24 h-auto">
                 <img 
                     src={logoNb} 
@@ -103,7 +103,7 @@ export default function MobileHome() {
 
         {/* Description with side line */}
         <div className="flex gap-4 mb-8 animate-fade-in-up animation-delay-400 relative">
-            <div className="absolute inset-0 bg-black/40 dark:bg-black/60 blur-xl -z-10 rounded-full" />
+            <div className="absolute inset-0 bg-black/40 dark:bg-black/60 blur-xl -z-10 rounded-full hidden dark:block" />
             <div className="w-1 bg-gradient-to-b from-brand-500 to-transparent rounded-full" />
             <p className="text-base text-gray-100 dark:text-gray-100 font-medium leading-relaxed max-w-[80%] drop-shadow-md">
                 We design digital experiences that define the future of your brand. Unapologetically bold.
