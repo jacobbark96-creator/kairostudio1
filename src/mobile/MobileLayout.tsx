@@ -49,49 +49,56 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
         {children}
       </main>
 
-      {/* Bottom Navigation - Fixed to viewport */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-800 safe-area-bottom shadow-lg shadow-black/5">
-        <div className="flex justify-around items-center h-16">
+      {/* Bottom Navigation - Luxurious Floating Dock */}
+      <nav className="fixed bottom-6 left-4 right-4 z-50">
+        <div className="bg-black/80 dark:bg-white/90 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-black/20 border border-white/10 dark:border-gray-200 p-2 flex justify-between items-center h-20 px-6">
+          
           <Link 
             to="/" 
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/') ? 'text-brand-600 dark:text-brand-400' : 'text-gray-500 dark:text-gray-400'}`}
+            className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
-            <Home className={`w-6 h-6 ${isActive('/') ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-medium">Home</span>
+            <div className={`p-2 rounded-full ${isActive('/') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
+                <Home className="w-6 h-6" />
+            </div>
           </Link>
           
           <Link 
             to="/services" 
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/services') ? 'text-brand-600 dark:text-brand-400' : 'text-gray-500 dark:text-gray-400'}`}
+            className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/services') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
-            <Layers className={`w-6 h-6 ${isActive('/services') ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-medium">Services</span>
+            <div className={`p-2 rounded-full ${isActive('/services') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
+                <Layers className="w-6 h-6" />
+            </div>
           </Link>
 
-          {/* Center FAB - Contact/Offer */}
-          <div className="relative -top-5">
+          {/* Center Action Button - Pulse Effect */}
+          <div className="relative -top-8">
             <button 
                 onClick={() => openContactModal()}
-                className="w-14 h-14 rounded-full bg-brand-600 text-white shadow-lg shadow-brand-500/40 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                className="w-16 h-16 rounded-full bg-gradient-to-tr from-brand-600 to-purple-600 text-white shadow-xl shadow-brand-500/40 flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-300 border-4 border-gray-100 dark:border-gray-900"
             >
-                <Rocket className="w-6 h-6" />
+                <Rocket className="w-7 h-7 animate-pulse" />
             </button>
           </div>
           
           <Link 
-            to="/portfolio" 
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/portfolio') ? 'text-brand-600 dark:text-brand-400' : 'text-gray-500 dark:text-gray-400'}`}
+            to="/about" 
+            className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/about') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
-            <Grid className={`w-6 h-6 ${isActive('/portfolio') ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-medium">Work</span>
+             <div className={`p-2 rounded-full ${isActive('/about') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
+                <User className="w-6 h-6" />
+            </div>
           </Link>
           
           <Link 
-            to="/about" 
-            className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/about') ? 'text-brand-600 dark:text-brand-400' : 'text-gray-500 dark:text-gray-400'}`}
+            to="/login" 
+            className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/login') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
-            <User className={`w-6 h-6 ${isActive('/about') ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-medium">About</span>
+             <div className={`p-2 rounded-full ${isActive('/login') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
+                <div className="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center">
+                    <span className="text-[10px] font-bold">ID</span>
+                </div>
+            </div>
           </Link>
         </div>
       </nav>

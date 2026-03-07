@@ -1,12 +1,78 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Zap, Code, Palette } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award } from 'lucide-react';
 import RandomOffer from '../../components/RandomOffer';
 import { useUI } from '../../context/UIContext';
+import { supabase } from '../../lib/supabase';
+
+interface Project {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  image_url: string | null;
+  link?: string;
+  featured: boolean;
+  color?: string;
+}
 
 export default function MobileHome() {
   const { openContactModal } = useUI();
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    // Fetch featured projects first, or recent ones if no featured
+    let { data: featuredData } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('featured', true)
+      .order('created_at', { ascending: false });
+
+    if (!featuredData || featuredData.length === 0) {
+       // Fallback to recent projects if no featured ones
+       const { data: recentData } = await supabase
+         .from('projects')
+         .select('*')
+         .order('created_at', { ascending: false })
+         .limit(5);
+       featuredData = recentData || [];
+    }
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setProjects(featuredData as any[]);
+  };
+
+  const services = [
+    { 
+        icon: Palette, 
+        title: 'Brand Identity', 
+        desc: 'Crafting logos and visual systems.',
+        color: 'from-pink-500 to-rose-500',
+    },
+    { 
+        icon: Code, 
+        title: 'Web Dev', 
+        desc: 'Lightning-fast, responsive websites.',
+        color: 'from-blue-500 to-cyan-500',
+    },
+    { 
+        icon: Zap, 
+        title: 'Digital Strategy', 
+        desc: 'Data-driven SEO strategies.',
+        color: 'from-amber-400 to-orange-500',
+    },
+    { 
+        icon: Rocket, 
+        title: 'Growth', 
+        desc: 'Targeted campaigns that convert.',
+        color: 'from-purple-500 to-indigo-500',
+    },
+  ];
 
   return (
     <div className="space-y-8 pb-20 relative overflow-hidden z-0">
@@ -73,43 +139,70 @@ export default function MobileHome() {
         </div>
       </section>
 
-      {/* Quick Services */}
+      {/* Services Redesigned */}
       <section className="space-y-4 relative z-10">
-        <div className="flex justify-between items-end px-2">
+        <div className="flex justify-between items-end px-4">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Services</h2>
             <Link to="/services" className="text-xs text-brand-600 font-medium">View All</Link>
         </div>
         
-        <div className="flex gap-4 overflow-x-auto pb-4 px-2 snap-x">
-            {[
-                { icon: Palette, title: 'Branding', color: 'bg-pink-100 text-pink-600' },
-                { icon: Code, title: 'Web Dev', color: 'bg-blue-100 text-blue-600' },
-                { icon: Zap, title: 'Growth', color: 'bg-amber-100 text-amber-600' },
-            ].map((s, i) => (
-                <div key={i} className="flex-shrink-0 w-32 p-4 bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 snap-center flex flex-col items-center text-center gap-3 shadow-sm">
-                    <div className={`w-10 h-10 rounded-full ${s.color} flex items-center justify-center`}>
+        <div className="grid grid-cols-2 gap-3 px-4">
+            {services.map((s, i) => (
+                <div key={i} className="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-4 shadow-sm hover:shadow-md transition-all">
+                    <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br ${s.color} opacity-10 rounded-bl-full`} />
+                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-3 shadow-sm`}>
                         <s.icon className="w-5 h-5" />
                     </div>
-                    <span className="font-bold text-sm dark:text-white">{s.title}</span>
+                    <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-1">{s.title}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{s.desc}</p>
                 </div>
             ))}
         </div>
       </section>
 
-      {/* Recent Work Teaser */}
-      <section className="space-y-4 px-2 relative z-10">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Work</h2>
-        <div className="bg-gray-900 rounded-[2rem] p-6 text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/20 rounded-full blur-2xl" />
-            <div className="relative z-10">
-                <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">Featured</span>
-                <h3 className="text-2xl font-bold mt-2 mb-4">Verde Restaurant</h3>
-                <p className="text-gray-400 text-sm mb-6">A modern dining experience with seamless reservation system.</p>
-                <Link to="/portfolio" className="inline-flex items-center gap-2 text-sm font-bold hover:gap-3 transition-all">
-                    View Case Study <ArrowRight className="w-4 h-4" />
-                </Link>
-            </div>
+      {/* Recent Work Carousel */}
+      <section className="space-y-4 relative z-10 overflow-hidden">
+        <div className="flex justify-between items-end px-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Work</h2>
+            <Link to="/portfolio" className="text-xs text-brand-600 font-medium">View All</Link>
         </div>
+        
+        {projects.length > 0 ? (
+            <div className="flex overflow-x-auto gap-4 px-4 pb-8 snap-x snap-mandatory scrollbar-hide">
+                {projects.map((project) => (
+                    <Link 
+                        key={project.id} 
+                        to="/portfolio"
+                        className="flex-shrink-0 w-[85vw] snap-center relative rounded-[2rem] overflow-hidden aspect-[4/3] group"
+                    >
+                        {project.image_url ? (
+                            <img 
+                                src={project.image_url} 
+                                alt={project.title} 
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                        ) : (
+                            <div className={`absolute inset-0 w-full h-full bg-gradient-to-br ${project.color || 'from-gray-800 to-black'}`} />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80" />
+                        
+                        <div className="absolute bottom-0 left-0 p-6 w-full">
+                            <span className="inline-block px-2 py-1 rounded-md bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-white mb-2">
+                                {project.category}
+                            </span>
+                            <h3 className="text-2xl font-bold text-white mb-1">{project.title}</h3>
+                            <p className="text-sm text-gray-300 line-clamp-2">{project.description}</p>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+        ) : (
+             <div className="px-4">
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-[2rem] p-8 text-center">
+                    <p className="text-gray-500 dark:text-gray-400">Loading projects...</p>
+                </div>
+            </div>
+        )}
       </section>
     </div>
   );

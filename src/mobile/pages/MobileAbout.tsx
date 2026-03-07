@@ -5,15 +5,17 @@ import { Target, Heart, Zap, Award } from 'lucide-react';
 export default function MobileAbout() {
   return (
     <div className="space-y-8 pb-24 relative overflow-hidden z-0">
-       {/* Night Sky Background */}
-       <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+       {/* Night Sky Background - Fixed Top */}
+       <div className="absolute top-0 left-0 w-full h-[60vh] -z-20 overflow-hidden">
             <img 
                 src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
                 alt="Night Sky" 
                 className="absolute inset-0 w-full h-full object-cover"
             />
-            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            {/* Light Mode "Fade" Overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+            {/* Bottom Fade to Plain Background */}
+            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white dark:from-dark-bg to-transparent" />
         </div>
 
       <div className="space-y-2 pt-8 px-4 relative z-10">
