@@ -26,25 +26,17 @@ export default function MobileHome() {
   }, []);
 
   const fetchProjects = async () => {
-    // Fetch featured projects first, or recent ones if no featured
-    let { data: featuredData } = await supabase
+    // Fetch all projects, prioritizing featured ones, then by date
+    const { data } = await supabase
       .from('projects')
       .select('*')
-      .eq('featured', true)
-      .order('created_at', { ascending: false });
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(10);
 
-    if (!featuredData || featuredData.length === 0) {
-       // Fallback to recent projects if no featured ones
-       const { data: recentData } = await supabase
-         .from('projects')
-         .select('*')
-         .order('created_at', { ascending: false })
-         .limit(5);
-       featuredData = recentData || [];
+    if (data) {
+        setProjects(data);
     }
-    
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setProjects(featuredData as any[]);
   };
 
   const services = [
