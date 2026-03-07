@@ -101,19 +101,21 @@ export default function MobileHome() {
           Turning bold ideas into stunning digital realities. Fast, fun, and future-proof.
         </p>
         
-        <div className="flex flex-col gap-3 pt-4 px-4">
+        <div className="flex flex-col gap-3 pt-6 px-4">
             <button 
                 onClick={() => openContactModal()}
-                className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-brand-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gradient-to-r from-gray-900 to-black dark:from-white dark:to-gray-200 text-white dark:text-black rounded-2xl font-bold text-lg shadow-xl shadow-black/10 dark:shadow-white/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 relative overflow-hidden group"
             >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                 <Zap className="w-5 h-5 fill-current" />
                 Start Your Project
             </button>
             <Link 
                 to="/portfolio"
-                className="w-full py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-2xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="w-full py-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-2xl font-bold text-lg hover:bg-white dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 shadow-sm"
             >
                 Explore Our Work
+                <ArrowRight className="w-5 h-5" />
             </Link>
         </div>
       </section>
