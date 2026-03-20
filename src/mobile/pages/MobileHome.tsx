@@ -21,6 +21,10 @@ interface Project {
 export default function MobileHome() {
   const { openContactModal } = useUI();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [auditUrl, setAuditUrl] = useState('');
+  const [auditEmail, setAuditEmail] = useState('');
+  const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
+  const [auditSuccess, setAuditSuccess] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -37,6 +41,33 @@ export default function MobileHome() {
 
     if (data) {
         setProjects(data);
+    }
+  };
+
+  const handleAuditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingAudit(true);
+
+    try {
+        await fetch('https://hook.make.com/PLACEHOLDER', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                url: auditUrl,
+                email: auditEmail
+            }),
+        });
+        
+        setAuditSuccess(true);
+        setAuditUrl('');
+        setAuditEmail('');
+    } catch (error) {
+        console.error("Error submitting audit request", error);
+        alert("There was an issue submitting your request. Please try again.");
+    } finally {
+        setIsSubmittingAudit(false);
     }
   };
 
@@ -151,27 +182,51 @@ export default function MobileHome() {
                 
                 {/* Clawbot Integration Area */}
                 <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-4 border border-gray-100 dark:border-white/5">
-                    <form 
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            alert("Clawbot integration pending! Enter your Clawbot script or API logic here.");
-                        }}
-                        className="flex flex-col gap-3"
-                    >
-                        <input 
-                            type="url" 
-                            placeholder="https://yourdomain.com" 
-                            required
-                            className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
-                        />
-                        <button 
-                            type="submit"
-                            className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+                    {auditSuccess ? (
+                        <div className="py-6 text-center animate-fade-in-up">
+                            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
+                                <Zap className="w-6 h-6 text-green-600 dark:text-green-400" />
+                            </div>
+                            <h4 className="font-bold text-gray-900 dark:text-white mb-2">Generating your audit...</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">This will be emailed to you shortly.</p>
+                            <button 
+                                onClick={() => setAuditSuccess(false)}
+                                className="mt-4 text-xs text-brand-600 font-medium"
+                            >
+                                Submit another site
+                            </button>
+                        </div>
+                    ) : (
+                        <form 
+                            onSubmit={handleAuditSubmit}
+                            className="flex flex-col gap-3"
                         >
-                            Analyze Now
-                            <ArrowRight className="w-4 h-4" />
-                        </button>
-                    </form>
+                            <input 
+                                type="url" 
+                                placeholder="https://yourdomain.com" 
+                                required
+                                value={auditUrl}
+                                onChange={(e) => setAuditUrl(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                            />
+                            <input 
+                                type="email" 
+                                placeholder="Enter your email" 
+                                required
+                                value={auditEmail}
+                                onChange={(e) => setAuditEmail(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                            />
+                            <button 
+                                type="submit"
+                                disabled={isSubmittingAudit}
+                                className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70"
+                            >
+                                {isSubmittingAudit ? 'Sending...' : 'Analyze Now'}
+                                {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
+                            </button>
+                        </form>
+                    )}
                     <p className="text-[10px] text-gray-400 mt-3">Powered by Clawbot AI</p>
                 </div>
             </div>
