@@ -49,7 +49,7 @@ export default function MobileHome() {
     setIsSubmittingAudit(true);
 
     try {
-        await fetch('https://hook.make.com/PLACEHOLDER', {
+        await fetch('https://hook.eu1.make.com/aewnwbg67m55lr979f9ofriktxg9i496', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
