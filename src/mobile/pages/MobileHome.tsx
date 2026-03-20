@@ -128,34 +128,56 @@ export default function MobileHome() {
         </div>
       </section>
 
-      {/* Slot Machine - Prominent Feature */}
+      {/* Site Assessment Feature */}
       <section className="px-4 relative z-10">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-900 to-purple-900 dark:from-white dark:to-gray-200 shadow-2xl shadow-brand-500/20">
-            {/* Animated Border/Glow Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer" />
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-gradient-to-br dark:from-brand-900 dark:to-purple-900 shadow-2xl border border-gray-200 dark:border-white/10">
+            {/* Animated Border/Glow Effect (Dark Mode only) */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer hidden dark:block" />
             
             <div className="relative z-10 p-6 sm:p-8 text-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-black/10 text-white dark:text-black text-[10px] font-bold uppercase tracking-wider mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-white/10 backdrop-blur-md border border-brand-100 dark:border-black/10 text-brand-600 dark:text-white text-[10px] font-bold uppercase tracking-wider mb-4">
                     <Sparkles className="w-3 h-3 animate-pulse" />
-                    Limited Time Offer
+                    Free Audit
                 </div>
                 
-                <h3 className="text-2xl sm:text-3xl font-display font-black text-white dark:text-black mb-2 leading-tight">
-                    Spin & Win <br/> 
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-200 to-purple-200 dark:from-brand-600 dark:to-purple-600">Exclusive Discounts</span>
+                <h3 className="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white mb-2 leading-tight">
+                    Assess your <br/> 
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-200 dark:to-purple-200">current site</span>
                 </h3>
                 
-                <p className="text-white/80 dark:text-black/60 text-sm font-medium mb-6 max-w-xs mx-auto">
-                    Try your luck for up to £800 off your next digital project.
+                <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
+                    Get instant feedback on your site and learn how Kairo can take you to the next level.
                 </p>
                 
-                <div className="transform scale-100 origin-center bg-white/5 dark:bg-black/5 backdrop-blur-sm rounded-2xl p-2 border border-white/10 dark:border-black/5">
-                    <RandomOffer />
+                {/* Clawbot Integration Area */}
+                <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                    <form 
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            alert("Clawbot integration pending! Enter your Clawbot script or API logic here.");
+                        }}
+                        className="flex flex-col gap-3"
+                    >
+                        <input 
+                            type="url" 
+                            placeholder="https://yourdomain.com" 
+                            required
+                            className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                        />
+                        <button 
+                            type="submit"
+                            className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+                        >
+                            Analyze Now
+                            <ArrowRight className="w-4 h-4" />
+                        </button>
+                    </form>
+                    <p className="text-[10px] text-gray-400 mt-3">Powered by Clawbot AI</p>
                 </div>
             </div>
             
-            {/* Background Texture */}
-            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+            {/* Background Texture (Dark Mode only) */}
+            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block" />
         </div>
       </section>
 
