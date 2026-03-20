@@ -1,7 +1,6 @@
-import { ArrowRight, Palette, Code, Zap } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import RandomOffer from '../components/RandomOffer';
 import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
 import SEO from '../components/SEO';
@@ -16,6 +15,38 @@ export default function HomePage() {
   const [heroTitleAlt1, setHeroTitleAlt1] = useState('');
   const [heroTitleAlt2, setHeroTitleAlt2] = useState('');
   const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
+
+  const [auditUrl, setAuditUrl] = useState('');
+  const [auditEmail, setAuditEmail] = useState('');
+  const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
+  const [auditSuccess, setAuditSuccess] = useState(false);
+
+  const handleAuditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmittingAudit(true);
+
+    try {
+        await fetch('https://hook.eu1.make.com/aewnwbg67m55lr979f9ofriktxg9i496', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                url: auditUrl,
+                email: auditEmail
+            }),
+        });
+        
+        setAuditSuccess(true);
+        setAuditUrl('');
+        setAuditEmail('');
+    } catch (error) {
+        console.error("Error submitting audit request", error);
+        alert("There was an issue submitting your request. Please try again.");
+    } finally {
+        setIsSubmittingAudit(false);
+    }
+  };
 
   // Handle Jackpot Celebration
   useEffect(() => {
@@ -161,7 +192,78 @@ export default function HomePage() {
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-full blur-[80px] -z-10" />
               <div className="w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-transform duration-500 hidden md:block">
-                <RandomOffer />
+                
+                {/* Site Assessment Feature (Desktop) */}
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-gradient-to-br dark:from-brand-900 dark:to-purple-900 shadow-2xl border border-gray-200 dark:border-white/10">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer hidden dark:block" />
+                    
+                    <div className="relative z-10 p-8 text-center">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-white/10 backdrop-blur-md border border-brand-100 dark:border-black/10 text-brand-600 dark:text-white text-[10px] font-bold uppercase tracking-wider mb-4">
+                            <Sparkles className="w-3 h-3 animate-pulse" />
+                            Free Audit
+                        </div>
+                        
+                        <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-2 leading-tight">
+                            Assess your <br/> 
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-200 dark:to-purple-200">current site</span>
+                        </h3>
+                        
+                        <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
+                            Get instant feedback on your site and learn how Kairo can take you to the next level.
+                        </p>
+                        
+                        <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-5 border border-gray-100 dark:border-white/5">
+                            {auditSuccess ? (
+                                <div className="py-6 text-center animate-fade-in-up">
+                                    <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
+                                        <Zap className="w-6 h-6 text-green-600 dark:text-green-400" />
+                                    </div>
+                                    <h4 className="font-bold text-gray-900 dark:text-white mb-2">Generating your audit...</h4>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">This will be emailed to you shortly.</p>
+                                    <button 
+                                        onClick={() => setAuditSuccess(false)}
+                                        className="mt-4 text-xs text-brand-600 font-medium hover:underline"
+                                    >
+                                        Submit another site
+                                    </button>
+                                </div>
+                            ) : (
+                                <form 
+                                    onSubmit={handleAuditSubmit}
+                                    className="flex flex-col gap-3"
+                                >
+                                    <input 
+                                        type="url" 
+                                        placeholder="https://yourdomain.com" 
+                                        required
+                                        value={auditUrl}
+                                        onChange={(e) => setAuditUrl(e.target.value)}
+                                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                                    />
+                                    <input 
+                                        type="email" 
+                                        placeholder="Enter your email" 
+                                        required
+                                        value={auditEmail}
+                                        onChange={(e) => setAuditEmail(e.target.value)}
+                                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                                    />
+                                    <button 
+                                        type="submit"
+                                        disabled={isSubmittingAudit}
+                                        className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70"
+                                    >
+                                        {isSubmittingAudit ? 'Sending...' : 'Analyze Now'}
+                                        {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
+                                    </button>
+                                </form>
+                            )}
+                            <p className="text-[10px] text-gray-400 mt-3 text-center">Powered by Clawbot AI</p>
+                        </div>
+                    </div>
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block pointer-events-none" />
+                </div>
+
               </div>
             </div>
           </div>
