@@ -160,7 +160,7 @@ export default function HomePage() {
             
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-full blur-[80px] -z-10" />
-              <div className="w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-transform duration-500">
+              <div className="w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-transform duration-500 hidden md:block">
                 <RandomOffer />
               </div>
             </div>
