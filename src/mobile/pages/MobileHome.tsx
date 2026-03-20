@@ -48,6 +48,16 @@ export default function MobileHome() {
     e.preventDefault();
     setIsSubmittingAudit(true);
 
+    // Format URL logic
+    let formattedUrl = auditUrl.trim().toLowerCase();
+    if (!/^https?:\/\//i.test(formattedUrl)) {
+      if (!/^www\./i.test(formattedUrl)) {
+          formattedUrl = `https://www.${formattedUrl}`;
+      } else {
+          formattedUrl = `https://${formattedUrl}`;
+      }
+    }
+
     try {
         await fetch('https://hook.eu1.make.com/aewnwbg67m55lr979f9ofriktxg9i496', {
             method: 'POST',
@@ -55,7 +65,7 @@ export default function MobileHome() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                url: auditUrl,
+                url: formattedUrl,
                 email: auditEmail
             }),
         });
@@ -202,8 +212,8 @@ export default function MobileHome() {
                             className="flex flex-col gap-3"
                         >
                             <input 
-                                type="url" 
-                                placeholder="https://yourdomain.com" 
+                                type="text" 
+                                placeholder="yourdomain.com" 
                                 required
                                 value={auditUrl}
                                 onChange={(e) => setAuditUrl(e.target.value)}
