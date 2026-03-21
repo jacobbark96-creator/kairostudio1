@@ -174,21 +174,12 @@ export default function RandomOffer() {
         <div className="relative z-10 w-full max-w-sm min-h-[120px] flex flex-col items-center justify-center">
             {!isFlipped ? (
                 <div className="space-y-4 animate-in fade-in zoom-in duration-500">
-                    <div>
-                        <h3 className="text-2xl sm:text-3xl font-display font-bold text-black dark:text-white mb-2">
-                            Pick a Card
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                            Reveal your exclusive project offer.
-                        </p>
-                    </div>
-                    
                     <button
                         onClick={handleReveal}
                         className="group relative inline-flex items-center gap-2 px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-brand-500/20"
                     >
-                        <span>Reveal Offer</span>
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        <span>Flip to Win</span>
+                        <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
                     </button>
                 </div>
             ) : (

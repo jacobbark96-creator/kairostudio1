@@ -219,30 +219,25 @@ export default function HomePage() {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-200 dark:to-purple-200">current site</span>
                         </h3>
                         
-                        <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
-                            Get instant feedback on your site and learn how Kairo can take you to the next level.
-                        </p>
-                        
-                        <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-5 border border-gray-100 dark:border-white/5">
-                            {auditSuccess ? (
-                                <div className="py-2 text-center animate-fade-in-up">
-                                    <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Your email will arrive any moment</h4>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Play for a discount while you wait.</p>
-                                    <div className="transform scale-90 origin-top">
-                                        <RandomOffer />
-                                    </div>
-                                    <button 
-                                        onClick={() => setAuditSuccess(false)}
-                                        className="mt-6 text-xs text-brand-600 font-medium hover:underline"
-                                    >
-                                        Submit another site
-                                    </button>
+                        {auditSuccess ? (
+                            <div className="py-2 text-center animate-fade-in-up">
+                                <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Your email will arrive any moment</h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Play for a discount while you wait.</p>
+                                <div className="transform scale-90 origin-top">
+                                    <RandomOffer />
                                 </div>
-                            ) : (
-                                <form 
-                                    onSubmit={handleAuditSubmit}
-                                    className="flex flex-col gap-3"
-                                >
+                            </div>
+                        ) : (
+                            <>
+                                <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
+                                    Get instant feedback on your site and learn how Kairo can take you to the next level.
+                                </p>
+                                
+                                <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-5 border border-gray-100 dark:border-white/5">
+                                    <form 
+                                        onSubmit={handleAuditSubmit}
+                                        className="flex flex-col gap-3"
+                                    >
                                     <input 
                                         type="text" 
                                         placeholder="yourdomain.com" 
@@ -268,9 +263,10 @@ export default function HomePage() {
                                         {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
                                     </button>
                                 </form>
-                            )}
-                            <p className="text-[10px] text-gray-400 mt-3 text-center">Powered by Kairo AI</p>
-                        </div>
+                                <p className="text-[10px] text-gray-400 mt-3 text-center">Powered by Kairo AI</p>
+                            </div>
+                            </>
+                        )}
                     </div>
                     <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block pointer-events-none" />
                 </div>
