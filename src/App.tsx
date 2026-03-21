@@ -11,6 +11,8 @@ import AdminCRM from './pages/AdminCRM';
 import ProtectedRoute from './components/ProtectedRoute';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import BlogList from './components/BlogList';
+import BlogPost from './components/BlogPost';
 import { ThemeProvider } from './hooks/useTheme';
 import { AuthProvider } from './context/AuthContext';
 import { UIProvider } from './context/UIContext';
@@ -38,6 +40,10 @@ function AppContent() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           
+          {/* Blog Routes */}
+          <Route path="/blog" element={<BlogList />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          
           {/* Shared Routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route element={<ProtectedRoute />}>
@@ -61,6 +67,10 @@ function AppContent() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/login" element={<LoginPage />} />
+        
+        {/* Blog Routes */}
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
