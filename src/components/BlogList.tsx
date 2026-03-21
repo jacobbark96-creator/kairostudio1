@@ -100,7 +100,7 @@ export default function BlogList() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-            <div className="text-center mb-16">
+            <div className="text-center mb-16 mt-8 sm:mt-16">
                 <h1 className="text-5xl md:text-7xl font-display font-black text-gray-900 dark:text-white mb-6 tracking-tight drop-shadow-sm">
                     The <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-400 dark:to-purple-400">Journal</span>
                 </h1>
