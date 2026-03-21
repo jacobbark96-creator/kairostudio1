@@ -193,15 +193,15 @@ export default function MobileHome() {
                 {/* Clawbot Integration Area */}
                 <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-4 border border-gray-100 dark:border-white/5">
                     {auditSuccess ? (
-                        <div className="py-6 text-center animate-fade-in-up">
-                            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-3">
-                                <Zap className="w-6 h-6 text-green-600 dark:text-green-400" />
+                        <div className="py-2 text-center animate-fade-in-up">
+                            <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-lg">Your email will arrive any moment</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Play for a discount while you wait.</p>
+                            <div className="transform scale-90 origin-top">
+                                <RandomOffer />
                             </div>
-                            <h4 className="font-bold text-gray-900 dark:text-white mb-2">Generating your audit...</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">This will be emailed to you shortly.</p>
                             <button 
                                 onClick={() => setAuditSuccess(false)}
-                                className="mt-4 text-xs text-brand-600 font-medium"
+                                className="mt-6 text-xs text-brand-600 font-medium hover:underline"
                             >
                                 Submit another site
                             </button>
