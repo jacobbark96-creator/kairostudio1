@@ -268,7 +268,7 @@ export default function HomePage() {
                                     </button>
                                 </form>
                             )}
-                            <p className="text-[10px] text-gray-400 mt-3 text-center">Powered by Clawbot AI</p>
+                            <p className="text-[10px] text-gray-400 mt-3 text-center">Powered by Kairo AI</p>
                         </div>
                     </div>
                     <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block pointer-events-none" />

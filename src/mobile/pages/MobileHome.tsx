@@ -237,7 +237,7 @@ export default function MobileHome() {
                             </button>
                         </form>
                     )}
-                    <p className="text-[10px] text-gray-400 mt-3">Powered by Clawbot AI</p>
+                    <p className="text-[10px] text-gray-400 mt-3">Powered by Kairo AI</p>
                 </div>
             </div>
             
