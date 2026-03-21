@@ -232,7 +232,7 @@ export default function MobileHome() {
                                 disabled={isSubmittingAudit}
                                 className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70"
                             >
-                                {isSubmittingAudit ? 'Sending...' : 'Analyze Now'}
+                                {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
                                 {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
                             </button>
                         </form>
