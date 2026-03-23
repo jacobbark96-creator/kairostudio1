@@ -1,10 +1,15 @@
 
-import React from 'react';
-import { Palette, Code, Zap, Rocket, Users, Award, Sparkles, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Palette, Code, Zap, Rocket, Users, Award, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';
 import { useUI } from '../../context/UIContext';
 
 export default function MobileServices() {
   const { openContactModal } = useUI();
+  const [openCard, setOpenCard] = useState<number | null>(null);
+
+  const toggleCard = (index: number) => {
+      setOpenCard(openCard === index ? null : index);
+  };
   
   const services = [
     { 
@@ -80,45 +85,56 @@ export default function MobileServices() {
         </p>
       </div>
       
-      <div className="flex flex-col gap-6 px-4 z-10 relative">
-        {services.map((s, i) => (
-          <div 
-            key={i} 
-            className="group relative overflow-hidden rounded-[2.5rem] shadow-xl transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] border border-white/10"
-          >
-            {/* Background Image with Gradient Overlay */}
-            <div className="absolute inset-0 z-0">
-                <img 
-                    src={s.bgImage} 
-                    alt={s.title} 
-                    className="w-full h-full object-cover opacity-100 transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-br ${s.color} opacity-90 mix-blend-multiply transition-opacity duration-500 group-hover:opacity-80`} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90" />
-            </div>
+      <div className="flex flex-col gap-4 px-4 z-10 relative">
+        {services.map((s, i) => {
+          const isOpen = openCard === i;
+          
+          return (
+            <div 
+              key={i} 
+              onClick={() => toggleCard(i)}
+              className="group relative overflow-hidden rounded-[2rem] shadow-xl transition-all duration-300 border border-white/10 cursor-pointer"
+            >
+              {/* Background Image with Gradient Overlay */}
+              <div className="absolute inset-0 z-0">
+                  <img 
+                      src={s.bgImage} 
+                      alt={s.title} 
+                      className={`w-full h-full object-cover transition-transform duration-700 ${isOpen ? 'scale-110 grayscale-0' : 'grayscale'}`}
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${s.color} mix-blend-multiply transition-opacity duration-500 ${isOpen ? 'opacity-80' : 'opacity-90'}`} />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-500 ${isOpen ? 'opacity-95' : 'opacity-90'}`} />
+              </div>
 
-            {/* Content */}
-            <div className="relative z-10 p-8 min-h-[240px] flex flex-col justify-between h-full">
-                <div className="flex justify-between items-start">
-                    <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-500">
-                        <s.icon className="w-7 h-7" />
-                    </div>
-                    <span className="text-6xl font-display font-black text-white/5 absolute top-4 right-4 pointer-events-none select-none">
-                        0{i + 1}
-                    </span>
-                </div>
-                
-                <div className="space-y-3 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-3xl font-display font-bold text-white tracking-tight drop-shadow-md">
-                        {s.title}
-                    </h3>
-                    <p className="text-white/80 font-medium text-sm leading-relaxed line-clamp-2 group-hover:line-clamp-none transition-all duration-300 border-l-2 border-white/30 pl-3">
-                        {s.desc}
-                    </p>
-                </div>
+              {/* Content */}
+              <div className="relative z-10 p-6 flex flex-col justify-between">
+                  <div className="flex justify-between items-center mb-4">
+                      <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-lg transition-transform duration-500 ${isOpen ? 'rotate-12' : ''}`}>
+                              <s.icon className="w-6 h-6" />
+                          </div>
+                          <h3 className="text-2xl font-display font-bold text-white tracking-tight drop-shadow-md">
+                              {s.title}
+                          </h3>
+                      </div>
+                      <ChevronDown className={`w-6 h-6 text-white/50 transition-transform duration-300 ${isOpen ? 'rotate-180 text-white' : ''}`} />
+                  </div>
+                  
+                  <div 
+                      className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+                  >
+                      <div className="overflow-hidden">
+                          <div className="pt-2 pb-2 pl-3 border-l-2 border-white/30">
+                              <p className="text-white/90 font-medium text-sm leading-relaxed">
+                                  {s.desc}
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="px-4 pb-12 z-10 relative">

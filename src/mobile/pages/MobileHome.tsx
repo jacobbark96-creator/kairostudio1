@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X } from 'lucide-react';
 import RandomOffer from '../../components/RandomOffer';
 import { useUI } from '../../context/UIContext';
 import { supabase } from '../../lib/supabase';
@@ -25,6 +25,8 @@ export default function MobileHome() {
   const [auditEmail, setAuditEmail] = useState('');
   const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
   const [auditSuccess, setAuditSuccess] = useState(false);
+
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -152,95 +154,112 @@ export default function MobileHome() {
         </div>
 
         {/* CTAs */}
-        <div className="grid grid-cols-[1fr,auto] gap-3 animate-fade-in-up animation-delay-600">
+        <div className="flex gap-3 animate-fade-in-up animation-delay-600">
             <button 
                 onClick={() => openContactModal()}
-                className="h-14 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-transform"
+                className="flex-1 h-14 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-transform"
             >
                 Start Project
                 <ArrowRight className="w-4 h-4" />
             </button>
-            <Link 
-                to="/portfolio"
-                className="h-14 w-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl flex items-center justify-center text-gray-900 dark:text-white active:scale-95 transition-transform"
-            >
-                <Zap className="w-5 h-5" />
-            </Link>
         </div>
       </section>
 
-      {/* Site Assessment Feature */}
-      <section className="px-4 relative z-10">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-gradient-to-br dark:from-brand-900 dark:to-purple-900 shadow-2xl border border-gray-200 dark:border-white/10">
-            {/* Animated Border/Glow Effect (Dark Mode only) */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer hidden dark:block" />
-            
-            <div className="relative z-10 p-6 sm:p-8 text-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-white/10 backdrop-blur-md border border-brand-100 dark:border-black/10 text-brand-600 dark:text-white text-[10px] font-bold uppercase tracking-wider mb-4">
-                    <Sparkles className="w-3 h-3 animate-pulse" />
-                    Free Audit
-                </div>
-                
-                <h3 className="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white mb-2 leading-tight">
-                    Assess your <br/> 
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-200 dark:to-purple-200">current site</span>
-                </h3>
-                
-                {auditSuccess ? (
-                    <div className="py-2 text-center animate-fade-in-up">
-                        <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Your email will arrive any moment</h4>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Play for a discount while you wait.</p>
-                        <div className="transform scale-90 origin-top">
-                            <RandomOffer />
-                        </div>
-                    </div>
-                ) : (
-                    <>
-                        <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
-                            Get instant feedback on your site and learn how Kairo can take you to the next level.
-                        </p>
-                        
-                        {/* Clawbot Integration Area */}
-                        <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-4 border border-gray-100 dark:border-white/5">
-                            <form 
-                                onSubmit={handleAuditSubmit}
-                                className="flex flex-col gap-3"
-                            >
-                            <input 
-                                type="text" 
-                                placeholder="yourdomain.com" 
-                                required
-                                value={auditUrl}
-                                onChange={(e) => setAuditUrl(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
-                            />
-                            <input 
-                                type="email" 
-                                placeholder="Enter your email" 
-                                required
-                                value={auditEmail}
-                                onChange={(e) => setAuditEmail(e.target.value)}
-                                className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
-                            />
-                            <button 
-                                type="submit"
-                                disabled={isSubmittingAudit}
-                                className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70"
-                            >
-                                {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
-                                {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
-                            </button>
-                        </form>
-                        <p className="text-[10px] text-gray-400 mt-3">Powered by Kairo AI</p>
-                    </div>
-                    </>
-                )}
-            </div>
-            
-            {/* Background Texture (Dark Mode only) */}
-            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block" />
-        </div>
-      </section>
+      {/* Site Assessment Trigger Pill */}
+      <div className="px-4 relative z-10 flex justify-center -mt-6 mb-4">
+          <button 
+              onClick={() => setIsAuditModalOpen(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl text-gray-900 dark:text-white font-bold text-sm active:scale-95 transition-transform"
+          >
+              <Sparkles className="w-4 h-4 text-brand-500 animate-pulse" />
+              Analyse Your Website
+          </button>
+      </div>
+
+      {/* Site Assessment Modal */}
+      {isAuditModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <div 
+                  className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                  onClick={() => setIsAuditModalOpen(false)}
+              />
+              <div className="relative w-full max-w-sm overflow-hidden rounded-[2.5rem] bg-white dark:bg-gradient-to-br dark:from-brand-900 dark:to-purple-900 shadow-2xl border border-gray-200 dark:border-white/10 animate-fade-in-up">
+                  {/* Close Button */}
+                  <button 
+                      onClick={() => setIsAuditModalOpen(false)}
+                      className="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-black/5 dark:bg-white/10 text-gray-500 dark:text-white/70 hover:bg-black/10 dark:hover:bg-white/20 transition-colors"
+                  >
+                      <X className="w-4 h-4" />
+                  </button>
+
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer hidden dark:block" />
+                  
+                  <div className="relative z-10 p-6 sm:p-8 text-center max-h-[85vh] overflow-y-auto">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-white/10 backdrop-blur-md border border-brand-100 dark:border-black/10 text-brand-600 dark:text-white text-[10px] font-bold uppercase tracking-wider mb-4">
+                          <Sparkles className="w-3 h-3 animate-pulse" />
+                          Free Audit
+                      </div>
+                      
+                      <h3 className="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white mb-2 leading-tight">
+                          Assess your <br/> 
+                          <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-200 dark:to-purple-200">current site</span>
+                      </h3>
+                      
+                      {auditSuccess ? (
+                          <div className="py-2 text-center animate-fade-in-up">
+                              <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Your email will arrive any moment</h4>
+                              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Play for a discount while you wait.</p>
+                              <div className="transform scale-90 origin-top">
+                                  <RandomOffer />
+                              </div>
+                          </div>
+                      ) : (
+                          <>
+                              <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
+                                  Get instant feedback on your site and learn how Kairo can take you to the next level.
+                              </p>
+                              
+                              {/* Clawbot Integration Area */}
+                              <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-4 border border-gray-100 dark:border-white/5">
+                                  <form 
+                                      onSubmit={handleAuditSubmit}
+                                      className="flex flex-col gap-3"
+                                  >
+                                  <input 
+                                      type="text" 
+                                      placeholder="yourdomain.com" 
+                                      required
+                                      value={auditUrl}
+                                      onChange={(e) => setAuditUrl(e.target.value)}
+                                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                                  />
+                                  <input 
+                                      type="email" 
+                                      placeholder="Enter your email" 
+                                      required
+                                      value={auditEmail}
+                                      onChange={(e) => setAuditEmail(e.target.value)}
+                                      className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                                  />
+                                  <button 
+                                      type="submit"
+                                      disabled={isSubmittingAudit}
+                                      className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70"
+                                  >
+                                      {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
+                                      {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
+                                  </button>
+                              </form>
+                              <p className="text-[10px] text-gray-400 mt-3">Powered by Kairo AI</p>
+                          </div>
+                          </>
+                      )}
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block pointer-events-none" />
+              </div>
+          </div>
+      )}
 
       {/* Services Redesigned */}
       <section className="space-y-4 relative z-10">
