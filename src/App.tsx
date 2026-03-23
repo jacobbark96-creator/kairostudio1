@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import ServicesPage from './components/ServicesPage';
 import PortfolioPage from './components/PortfolioPage';
 import AboutPage from './components/AboutPage';
+import PricingPage from './pages/PricingPage';
 import LoginPage from './pages/LoginPage';
 import ClientDashboard from './pages/ClientDashboard';
 import AdminCRM from './pages/AdminCRM';
@@ -37,6 +38,7 @@ function AppContent() {
           <Route path="/services" element={<MobileServices />} />
           <Route path="/portfolio" element={<MobilePortfolio />} />
           <Route path="/about" element={<MobileAbout />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           
@@ -64,6 +66,7 @@ function AppContent() {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/portfolio" element={<PortfolioPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/login" element={<LoginPage />} />

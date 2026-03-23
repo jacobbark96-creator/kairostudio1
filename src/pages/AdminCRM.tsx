@@ -8,7 +8,7 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers' | 'portfolio'>('invoices');
+  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers' | 'portfolio' | 'pricing'>('invoices');
   
   // Portfolio State
   const [projects, setProjects] = useState<any[]>([]);
@@ -69,13 +69,89 @@ export default function AdminCRM() {
   // Invoice Filter
   const [invoiceFilter, setInvoiceFilter] = useState<'all' | 'pending' | 'paid'>('all');
 
+  // Pricing State
+  const [pricingPlans, setPricingPlans] = useState<any[]>([]);
+  const [editingPlan, setEditingPlan] = useState<any>(null);
+  const [savingPlan, setSavingPlan] = useState(false);
+  const [planForm, setPlanForm] = useState({
+    name: '',
+    description: '',
+    price: '',
+    billing_period: 'per month',
+    features: '', // Stored as comma separated in form, JSON in DB
+    is_popular: false,
+    button_text: 'Get Started',
+    sort_order: 0
+  });
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
     fetchOffers();
     fetchProjects();
     fetchAllInvoices();
+    fetchPricingPlans();
   }, []);
+
+  const fetchPricingPlans = async () => {
+    const { data } = await supabase.from('pricing_plans').select('*').order('sort_order', { ascending: true });
+    if (data) setPricingPlans(data);
+  };
+
+  const handleSavePlan = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingPlan(true);
+    try {
+      const planData = {
+        ...planForm,
+        features: planForm.features.split('\n').map(f => f.trim()).filter(f => f) // Convert textarea to JSON array
+      };
+
+      if (editingPlan) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await (supabase.from('pricing_plans') as any).update(planData).eq('id', editingPlan.id);
+        if (error) throw error;
+        alert('Pricing plan updated!');
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await (supabase.from('pricing_plans') as any).insert([planData]);
+        if (error) throw error;
+        alert('Pricing plan created!');
+      }
+
+      setPlanForm({
+        name: '', description: '', price: '', billing_period: 'per month', features: '', is_popular: false, button_text: 'Get Started', sort_order: 0
+      });
+      setEditingPlan(null);
+      fetchPricingPlans();
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setSavingPlan(false);
+    }
+  };
+
+  const startEditPlan = (plan: any) => {
+    setEditingPlan(plan);
+    setPlanForm({
+      name: plan.name,
+      description: plan.description,
+      price: plan.price,
+      billing_period: plan.billing_period || '',
+      features: Array.isArray(plan.features) ? plan.features.join('\n') : '',
+      is_popular: plan.is_popular,
+      button_text: plan.button_text || 'Get Started',
+      sort_order: plan.sort_order || 0
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeletePlan = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this pricing plan?')) return;
+    const { error } = await supabase.from('pricing_plans').delete().eq('id', id);
+    if (error) alert(error.message);
+    else fetchPricingPlans();
+  };
 
   const fetchProjects = async () => {
     const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
@@ -502,6 +578,12 @@ export default function AdminCRM() {
             className={`pb-4 px-4 ${activeTab === 'offers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
           >
             Manage Offers
+          </button>
+          <button
+            onClick={() => setActiveTab('pricing')}
+            className={`pb-4 px-4 ${activeTab === 'pricing' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+          >
+            Pricing Plans
           </button>
         </div>
 
@@ -1162,6 +1244,163 @@ export default function AdminCRM() {
               ))}
               {offers.length === 0 && (
                 <p className="text-center text-gray-500 py-4">No offers created yet.</p>
+              )}
+            </div>
+          </div>
+        )}
+        {activeTab === 'pricing' && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+              {editingPlan ? 'Edit Pricing Plan' : 'Add New Pricing Plan'}
+            </h2>
+            <form onSubmit={handleSavePlan} className="space-y-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Plan Name</label>
+                  <input
+                    type="text"
+                    value={planForm.name}
+                    onChange={(e) => setPlanForm({...planForm, name: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price (e.g. £99 or Custom)</label>
+                  <input
+                    type="text"
+                    value={planForm.price}
+                    onChange={(e) => setPlanForm({...planForm, price: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Billing Period (e.g. per month)</label>
+                  <input
+                    type="text"
+                    value={planForm.billing_period}
+                    onChange={(e) => setPlanForm({...planForm, billing_period: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Button Text</label>
+                  <input
+                    type="text"
+                    value={planForm.button_text}
+                    onChange={(e) => setPlanForm({...planForm, button_text: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <input
+                  type="text"
+                  value={planForm.description}
+                  onChange={(e) => setPlanForm({...planForm, description: e.target.value})}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Features (One per line)</label>
+                <textarea
+                  value={planForm.features}
+                  onChange={(e) => setPlanForm({...planForm, features: e.target.value})}
+                  rows={5}
+                  placeholder="Custom Design&#10;Mobile Responsive&#10;Basic SEO"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-4 h-full pt-4">
+                  <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                    <input
+                      type="checkbox"
+                      checked={planForm.is_popular}
+                      onChange={(e) => setPlanForm({...planForm, is_popular: e.target.checked})}
+                      className="rounded text-cyan-600 focus:ring-cyan-500"
+                    />
+                    Highlight as "Most Popular"
+                  </label>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort Order (1, 2, 3...)</label>
+                  <input
+                    type="number"
+                    value={planForm.sort_order}
+                    onChange={(e) => setPlanForm({...planForm, sort_order: parseInt(e.target.value) || 0})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={savingPlan}
+                  className="flex-1 py-3 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {savingPlan ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                  {savingPlan ? 'Saving...' : (editingPlan ? 'Update Plan' : 'Create Plan')}
+                </button>
+                {editingPlan && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingPlan(null);
+                      setPlanForm({
+                        name: '', description: '', price: '', billing_period: 'per month', features: '', is_popular: false, button_text: 'Get Started', sort_order: 0
+                      });
+                    }}
+                    className="py-3 px-4 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Existing Plans</h2>
+            <div className="space-y-4">
+              {pricingPlans.map((plan) => (
+                <div key={plan.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                      {plan.name} - {plan.price} {plan.billing_period}
+                      {plan.is_popular && <span className="text-xs bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">Popular</span>}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{plan.description}</p>
+                    <p className="text-xs text-gray-400 mt-1">Order: {plan.sort_order} | Features: {Array.isArray(plan.features) ? plan.features.length : 0}</p>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={() => startEditPlan(plan)}
+                      className="flex-1 sm:flex-none py-2 px-3 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeletePlan(plan.id)}
+                      className="flex-1 sm:flex-none py-2 px-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {pricingPlans.length === 0 && (
+                <p className="text-center text-gray-500 py-4">No pricing plans found.</p>
               )}
             </div>
           </div>

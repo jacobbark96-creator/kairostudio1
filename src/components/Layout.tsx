@@ -78,6 +78,12 @@ export default function Layout({ children }: LayoutProps) {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
               <Link
+                to="/pricing"
+                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
+              >
+                Pricing
+              </Link>
+              <Link
                 to="/dashboard"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
@@ -127,6 +133,13 @@ export default function Layout({ children }: LayoutProps) {
             mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}>
             <div className="flex flex-col items-center justify-center h-full gap-8 p-8">
+              <Link
+                to="/pricing"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+              >
+                Pricing
+              </Link>
               <Link
                 to="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
