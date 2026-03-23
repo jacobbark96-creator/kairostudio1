@@ -155,7 +155,7 @@ export default function PricingPage() {
                             </div>
                             
                             <button 
-                                onClick={() => openContactModal()}
+                                onClick={() => openContactModal(`Interested in ${plan.name} Plan`)}
                                 className={`w-full py-4 rounded-xl font-bold text-lg mb-8 transition-transform active:scale-95 flex items-center justify-center gap-2
                                     ${plan.is_popular 
                                         ? 'bg-gradient-to-r from-brand-500 to-purple-500 text-white shadow-lg hover:shadow-brand-500/25' 

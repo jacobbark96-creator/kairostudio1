@@ -128,7 +128,9 @@ export default function ContactModal() {
                   <Rocket className="w-5 h-5 text-brand-600 dark:text-brand-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-0.5">Selected Offer</p>
+                  <p className="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-0.5">
+                    {lockedSubject.includes('Plan') ? 'Selected Plan' : 'Selected Offer'}
+                  </p>
                   <p className="font-semibold text-gray-900 dark:text-white">{lockedSubject}</p>
                 </div>
               </div>
