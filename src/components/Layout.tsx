@@ -78,10 +78,28 @@ export default function Layout({ children }: LayoutProps) {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
               <Link
+                to="/services"
+                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
+              >
+                Services
+              </Link>
+              <Link
+                to="/portfolio"
+                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
+              >
+                Portfolio
+              </Link>
+              <Link
                 to="/pricing"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Pricing
+              </Link>
+              <Link
+                to="/about"
+                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
+              >
+                About
               </Link>
               <Link
                 to="/dashboard"
@@ -134,11 +152,32 @@ export default function Layout({ children }: LayoutProps) {
           }`}>
             <div className="flex flex-col items-center justify-center h-full gap-8 p-8">
               <Link
+                to="/services"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+              >
+                Services
+              </Link>
+              <Link
+                to="/portfolio"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+              >
+                Portfolio
+              </Link>
+              <Link
                 to="/pricing"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
                 Pricing
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+              >
+                About
               </Link>
               <Link
                 to="/dashboard"
