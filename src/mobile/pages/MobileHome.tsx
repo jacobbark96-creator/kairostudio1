@@ -166,12 +166,13 @@ export default function MobileHome() {
       </section>
 
       {/* Site Assessment Trigger Pill */}
-      <div className="px-4 relative z-10 flex justify-center -mt-6 mb-4">
+      <div className="px-4 relative z-10 flex justify-center -mt-6 mb-4 animate-fade-in-up animation-delay-800">
           <button 
               onClick={() => setIsAuditModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-xl text-gray-900 dark:text-white font-bold text-sm active:scale-95 transition-transform"
+              className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-brand-600 to-purple-600 shadow-2xl shadow-brand-500/30 text-white font-bold text-sm active:scale-95 transition-all hover:shadow-brand-500/50"
           >
-              <Sparkles className="w-4 h-4 text-brand-500 animate-pulse" />
+              <div className="absolute inset-0 rounded-full bg-white/20 animate-pulse mix-blend-overlay" />
+              <Sparkles className="w-5 h-5 text-white animate-pulse" />
               Analyse Your Website
           </button>
       </div>
