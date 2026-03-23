@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
-import SEO from './SEO';
+import SEO from '../components/SEO';
 import { useUI } from '../context/UIContext';
 
 export interface PricingPlan {
@@ -127,7 +127,7 @@ export default function PricingPage() {
                                     ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-2xl scale-100 md:scale-105 z-10 border border-gray-800 dark:border-gray-200' 
                                     : 'bg-white dark:bg-gray-900/60 backdrop-blur-md text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 shadow-xl'
                                 }`}
-                            style={{ animationDelay: \`\${(index + 3) * 200}ms\` }}
+                            style={{ animationDelay: `${(index + 3) * 200}ms` }}
                         >
                             {plan.is_popular && (
                                 <div className="absolute -top-5 left-1/2 -translate-x-1/2">
