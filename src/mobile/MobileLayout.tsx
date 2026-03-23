@@ -123,7 +123,9 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
                     <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Home</Link>
                     <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Services</Link>
                     <Link to="/portfolio" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Portfolio</Link>
+                    <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Pricing</Link>
                     <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">About Us</Link>
+                    <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Blog</Link>
                     <Link to="/privacy-policy" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Privacy Policy</Link>
                     <Link to="/terms-of-service" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Terms of Service</Link>
                 </div>
