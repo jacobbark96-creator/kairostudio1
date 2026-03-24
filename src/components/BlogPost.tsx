@@ -1,5 +1,8 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import Link from 'next/link';
+import { useParams } from 'next/navigation';
+
 import { supabase } from '../lib/supabase';
 import SEO from './SEO';
 import { Calendar, Clock, ArrowLeft } from 'lucide-react';
@@ -95,7 +98,7 @@ export default function BlogPost() {
           <div className="min-h-screen flex flex-col justify-center items-center text-center px-4">
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Post not found</h1>
               <p className="text-gray-600 dark:text-gray-400 mb-8">The article you're looking for doesn't exist or has been removed.</p>
-              <Link to="/blog" className="px-6 py-3 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition-colors">
+              <Link href="/blog" className="px-6 py-3 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition-colors">
                   Back to Blog
               </Link>
           </div>
@@ -124,7 +127,7 @@ export default function BlogPost() {
             
             <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 lg:px-8 translate-y-1/2 sm:translate-y-1/4">
                 <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900/90 backdrop-blur-xl p-8 sm:p-12 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-white/10">
-                    <Link to="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-6 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+                    <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-6 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
                         <ArrowLeft className="w-4 h-4" />
                         Back to Journal
                     </Link>
@@ -160,7 +163,7 @@ export default function BlogPost() {
                 <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto">
                     Let's discuss how Kairo can help you achieve your goals with a custom digital solution.
                 </p>
-                <Link to="/" className="inline-flex px-8 py-4 bg-brand-600 text-white rounded-xl font-bold shadow-lg hover:bg-brand-700 transition-colors">
+                <Link href="/" className="inline-flex px-8 py-4 bg-brand-600 text-white rounded-xl font-bold shadow-lg hover:bg-brand-700 transition-colors">
                     Start Your Project
                 </Link>
             </div>

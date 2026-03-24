@@ -1,5 +1,10 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import lightLogoImg from '../Logo/light/colored-logo.png';
+import darkLogoImg from '../Logo/kairologo-nbg.png';
+import { usePathname } from 'next/navigation';
+
 import { Menu, X } from 'lucide-react';
 import Footer from './Footer';
 import ContactModal from './ContactModal';
@@ -15,14 +20,10 @@ export default function Layout({ children }: LayoutProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const location = useLocation();
+  const pathname = usePathname();
 
-  // Load logos for both themes
-  const lightLogoModules = import.meta.glob('../Logo/light/*.{png,jpg,jpeg,webp,svg}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  const darkLogoModules = import.meta.glob('../Logo/*.{png,jpg,jpeg,webp,svg}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
-  
-  const lightLogos = Object.values(lightLogoModules || {});
-  const darkLogos = Object.values(darkLogoModules || {});
+  const lightLogos = [lightLogoImg.src || lightLogoImg];
+  const darkLogos = [darkLogoImg.src || darkLogoImg];
   
   const kairoLogo = (theme === 'light' && lightLogos.length > 0 ? lightLogos[0] : darkLogos[0]) || '';
 
@@ -36,11 +37,11 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [location]);
+  }, [pathname]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location]);
+  }, [pathname]);
 
   return (
     <div className="min-h-screen bg-brand-50/50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 selection:bg-brand-500/30">
@@ -61,7 +62,7 @@ export default function Layout({ children }: LayoutProps) {
           }`}>
             <div className="flex items-center justify-between">
             <Link 
-              to="/"
+              href="/"
               className="cursor-pointer flex-shrink-0 flex items-center group"
             >
               {kairoLogo && (
@@ -78,31 +79,31 @@ export default function Layout({ children }: LayoutProps) {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
               <Link
-                to="/services"
+                href="/services"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Services
               </Link>
               <Link
-                to="/portfolio"
+                href="/portfolio"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Portfolio
               </Link>
               <Link
-                to="/pricing"
+                href="/pricing"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Pricing
               </Link>
               <Link
-                to="/about"
+                href="/about"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 About
               </Link>
               <Link
-                to="/dashboard"
+                href="/dashboard"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Client Portal
@@ -152,35 +153,35 @@ export default function Layout({ children }: LayoutProps) {
           }`}>
             <div className="flex flex-col items-center justify-center h-full gap-8 p-8">
               <Link
-                to="/services"
+                href="/services"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
                 Services
               </Link>
               <Link
-                to="/portfolio"
+                href="/portfolio"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
                 Portfolio
               </Link>
               <Link
-                to="/pricing"
+                href="/pricing"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
                 Pricing
               </Link>
               <Link
-                to="/about"
+                href="/about"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >
                 About
               </Link>
               <Link
-                to="/dashboard"
+                href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-2xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
               >

@@ -1,5 +1,7 @@
+"use client";
 import { Mail, Phone, MapPin, Instagram, Linkedin, Github } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+
 
 interface FooterProps {
   logo: string;
@@ -22,7 +24,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               <ul className="space-y-2">
                 <li>
                   <Link 
-                    to="/services"
+                    href="/services"
                     className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                   >
                     Services
@@ -30,7 +32,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    to="/about"
+                    href="/about"
                     className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                   >
                     About
@@ -38,7 +40,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    to="/blog"
+                    href="/blog"
                     className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                   >
                     Blog
@@ -54,7 +56,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    to="/portfolio"
+                    href="/portfolio"
                     className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                   >
                     Our Work
@@ -62,7 +64,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    to="/dashboard"
+                    href="/dashboard"
                     className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                   >
                     Client Portal
@@ -183,7 +185,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             <ul className="space-y-2">
               <li>
                 <Link 
-                  to="/services"
+                  href="/services"
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
                   Services
@@ -191,7 +193,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               </li>
               <li>
                 <Link 
-                  to="/about"
+                  href="/about"
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
                   About
@@ -199,7 +201,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               </li>
               <li>
                 <Link 
-                  to="/blog"
+                  href="/blog"
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
                   Blog
@@ -215,7 +217,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               </li>
               <li>
                 <Link 
-                  to="/portfolio"
+                  href="/portfolio"
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
                   Our Work
@@ -223,7 +225,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               </li>
               <li>
                 <Link 
-                  to="/dashboard"
+                  href="/dashboard"
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
                   Client Portal
@@ -307,10 +309,10 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             © {new Date().getFullYear()} Kairo Studio. All rights reserved.
           </p>
           <div className="hidden sm:flex justify-center gap-5 mt-2 text-xs sm:text-sm text-gray-500 dark:text-gray-500">
-            <Link to="/privacy-policy" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
+            <Link href="/privacy-policy" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
               Privacy Policy
             </Link>
-            <Link to="/terms-of-service" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
+            <Link href="/terms-of-service" className="hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200">
               Terms of Service
             </Link>
           </div>

@@ -1,6 +1,8 @@
+"use client";
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+
 import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X } from 'lucide-react';
 import RandomOffer from '../../components/RandomOffer';
 import { useUI } from '../../context/UIContext';
@@ -266,7 +268,7 @@ export default function MobileHome() {
       <section className="space-y-4 relative z-10">
         <div className="flex justify-between items-end px-4">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Services</h2>
-            <Link to="/services" className="text-xs text-brand-600 font-medium">View All</Link>
+            <Link href="/services" className="text-xs text-brand-600 font-medium">View All</Link>
         </div>
         
         <div className="grid grid-cols-2 gap-3 px-4">
@@ -287,7 +289,7 @@ export default function MobileHome() {
       <section className="space-y-4 relative z-10 overflow-hidden">
         <div className="flex justify-between items-end px-4">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Work</h2>
-            <Link to="/portfolio" className="text-xs text-brand-600 font-medium">View All</Link>
+            <Link href="/portfolio" className="text-xs text-brand-600 font-medium">View All</Link>
         </div>
         
         {projects.length > 0 ? (
@@ -296,7 +298,7 @@ export default function MobileHome() {
                     {[...projects, ...projects].map((project, index) => (
                         <Link 
                             key={`${project.id}-${index}`} 
-                            to="/portfolio"
+                            href="/portfolio"
                             className="flex-shrink-0 w-[85vw] relative rounded-[2rem] overflow-hidden aspect-[4/3] group"
                         >
                             {project.image_url ? (

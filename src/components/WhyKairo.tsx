@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { TrendingUp, ShoppingCart, Zap, Calendar, Megaphone, Users, ChevronRight } from 'lucide-react';
 

@@ -1,3 +1,4 @@
+"use client";
 
 import React, { useState } from 'react';
 import { Palette, Code, Zap, Rocket, Users, Award, Sparkles, ArrowRight, ChevronDown } from 'lucide-react';

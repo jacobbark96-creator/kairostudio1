@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[51588,["/_next/static/chunks/0ii6-xcrlc4p8.js","/_next/static/chunks/0d6ekd_7oaj~w.js","/_next/static/chunks/14r3.fevmhs37.js","/_next/static/chunks/0mbylecih0msh.js"],"ViewportBoundary"]
+3:I[51588,["/_next/static/chunks/0ii6-xcrlc4p8.js","/_next/static/chunks/0d6ekd_7oaj~w.js","/_next/static/chunks/14r3.fevmhs37.js","/_next/static/chunks/0mbylecih0msh.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Kairo Studio | High-Performance Digital Solutions"}],["$","meta","1",{"name":"description","content":"We build high-performance websites and digital products."}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"_QQqYCW1V2ArqklQBSwHY"}

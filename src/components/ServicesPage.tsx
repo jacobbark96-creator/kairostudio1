@@ -1,5 +1,7 @@
+"use client";
 import { ArrowRight, Sparkles, Palette, Code, Zap, Mail, CheckCircle, TrendingUp, DollarSign, Users, Rocket, Award, ArrowLeft, ArrowDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+
 import { useUI } from '../context/UIContext';
 import SEO from './SEO';
 
@@ -81,7 +83,7 @@ export default function ServicesPage() {
 
         <div className="max-w-7xl mx-auto w-full relative z-10">
           <Link
-            to="/"
+            href="/"
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-300 mb-8 group"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />

@@ -1,3 +1,4 @@
+"use client";
 import { ArrowRight, Code, Heart, Zap, Award, Target, Users, Rocket, Sparkles } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import SEO from './SEO';

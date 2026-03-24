@@ -1,3 +1,4 @@
+"use client";
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {

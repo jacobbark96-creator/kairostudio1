@@ -1,5 +1,7 @@
+"use client";
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+
 import { supabase } from '../lib/supabase';
 import SEO from './SEO';
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
@@ -118,7 +120,7 @@ export default function BlogList() {
                     {posts.map((post) => (
                         <Link 
                             key={post.id} 
-                            to={`/blog/${post.slug}`}
+                            href={`/blog/${post.slug}`}
                             className="group bg-white dark:bg-gray-900/60 backdrop-blur-md rounded-[2rem] overflow-hidden border border-gray-100 dark:border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
                         >
                             <div className="aspect-video w-full overflow-hidden relative">

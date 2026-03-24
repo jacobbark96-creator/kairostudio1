@@ -1,6 +1,8 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ExternalLink, Code, Palette, Zap, Users, Globe, CheckCircle, ArrowLeft, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
+
 import { useUI } from '../context/UIContext';
 import SEO from './SEO';
 import { supabase } from '../lib/supabase';
@@ -92,7 +94,7 @@ export default function PortfolioPage() {
 
         <div className="max-w-7xl mx-auto w-full relative z-10">
           <Link
-            to="/"
+            href="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-300 mb-12 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />

@@ -1,6 +1,9 @@
+"use client";
 
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import { Home, Layers, Grid, User, Menu, X, Rocket } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import ContactModal from '../components/ContactModal';
@@ -15,17 +18,17 @@ interface MobileLayoutProps {
 
 export default function MobileLayout({ children }: MobileLayoutProps) {
   const { isContactModalOpen, closeContactModal, contactModalPreill, openContactModal } = useUI();
-  const location = useLocation();
+  const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => pathname === path;
 
   return (
     <div className="min-h-screen pb-20">
       {/* Mobile Header */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <img src={logoNb} alt="Kairo" className="h-12 w-auto" />
         </Link>
         <div className="flex items-center gap-3">
@@ -54,7 +57,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
         <div className="bg-black/80 dark:bg-white/90 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-black/20 border border-white/10 dark:border-gray-200 p-2 flex justify-between items-center h-20 px-6">
           
           <Link 
-            to="/" 
+            href="/" 
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
             <div className={`p-2 rounded-full ${isActive('/') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
@@ -63,7 +66,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
           </Link>
           
           <Link 
-            to="/services" 
+            href="/services" 
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/services') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
             <div className={`p-2 rounded-full ${isActive('/services') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
@@ -82,7 +85,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
           </div>
           
           <Link 
-            to="/about" 
+            href="/about" 
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/about') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
              <div className={`p-2 rounded-full ${isActive('/about') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
@@ -91,7 +94,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
           </Link>
           
           <Link 
-            to="/login" 
+            href="/login" 
             className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 ${isActive('/login') ? 'text-white dark:text-black scale-110' : 'text-gray-400 dark:text-gray-400 hover:text-white dark:hover:text-gray-600'}`}
           >
              <div className={`p-2 rounded-full ${isActive('/login') ? 'bg-white/10 dark:bg-black/10' : ''}`}>
@@ -116,18 +119,18 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
                 </button>
             </div>
             <div className="p-6 space-y-6">
-                <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-2xl font-bold dark:text-white">Client Portal</Link>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-2xl font-bold dark:text-white">Client Portal</Link>
                 <div className="h-px bg-gray-100 dark:bg-gray-800 my-4" />
                 <div className="space-y-4">
                     <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider">Quick Links</h3>
-                    <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Home</Link>
-                    <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Services</Link>
-                    <Link to="/portfolio" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Portfolio</Link>
-                    <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Pricing</Link>
-                    <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">About Us</Link>
-                    <Link to="/blog" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Blog</Link>
-                    <Link to="/privacy-policy" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Privacy Policy</Link>
-                    <Link to="/terms-of-service" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Terms of Service</Link>
+                    <Link href="/" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Home</Link>
+                    <Link href="/services" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Services</Link>
+                    <Link href="/portfolio" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Portfolio</Link>
+                    <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Pricing</Link>
+                    <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">About Us</Link>
+                    <Link href="/blog" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Blog</Link>
+                    <Link href="/privacy-policy" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Privacy Policy</Link>
+                    <Link href="/terms-of-service" onClick={() => setMobileMenuOpen(false)} className="block text-lg font-medium dark:text-gray-300">Terms of Service</Link>
                 </div>
             </div>
         </div>

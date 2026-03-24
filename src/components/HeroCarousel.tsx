@@ -1,5 +1,7 @@
+"use client";
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import heroImage from './hero/screenshot_2025-12-30_at_15.32.31.png';
 
 type Slide = 
   | { id: string; url: string }
@@ -15,10 +17,8 @@ export default function HeroCarousel() {
     { id: 3, color: 'from-cyan-400 to-blue-600' },
   ];
 
-  // Try to eagerly import any images placed in `src/components/hero/` (drop your image there)
-  // If no images are present, fall back to placeholderSlides.
-  const imageModules = import.meta.glob('./hero/*.{png,jpg,jpeg,webp,svg}', { eager: true }) as Record<string, { default: string }>;
-  const imageUrls = Object.values(imageModules || {}).map((mod) => mod.default);
+  // Load all images from the hero folder
+  const imageUrls = [(heroImage as any).src || heroImage];
 
   const imageSlides: Slide[] = imageUrls.map((url, i) => ({ id: `img-${i}`, url }));
   const slides = imageSlides.length ? imageSlides : placeholderSlides;
