@@ -1,3 +1,0 @@
-module.exports=[56469,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(46928);a.n(d("[project]/Downloads/Kairo/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},59536,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(46928);a.n(d("[project]/Downloads/Kairo/node_modules/next/dist/client/components/builtin/global-error.js"))},99170,a=>{"use strict";a.i(56469);var b=a.i(59536);a.n(b)},34802,a=>{a.n(a.i(99170))}];
-
-//# sourceMappingURL=0ao2_next_dist_client_components_builtin_global-error_00gsx4q.js.map

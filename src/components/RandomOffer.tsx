@@ -10,7 +10,7 @@ import confetti from 'canvas-confetti';
 import logoNb from '../Logo/kairologo-nbg.png';
 
 const KairoLogo = ({ className }: { className?: string }) => (
-  <img src={logoNb} alt="Kairo Logo" className={className} />
+  <img src={typeof logoNb === 'string' ? logoNb : (logoNb as any).src} alt="Kairo Logo" className={className} />
 );
 
 export default function RandomOffer() {

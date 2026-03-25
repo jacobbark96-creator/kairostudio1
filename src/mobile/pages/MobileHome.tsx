@@ -135,7 +135,7 @@ export default function MobileHome() {
             <div className="absolute inset-0 bg-black/30 dark:bg-black/50 blur-2xl -z-10 rounded-full scale-150 hidden dark:block" />
             <div className="w-24 h-auto">
                 <img 
-                    src={logoNb} 
+                    src={typeof logoNb === 'string' ? logoNb : (logoNb as any).src} 
                     alt="Kairo" 
                     className="w-full h-auto object-contain brightness-0 dark:invert drop-shadow-lg" 
                 />

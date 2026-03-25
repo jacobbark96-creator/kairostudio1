@@ -1,16 +1,1 @@
-{
-  "/_global-error/page": "/_global-error",
-  "/_not-found/page": "/_not-found",
-  "/about/page": "/about",
-  "/blog/[slug]/page": "/blog/[slug]",
-  "/blog/page": "/blog",
-  "/crm/page": "/crm",
-  "/dashboard/page": "/dashboard",
-  "/login/page": "/login",
-  "/page": "/",
-  "/portfolio/page": "/portfolio",
-  "/pricing/page": "/pricing",
-  "/privacy-policy/page": "/privacy-policy",
-  "/services/page": "/services",
-  "/terms-of-service/page": "/terms-of-service"
-}
+{"/_not-found/page":"/_not-found","/careers/page":"/careers","/about/page":"/about","/blog/[slug]/page":"/blog/[slug]","/crm/page":"/crm","/blog/page":"/blog","/dashboard/page":"/dashboard","/login/page":"/login","/privacy-policy/page":"/privacy-policy","/pricing/page":"/pricing","/page":"/","/terms-of-service/page":"/terms-of-service","/services/page":"/services","/portfolio/page":"/portfolio"}

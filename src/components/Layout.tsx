@@ -68,7 +68,7 @@ export default function Layout({ children }: LayoutProps) {
               {kairoLogo && (
                 <div className="h-20 sm:h-24 w-auto flex items-center justify-center">
                   <img 
-                    src={kairoLogo} 
+                    src={typeof kairoLogo === 'string' ? kairoLogo : (kairoLogo as any).src} 
                     alt="Kairo Studio" 
                     className="h-full w-auto object-contain object-left transition-transform duration-500 group-hover:scale-105" 
                   />
@@ -211,7 +211,7 @@ export default function Layout({ children }: LayoutProps) {
       </main>
 
       <Footer 
-        logo={kairoLogo}
+        logo={typeof kairoLogo === 'string' ? kairoLogo : (kairoLogo as any).src}
         onShowContact={() => openContactModal()}
       />
 

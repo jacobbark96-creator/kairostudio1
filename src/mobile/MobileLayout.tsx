@@ -29,7 +29,7 @@ export default function MobileLayout({ children }: MobileLayoutProps) {
       {/* Mobile Header */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <img src={logoNb} alt="Kairo" className="h-12 w-auto" />
+          <img src={typeof logoNb === 'string' ? logoNb : (logoNb as any).src} alt="Kairo" className="h-12 w-auto" />
         </Link>
         <div className="flex items-center gap-3">
             <button 

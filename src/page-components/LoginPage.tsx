@@ -26,7 +26,7 @@ export default function LoginPage() {
       });
 
       if (error) throw error;
-      navigate('/dashboard');
+      navigate.push('/dashboard');
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -49,7 +49,7 @@ export default function LoginPage() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-6">
         <div className="text-center mb-8">
-            <img src={logoNb} alt="Kairo" className="h-16 w-auto mx-auto mb-6 drop-shadow-lg" />
+            <img src={typeof logoNb === 'string' ? logoNb : (logoNb as any).src} alt="Kairo" className="h-16 w-auto mx-auto mb-6 drop-shadow-lg" />
             <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white tracking-tight">
               Welcome Back
             </h2>

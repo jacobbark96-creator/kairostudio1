@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Briefcase, MapPin, Clock, ArrowRight, Sparkles, ChevronDown } from 'lucide-react';
-import SEO from './SEO';
+import SEO from '../components/SEO';
 
 interface Career {
   id: string;
