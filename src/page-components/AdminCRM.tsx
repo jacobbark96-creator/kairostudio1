@@ -99,6 +99,13 @@ export default function AdminCRM() {
     is_active: true
   });
 
+  // Client Projects State
+  const [managingProjectsForUser, setManagingProjectsForUser] = useState<Profile | null>(null);
+  const [clientProjects, setClientProjects] = useState<any[]>([]);
+  const [newProjectName, setNewProjectName] = useState('');
+  const [newProjectUrl, setNewProjectUrl] = useState('');
+  const [addingClientProject, setAddingClientProject] = useState(false);
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
@@ -513,6 +520,49 @@ export default function AdminCRM() {
     }
   };
 
+  const openClientProjects = async (user: Profile) => {
+    setManagingProjectsForUser(user);
+    const { data } = await supabase.from('client_projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+    if (data) setClientProjects(data);
+  };
+
+  const handleAddClientProject = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!managingProjectsForUser || !newProjectName || !newProjectUrl) return;
+
+    setAddingClientProject(true);
+    try {
+      const { error } = await supabase.from('client_projects').insert([{
+        user_id: managingProjectsForUser.id,
+        project_name: newProjectName,
+        project_url: newProjectUrl
+      }]);
+
+      if (error) throw error;
+      
+      setNewProjectName('');
+      setNewProjectUrl('');
+      
+      // Refresh list
+      const { data } = await supabase.from('client_projects').select('*').eq('user_id', managingProjectsForUser.id).order('created_at', { ascending: false });
+      if (data) setClientProjects(data);
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setAddingClientProject(false);
+    }
+  };
+
+  const handleDeleteClientProject = async (projectId: string) => {
+    if (!confirm('Delete this project link?')) return;
+    const { error } = await supabase.from('client_projects').delete().eq('id', projectId);
+    if (error) alert(error.message);
+    else if (managingProjectsForUser) {
+      const { data } = await supabase.from('client_projects').select('*').eq('user_id', managingProjectsForUser.id).order('created_at', { ascending: false });
+      if (data) setClientProjects(data);
+    }
+  };
+
   const handleUpdateContent = async () => {
     setSavingContent(true);
     try {
@@ -899,7 +949,13 @@ export default function AdminCRM() {
                           {user.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-3">
+                        <button
+                          onClick={() => openClientProjects(user)}
+                          className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center gap-1"
+                        >
+                          <FileText className="w-4 h-4" /> Edit Projects
+                        </button>
                         {user.role !== 'admin' && (
                           <button
                             onClick={() => handlePromoteAdmin(user.id)}
@@ -914,6 +970,83 @@ export default function AdminCRM() {
                 </tbody>
               </table>
             </div>
+            
+            {/* Client Projects Modal/Section */}
+            {managingProjectsForUser && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+                  <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                      Projects for {managingProjectsForUser.email}
+                    </h3>
+                    <button 
+                      onClick={() => setManagingProjectsForUser(null)}
+                      className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  
+                  <div className="p-6">
+                    <form onSubmit={handleAddClientProject} className="flex flex-col sm:flex-row gap-4 items-end mb-8">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project Name</label>
+                        <input
+                          type="text"
+                          value={newProjectName}
+                          onChange={(e) => setNewProjectName(e.target.value)}
+                          placeholder="e.g. Kairo Website"
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          required
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project URL</label>
+                        <input
+                          type="url"
+                          value={newProjectUrl}
+                          onChange={(e) => setNewProjectUrl(e.target.value)}
+                          placeholder="https://..."
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          required
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={addingClientProject}
+                        className="py-2 px-6 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 h-[42px] flex items-center gap-2"
+                      >
+                        {addingClientProject ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                        Add
+                      </button>
+                    </form>
+
+                    <div className="space-y-3">
+                      {clientProjects.map(proj => (
+                        <div key={proj.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">{proj.project_name}</p>
+                            <a href={proj.project_url} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 hover:underline block truncate max-w-xs sm:max-w-md">
+                              {proj.project_url}
+                            </a>
+                          </div>
+                          <button
+                            onClick={() => handleDeleteClientProject(proj.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                            title="Delete Project Link"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      ))}
+                      {clientProjects.length === 0 && (
+                        <p className="text-center text-gray-500 py-8">No projects assigned to this user yet.</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

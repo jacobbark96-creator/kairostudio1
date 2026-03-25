@@ -2,19 +2,39 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Download, Calendar, DollarSign, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText, Download, Calendar, DollarSign, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function ClientDashboard() {
   const { user, isAdmin } = useAuth();
+  const [activeTab, setActiveTab] = useState<'invoices' | 'projects'>('invoices');
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) fetchInvoices();
+    if (user) {
+      fetchInvoices();
+      fetchProjects();
+    }
   }, [user]);
+
+  const fetchProjects = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('client_projects')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProjects(data || []);
+    } catch (err: unknown) {
+      console.error('Error fetching projects:', err);
+    }
+  };
 
   const fetchInvoices = async () => {
     try {
@@ -96,83 +116,151 @@ export default function ClientDashboard() {
           )}
         </div>
 
+        <div className="flex space-x-4 mb-8 border-b border-gray-200 dark:border-gray-700">
+          <button
+            onClick={() => setActiveTab('invoices')}
+            className={`pb-4 px-4 flex items-center gap-2 font-medium transition-colors ${
+              activeTab === 'invoices' 
+                ? 'border-b-2 border-cyan-600 text-cyan-600 dark:text-cyan-400' 
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            Invoices
+          </button>
+          <button
+            onClick={() => setActiveTab('projects')}
+            className={`pb-4 px-4 flex items-center gap-2 font-medium transition-colors ${
+              activeTab === 'projects' 
+                ? 'border-b-2 border-cyan-600 text-cyan-600 dark:text-cyan-400' 
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            <LayoutIcon className="w-4 h-4" />
+            My Projects
+          </button>
+        </div>
+
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-600"></div>
           </div>
-        ) : invoices.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FileText className="w-8 h-8 text-gray-400" />
+        ) : activeTab === 'invoices' ? (
+          invoices.length === 0 ? (
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No invoices yet</h3>
+              <p className="text-gray-500 dark:text-gray-400">Any invoices sent to you will appear here.</p>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No documents yet</h3>
-            <p className="text-gray-500 dark:text-gray-400">Any invoices or documents sent to you will appear here.</p>
-          </div>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {invoices.map((invoice) => (
-              <div key={invoice.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 dark:border-gray-700">
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg">
-                      <FileText className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
-                    </div>
-                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(invoice.status || 'pending')}`}>
-                      {getStatusIcon(invoice.status || 'pending')}
-                      {(invoice.status || 'pending').charAt(0).toUpperCase() + (invoice.status || 'pending').slice(1)}
-                    </span>
-                  </div>
-                  
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{invoice.client_name}</h3>
-                    <div className="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
-                      <DollarSign className="w-5 h-5 text-gray-400" />
-                      {invoice.amount.toFixed(2)}
-                    </div>
-                    {invoice.amount_paid > 0 && (
-                      <div className="text-sm text-green-600 dark:text-green-400 mt-1">
-                        Paid: ${invoice.amount_paid.toFixed(2)}
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {invoices.map((invoice) => (
+                <div key={invoice.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 dark:border-gray-700">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg">
+                        <FileText className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
                       </div>
-                    )}
-                    {(invoice.amount - (invoice.amount_paid || 0) > 0) && (
-                      <div className="text-sm text-red-500 font-medium mt-1">
-                        Outstanding: ${(invoice.amount - (invoice.amount_paid || 0)).toFixed(2)}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Due: {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString() : 'No due date'}
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(invoice.status || 'pending')}`}>
+                        {getStatusIcon(invoice.status || 'pending')}
+                        {(invoice.status || 'pending').charAt(0).toUpperCase() + (invoice.status || 'pending').slice(1)}
+                      </span>
                     </div>
                     
-                    {invoice.status !== 'paid' && (
-                        <button
-                            onClick={() => handlePayment(invoice)}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors text-sm font-medium shadow-sm"
-                        >
-                            <DollarSign className="w-4 h-4" />
-                            Pay Now
-                        </button>
+                    <div className="mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{invoice.client_name}</h3>
+                      <div className="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
+                        <DollarSign className="w-5 h-5 text-gray-400" />
+                        {invoice.amount.toFixed(2)}
+                      </div>
+                      {invoice.amount_paid > 0 && (
+                        <div className="text-sm text-green-600 dark:text-green-400 mt-1">
+                          Paid: ${invoice.amount_paid.toFixed(2)}
+                        </div>
+                      )}
+                      {(invoice.amount - (invoice.amount_paid || 0) > 0) && (
+                        <div className="text-sm text-red-500 font-medium mt-1">
+                          Outstanding: ${(invoice.amount - (invoice.amount_paid || 0)).toFixed(2)}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Due: {invoice.due_date ? new Date(invoice.due_date).toLocaleDateString() : 'No due date'}
+                      </div>
+                      
+                      {invoice.status !== 'paid' && (
+                          <button
+                              onClick={() => handlePayment(invoice)}
+                              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors text-sm font-medium shadow-sm"
+                          >
+                              <DollarSign className="w-4 h-4" />
+                              Pay Now
+                          </button>
+                      )}
+                    </div>
+
+                    {invoice.file_url && (
+                      <a
+                        href={invoice.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors text-sm font-medium"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download Invoice
+                      </a>
                     )}
                   </div>
-
-                  {invoice.file_url && (
-                    <a
-                      href={invoice.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors text-sm font-medium"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download Invoice
-                    </a>
-                  )}
                 </div>
+              ))}
+            </div>
+          )
+        ) : (
+          projects.length === 0 ? (
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LayoutIcon className="w-8 h-8 text-gray-400" />
               </div>
-            ))}
-          </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No projects yet</h3>
+              <p className="text-gray-500 dark:text-gray-400">Links to your active projects will appear here.</p>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {projects.map((project) => (
+                <a 
+                  key={project.id}
+                  href={project.project_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 block"
+                >
+                  <div className="h-48 w-full bg-gray-100 dark:bg-gray-700 relative overflow-hidden">
+                    {/* Visual representation of a website using an iframe pointer event none */}
+                    <iframe 
+                      src={project.project_url} 
+                      className="w-[1024px] h-[768px] scale-[0.4] origin-top-left pointer-events-none opacity-50 group-hover:opacity-80 transition-opacity duration-500"
+                      title={project.project_name}
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent flex items-end p-6">
+                      <div className="text-white">
+                        <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
+                          {project.project_name}
+                          <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0" />
+                        </h3>
+                        <p className="text-sm text-gray-300 truncate w-full max-w-[200px]">{project.project_url}</p>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )
         )}
       </div>
     </div>
