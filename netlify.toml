@@ -5,6 +5,9 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+[build.environment]
+  NEXT_PRIVATE_LOCAL_WEBPACK = "true"
+
 
 [[headers]]
   for = "/*"
