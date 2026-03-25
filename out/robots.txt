@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://kairostudio.com/sitemap.xml

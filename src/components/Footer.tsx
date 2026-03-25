@@ -21,7 +21,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">
                 Quick Links
               </h3>
-              <ul className="space-y-2">
+              <ul className="grid grid-cols-2 gap-x-2 gap-y-2">
                 <li>
                   <Link 
                     href="/services"
@@ -190,7 +190,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             <h3 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">
               Quick Links
             </h3>
-            <ul className="space-y-2">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
               <li>
                 <Link 
                   href="/services"
