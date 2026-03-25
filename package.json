@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && rm -rf dist && mv out dist",
     "export": "next export",
     "start": "next start",
     "lint": "next lint"
