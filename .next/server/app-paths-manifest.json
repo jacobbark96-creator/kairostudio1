@@ -1,16 +1,16 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/about/page": "app/about/page.js",
-  "/blog/[slug]/page": "app/blog/[slug]/page.js",
-  "/blog/page": "app/blog/page.js",
   "/careers/page": "app/careers/page.js",
-  "/login/page": "app/login/page.js",
+  "/blog/page": "app/blog/page.js",
   "/crm/page": "app/crm/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/portfolio/page": "app/portfolio/page.js",
+  "/about/page": "app/about/page.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js",
   "/pricing/page": "app/pricing/page.js",
   "/privacy-policy/page": "app/privacy-policy/page.js",
+  "/portfolio/page": "app/portfolio/page.js",
+  "/services/page": "app/services/page.js",
   "/terms-of-service/page": "app/terms-of-service/page.js",
-  "/services/page": "app/services/page.js"
+  "/blog/[slug]/page": "app/blog/[slug]/page.js"
 }
