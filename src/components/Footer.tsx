@@ -47,6 +47,14 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                   </Link>
                 </li>
                 <li>
+                  <Link 
+                    href="/careers"
+                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
+                  >
+                    Careers
+                  </Link>
+                </li>
+                <li>
                   <button 
                     onClick={onShowContact}
                     className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
@@ -205,6 +213,14 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
                   Blog
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/careers"
+                  className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
+                >
+                  Careers
                 </Link>
               </li>
               <li>

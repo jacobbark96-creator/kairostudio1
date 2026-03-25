@@ -9,7 +9,7 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers' | 'portfolio' | 'pricing'>('invoices');
+  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers' | 'portfolio' | 'pricing' | 'careers'>('invoices');
   
   // Portfolio State
   const [projects, setProjects] = useState<any[]>([]);
@@ -85,6 +85,20 @@ export default function AdminCRM() {
     sort_order: 0
   });
 
+  // Careers State
+  const [careers, setCareers] = useState<any[]>([]);
+  const [editingCareer, setEditingCareer] = useState<any>(null);
+  const [savingCareer, setSavingCareer] = useState(false);
+  const [careerForm, setCareerForm] = useState({
+    title: '',
+    department: '',
+    location: '',
+    type: 'Full-time',
+    description: '',
+    requirements: '', // Stored as comma separated in form, JSON in DB
+    is_active: true
+  });
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
@@ -92,7 +106,67 @@ export default function AdminCRM() {
     fetchProjects();
     fetchAllInvoices();
     fetchPricingPlans();
+    fetchCareers();
   }, []);
+
+  const fetchCareers = async () => {
+    const { data } = await supabase.from('careers').select('*').order('created_at', { ascending: false });
+    if (data) setCareers(data);
+  };
+
+  const handleSaveCareer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingCareer(true);
+    try {
+      const careerData = {
+        ...careerForm,
+        requirements: careerForm.requirements.split('\n').map(r => r.trim()).filter(r => r)
+      };
+
+      if (editingCareer) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await (supabase.from('careers') as any).update(careerData).eq('id', editingCareer.id);
+        if (error) throw error;
+        alert('Career updated!');
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error } = await (supabase.from('careers') as any).insert([careerData]);
+        if (error) throw error;
+        alert('Career created!');
+      }
+
+      setCareerForm({
+        title: '', department: '', location: '', type: 'Full-time', description: '', requirements: '', is_active: true
+      });
+      setEditingCareer(null);
+      fetchCareers();
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setSavingCareer(false);
+    }
+  };
+
+  const startEditCareer = (career: any) => {
+    setEditingCareer(career);
+    setCareerForm({
+      title: career.title,
+      department: career.department,
+      location: career.location,
+      type: career.type,
+      description: career.description,
+      requirements: Array.isArray(career.requirements) ? career.requirements.join('\n') : '',
+      is_active: career.is_active
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeleteCareer = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this job posting?')) return;
+    const { error } = await supabase.from('careers').delete().eq('id', id);
+    if (error) alert(error.message);
+    else fetchCareers();
+  };
 
   const fetchPricingPlans = async () => {
     const { data } = await supabase.from('pricing_plans').select('*').order('sort_order', { ascending: true });
@@ -585,6 +659,12 @@ export default function AdminCRM() {
             className={`pb-4 px-4 ${activeTab === 'pricing' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
           >
             Pricing Plans
+          </button>
+          <button
+            onClick={() => setActiveTab('careers')}
+            className={`pb-4 px-4 ${activeTab === 'careers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+          >
+            Careers
           </button>
         </div>
 
@@ -1402,6 +1482,161 @@ export default function AdminCRM() {
               ))}
               {pricingPlans.length === 0 && (
                 <p className="text-center text-gray-500 py-4">No pricing plans found.</p>
+              )}
+            </div>
+          </div>
+        )}
+        {activeTab === 'careers' && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">
+              {editingCareer ? 'Edit Job Posting' : 'Add New Job Posting'}
+            </h2>
+            <form onSubmit={handleSaveCareer} className="space-y-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Job Title</label>
+                  <input
+                    type="text"
+                    value={careerForm.title}
+                    onChange={(e) => setCareerForm({...careerForm, title: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Department</label>
+                  <input
+                    type="text"
+                    value={careerForm.department}
+                    onChange={(e) => setCareerForm({...careerForm, department: e.target.value})}
+                    placeholder="e.g. Engineering, Design, Marketing"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Location</label>
+                  <input
+                    type="text"
+                    value={careerForm.location}
+                    onChange={(e) => setCareerForm({...careerForm, location: e.target.value})}
+                    placeholder="e.g. Remote, London, Hybrid"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Employment Type</label>
+                  <select
+                    value={careerForm.type}
+                    onChange={(e) => setCareerForm({...careerForm, type: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    required
+                  >
+                    <option value="Full-time">Full-time</option>
+                    <option value="Part-time">Part-time</option>
+                    <option value="Contract">Contract</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Internship">Internship</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Job Description</label>
+                <textarea
+                  value={careerForm.description}
+                  onChange={(e) => setCareerForm({...careerForm, description: e.target.value})}
+                  rows={4}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Requirements (One per line)</label>
+                <textarea
+                  value={careerForm.requirements}
+                  onChange={(e) => setCareerForm({...careerForm, requirements: e.target.value})}
+                  rows={5}
+                  placeholder="- 5+ years experience&#10;- Expert in React&#10;- Strong communication skills"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center gap-4 h-full pt-2 pb-4">
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <input
+                    type="checkbox"
+                    checked={careerForm.is_active}
+                    onChange={(e) => setCareerForm({...careerForm, is_active: e.target.checked})}
+                    className="rounded text-cyan-600 focus:ring-cyan-500"
+                  />
+                  Status: Active (Visible on site)
+                </label>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={savingCareer}
+                  className="flex-1 py-3 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {savingCareer ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                  {savingCareer ? 'Saving...' : (editingCareer ? 'Update Job' : 'Post Job')}
+                </button>
+                {editingCareer && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingCareer(null);
+                      setCareerForm({
+                        title: '', department: '', location: '', type: 'Full-time', description: '', requirements: '', is_active: true
+                      });
+                    }}
+                    className="py-3 px-4 bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </form>
+
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Existing Job Postings</h2>
+            <div className="space-y-4">
+              {careers.map((career) => (
+                <div key={career.id} className={`border ${career.is_active ? 'border-gray-200 dark:border-gray-700' : 'border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-900/10'} rounded-lg p-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between`}>
+                  <div>
+                    <h3 className="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                      {career.title}
+                      {!career.is_active && <span className="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full">Inactive</span>}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {career.department} • {career.location} • {career.type}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      onClick={() => startEditCareer(career)}
+                      className="flex-1 sm:flex-none py-2 px-3 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCareer(career.id)}
+                      className="flex-1 sm:flex-none py-2 px-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {careers.length === 0 && (
+                <p className="text-center text-gray-500 py-4">No job postings found.</p>
               )}
             </div>
           </div>
