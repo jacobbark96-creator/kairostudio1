@@ -151,8 +151,8 @@ export default function BlogPost() {
         </header>
 
         {/* Article Content */}
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-12">
-            <div className="prose prose-lg sm:prose-xl dark:prose-invert prose-headings:font-display prose-headings:font-bold prose-a:text-brand-600 dark:prose-a:text-brand-400 hover:prose-a:text-brand-700 max-w-none font-light leading-relaxed text-gray-700 dark:text-gray-300">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 sm:pt-16">
+            <div className="prose prose-lg sm:prose-xl dark:prose-invert prose-headings:font-display prose-headings:font-bold prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-a:text-brand-600 dark:prose-a:text-brand-400 hover:prose-a:text-brand-700 prose-img:rounded-2xl prose-img:shadow-xl max-w-none font-light">
                 <ReactMarkdown>{post.content}</ReactMarkdown>
             </div>
             
