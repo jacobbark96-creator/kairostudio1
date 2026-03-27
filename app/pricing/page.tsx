@@ -1,6 +1,14 @@
 import PricingPage from '../../src/page-components/PricingPage';
-// Since there's no MobilePricing, we use PricingPage for both for now, or just render PricingPage.
 import PageClientWrapper from '../../src/components/PageClientWrapper';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Pricing & Packages',
+  description: 'Transparent pricing for custom web design, development, and ongoing maintenance packages.',
+  alternates: {
+    canonical: 'https://kairostudio.com/pricing',
+  },
+};
 
 export default function Page() {
   return (
