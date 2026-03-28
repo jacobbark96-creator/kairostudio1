@@ -118,34 +118,28 @@ export default function BookingCalendar() {
           throw error;
         }
       } else {
-        // Send confirmation email/sms
+        // Send confirmation email/sms via Supabase Edge Function
         try {
           console.log('Sending confirmation email request to API...');
           
-          // CRITICAL: Ensure we use the absolute URL if needed, but relative should work in Next.js
-          const response = await fetch('/api/booking-confirmation', {
-            method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({ 
+          // Call the Supabase Edge Function directly instead of Next.js API route
+          const { data: edgeData, error: edgeError } = await supabase.functions.invoke('booking-confirmation', {
+            body: { 
               name: name.trim(), 
               email: email.trim(), 
               phone: phone.trim(), 
               date: formattedDate, 
               time: selectedTime 
-            }),
+            }
           });
           
-          const result = await response.json();
-          console.log('Confirmation API response:', response.status, result);
+          console.log('Edge Function response:', edgeData);
           
-          if (!response.ok) {
-            console.error('API Error Response:', result);
+          if (edgeError) {
+            console.error('Edge Function Error:', edgeError);
           }
         } catch (err) {
-          console.error('Fetch request to /api/booking-confirmation failed entirely:', err);
+          console.error('Fetch request to booking-confirmation edge function failed:', err);
         }
         setIsSuccess(true);
       }
