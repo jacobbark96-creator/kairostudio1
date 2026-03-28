@@ -118,29 +118,10 @@ export default function BookingCalendar() {
           throw error;
         }
       } else {
-        // Send confirmation email/sms via Supabase Edge Function
-        try {
-          console.log('Sending confirmation email request to API...');
-          
-          // Call the Supabase Edge Function directly instead of Next.js API route
-          const { data: edgeData, error: edgeError } = await supabase.functions.invoke('booking-confirmation', {
-            body: { 
-              name: name.trim(), 
-              email: email.trim(), 
-              phone: phone.trim(), 
-              date: formattedDate, 
-              time: selectedTime 
-            }
-          });
-          
-          console.log('Edge Function response:', edgeData);
-          
-          if (edgeError) {
-            console.error('Edge Function Error:', edgeError);
-          }
-        } catch (err) {
-          console.error('Fetch request to booking-confirmation edge function failed:', err);
-        }
+        // We no longer manually send the email from the frontend!
+        // The Postgres Database Trigger will automatically catch the insertion
+        // and fire the email logic securely in the background.
+        console.log('Booking successfully inserted. Postgres trigger will handle the email.');
         setIsSuccess(true);
       }
     } catch (error: any) {
