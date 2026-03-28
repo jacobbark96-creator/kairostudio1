@@ -9,7 +9,7 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'portfolio' | 'offers' | 'pricing' | 'careers' | 'media'>('invoices');
+  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'portfolio' | 'offers' | 'pricing' | 'careers' | 'media' | 'bookings'>('invoices');
   
   // Portfolio State
   const [projects, setProjects] = useState<any[]>([]);
@@ -110,6 +110,10 @@ export default function AdminCRM() {
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
   const [uploadingMedia, setUploadingMedia] = useState(false);
 
+  // Bookings State
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [loadingBookings, setLoadingBookings] = useState(false);
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
@@ -119,7 +123,35 @@ export default function AdminCRM() {
     fetchPricingPlans();
     fetchCareers();
     fetchMedia();
+    fetchBookings();
   }, []);
+
+  const fetchBookings = async () => {
+    setLoadingBookings(true);
+    const { data } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('booking_date', { ascending: false })
+      .order('time_slot', { ascending: false });
+    if (data) setBookings(data);
+    setLoadingBookings(false);
+  };
+
+  const updateBookingStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from('bookings')
+      .update({ status })
+      .eq('id', id);
+    if (error) alert(error.message);
+    else fetchBookings();
+  };
+
+  const deleteBooking = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this booking completely?')) return;
+    const { error } = await supabase.from('bookings').delete().eq('id', id);
+    if (error) alert(error.message);
+    else fetchBookings();
+  };
 
   const fetchMedia = async () => {
     const { data, error } = await supabase.storage.from('media').list();
@@ -783,6 +815,12 @@ export default function AdminCRM() {
             className={`pb-4 px-4 ${activeTab === 'media' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
           >
             Media Library
+          </button>
+          <button
+            onClick={() => setActiveTab('bookings')}
+            className={`pb-4 px-4 ${activeTab === 'bookings' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+          >
+            Bookings
           </button>
         </div>
 
@@ -1927,6 +1965,88 @@ export default function AdminCRM() {
                 <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">No files uploaded yet.</p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Click the upload button to add images and documents.</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'bookings' && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Consultation Bookings</h2>
+              <button 
+                onClick={fetchBookings}
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                title="Refresh"
+              >
+                <Clock className="w-5 h-5" />
+              </button>
+            </div>
+
+            {loadingBookings ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-cyan-600" />
+              </div>
+            ) : bookings.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                No bookings found. Share your booking link to get started:
+                <br/>
+                <a href="/book" target="_blank" className="text-cyan-600 hover:underline mt-2 inline-block">kairostudio.co.uk/book</a>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {bookings.map((booking) => {
+                      const isPast = new Date(booking.booking_date) < new Date(new Date().setHours(0,0,0,0));
+                      return (
+                        <tr key={booking.id} className={isPast ? 'opacity-60 bg-gray-50 dark:bg-gray-800/50' : ''}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-bold text-gray-900 dark:text-white">
+                              {new Date(booking.booking_date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                            </div>
+                            <div className="text-sm text-gray-500">{booking.time_slot}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900 dark:text-white">{booking.client_name}</div>
+                            <a href={`mailto:${booking.client_email}`} className="text-sm text-cyan-600 hover:underline">{booking.client_email}</a>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <select
+                              value={booking.status}
+                              onChange={(e) => updateBookingStatus(booking.id, e.target.value)}
+                              className={`text-xs font-semibold rounded-full px-2 py-1 border-0 focus:ring-0 ${
+                                booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
+                                booking.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                                'bg-red-100 text-red-800'
+                              }`}
+                            >
+                              <option value="confirmed">Confirmed</option>
+                              <option value="completed">Completed</option>
+                              <option value="cancelled">Cancelled</option>
+                            </select>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button
+                              onClick={() => deleteBooking(booking.id)}
+                              className="text-red-600 hover:text-red-900 dark:hover:text-red-400"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             )}
           </div>
