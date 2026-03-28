@@ -17,7 +17,7 @@ export default function RootWrapper({ children }: { children: React.ReactNode })
     return (
       <Layout>
         {children}
-        <Chatbot />
+        {/* <Chatbot /> */}
       </Layout>
     );
   }
@@ -25,7 +25,7 @@ export default function RootWrapper({ children }: { children: React.ReactNode })
   return (
     <>
       {isMobile ? <MobileLayout>{children}</MobileLayout> : <Layout>{children}</Layout>}
-      <Chatbot />
+      {/* <Chatbot /> */}
     </>
   );
 }
