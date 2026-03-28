@@ -6,14 +6,14 @@
   "/dashboard/page": "app/dashboard/page.js",
   "/login/page": "app/login/page.js",
   "/privacy-policy/page": "app/privacy-policy/page.js",
-  "/robots.txt/route": "app/robots.txt/route.js",
-  "/sitemap.xml/route": "app/sitemap.xml/route.js",
   "/terms-of-service/page": "app/terms-of-service/page.js",
-  "/careers/page": "app/careers/page.js",
-  "/blog/[slug]/page": "app/blog/[slug]/page.js",
-  "/about/page": "app/about/page.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
   "/blog/page": "app/blog/page.js",
+  "/careers/page": "app/careers/page.js",
+  "/about/page": "app/about/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/portfolio/page": "app/portfolio/page.js",
   "/pricing/page": "app/pricing/page.js",
-  "/services/page": "app/services/page.js",
-  "/portfolio/page": "app/portfolio/page.js"
+  "/services/page": "app/services/page.js"
 }
