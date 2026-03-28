@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 import twilio from 'twilio';
 
 // Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY || 're_3dzRJj4u_Lr4A9udWQM2Jqc3f9v5AHDDP');
+const resend = new Resend(process.env.RESEND_API_KEY || 're_TeVXqARF_De9xssbiT9Ywhq7PcFvQbQUs');
 
 // Initialize Twilio ONLY if the API key starts with 'AC' (which Twilio requires)
 // Otherwise, it will fail the build process
