@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Mail, Loader2, CheckCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Mail, Loader2, CheckCircle, Phone } from 'lucide-react';
 
 export default function BookingCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -13,6 +13,7 @@ export default function BookingCalendar() {
   // Form State
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -117,6 +118,16 @@ export default function BookingCalendar() {
           throw error;
         }
       } else {
+        // Send confirmation email/sms
+        try {
+          await fetch('/api/booking-confirmation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, phone, date: formattedDate, time: selectedTime }),
+          });
+        } catch (err) {
+          console.error('Failed to send confirmation:', err);
+        }
         setIsSuccess(true);
       }
     } catch (error: any) {
@@ -313,6 +324,20 @@ export default function BookingCalendar() {
                     placeholder="jane@example.com"
                   />
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number (Optional)</label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="+44 7700 900077"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">For SMS reminders</p>
               </div>
 
               <div className="pt-4">

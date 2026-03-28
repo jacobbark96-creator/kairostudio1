@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/about":{},"/blog":{},"/careers":{},"/book":{},"/portfolio":{},"/pricing":{},"/services":{},"/blog/[slug]":{}}}
+{"version":1,"functions":{"/about":{},"/careers":{},"/book":{},"/blog/[slug]":{},"/blog":{},"/portfolio":{},"/pricing":{},"/services":{}}}
