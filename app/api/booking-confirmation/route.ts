@@ -51,9 +51,12 @@ export async function POST(request: Request) {
           </div>
         `
       });
-      console.log('Client Email Sent:', clientEmailRes);
+      console.log('Client Email Response:', JSON.stringify(clientEmailRes));
+      if (clientEmailRes.error) {
+        console.error('Resend Client Error:', clientEmailRes.error);
+      }
     } catch (emailError) {
-      console.error('Failed to send client email:', emailError);
+      console.error('Failed to send client email (exception):', emailError);
     }
 
     // 2. Send Notification Email to Admin (You)
@@ -71,9 +74,12 @@ export async function POST(request: Request) {
           <p><strong>Time:</strong> ${time}</p>
         `
       });
-      console.log('Admin Email Sent:', adminEmailRes);
+      console.log('Admin Email Response:', JSON.stringify(adminEmailRes));
+      if (adminEmailRes.error) {
+        console.error('Resend Admin Error:', adminEmailRes.error);
+      }
     } catch (adminEmailError) {
-      console.error('Failed to send admin email:', adminEmailError);
+      console.error('Failed to send admin email (exception):', adminEmailError);
     }
 
     // 3. Send SMS to Client (if phone number provided and Twilio is configured)

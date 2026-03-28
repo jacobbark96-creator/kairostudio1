@@ -120,11 +120,14 @@ export default function BookingCalendar() {
       } else {
         // Send confirmation email/sms
         try {
-          await fetch('/api/booking-confirmation', {
+          console.log('Sending confirmation email for:', email);
+          const response = await fetch('/api/booking-confirmation', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, phone, date: formattedDate, time: selectedTime }),
           });
+          const result = await response.json();
+          console.log('Confirmation API response:', result);
         } catch (err) {
           console.error('Failed to send confirmation:', err);
         }
