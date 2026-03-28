@@ -60,6 +60,11 @@ export const metadata: Metadata = {
   verification: {
     google: 'your-google-site-verification-code', // We can update this later when you register on Google Search Console
   },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
+  },
 };
 
 export default function RootLayout({
