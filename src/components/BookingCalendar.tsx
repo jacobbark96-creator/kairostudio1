@@ -262,7 +262,7 @@ export default function BookingCalendar() {
       </div>
 
       {/* Time Slots & Form Section */}
-      <div className="w-full md:w-80 bg-gray-50 dark:bg-gray-900/50 p-8 flex flex-col">
+      <div className="w-full md:w-96 bg-gray-50 dark:bg-gray-900/50 p-8 flex flex-col">
         {!selectedDate ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center text-gray-500">
             <Clock className="w-12 h-12 mb-4 opacity-20" />
@@ -303,8 +303,8 @@ export default function BookingCalendar() {
             )}
           </div>
         ) : (
-          <div className="flex-1 flex flex-col animate-fade-in">
-            <div className="mb-6 flex items-start gap-3 p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl">
+          <div className="flex-1 flex flex-col animate-fade-in max-h-[500px]">
+            <div className="mb-6 flex items-start gap-3 p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl shrink-0">
               <Clock className="w-5 h-5 text-cyan-600 dark:text-cyan-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-cyan-900 dark:text-cyan-100">
@@ -320,7 +320,7 @@ export default function BookingCalendar() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 flex-1">
+            <form onSubmit={handleSubmit} className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                 <div className="relative">

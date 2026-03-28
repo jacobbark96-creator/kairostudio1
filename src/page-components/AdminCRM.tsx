@@ -618,11 +618,10 @@ export default function AdminCRM() {
   const handleSendPortalLink = async (userEmail: string, userName?: string) => {
     setSendingPortalEmail(userEmail);
     try {
-      const { data, error } = await supabase.functions.invoke('send-portal-link', {
-        body: { 
-          email: userEmail,
-          name: userName || 'there'
-        }
+      // Call the Postgres function directly via RPC
+      const { data, error } = await supabase.rpc('send_portal_email', {
+        target_email: userEmail,
+        target_name: userName || 'there'
       });
 
       if (error) throw error;
