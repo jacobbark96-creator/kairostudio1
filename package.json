@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && rm -rf dist && mv out dist && echo '/media/* https://tqnvjeshgvmougtimygd.supabase.co/storage/v1/object/public/media/:splat 200' > dist/_redirects",
+    "build": "next build && rm -rf dist && mv out dist",
     "export": "next export",
     "start": "next start",
     "lint": "next lint"

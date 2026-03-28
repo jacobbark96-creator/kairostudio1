@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'export',
+  // Removed output: 'export' because it breaks Next.js native Rewrites and API routes
   images: {
     unoptimized: true,
   },
@@ -12,8 +12,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Note: rewrites are not supported in output: 'export' mode
-  // To mask the URL on Cloudflare Pages, we will use a _routes.json or _redirects file
+  async rewrites() {
+    return [
+      {
+        source: '/media/:path*',
+        destination: 'https://tqnvjeshgvmougtimygd.supabase.co/storage/v1/object/public/media/:path*',
+      },
+    ]
+  }
 }
 
 export default nextConfig;
