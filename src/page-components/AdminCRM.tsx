@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'offers' | 'portfolio' | 'pricing' | 'careers'>('invoices');
+  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'portfolio' | 'offers' | 'pricing' | 'careers' | 'media'>('invoices');
   
   // Portfolio State
   const [projects, setProjects] = useState<any[]>([]);
@@ -106,6 +106,10 @@ export default function AdminCRM() {
   const [newProjectUrl, setNewProjectUrl] = useState('');
   const [addingClientProject, setAddingClientProject] = useState(false);
 
+  // Media State
+  const [mediaFiles, setMediaFiles] = useState<any[]>([]);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
+
   useEffect(() => {
     fetchUsers();
     fetchContent();
@@ -114,7 +118,65 @@ export default function AdminCRM() {
     fetchAllInvoices();
     fetchPricingPlans();
     fetchCareers();
+    fetchMedia();
   }, []);
+
+  const fetchMedia = async () => {
+    const { data, error } = await supabase.storage.from('media').list();
+    if (data) {
+      // Get public URLs for each file
+      const filesWithUrls = data.map(file => {
+        const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(file.name);
+        return { ...file, publicUrl };
+      });
+      // Filter out any hidden system files (like .emptyFolderPlaceholder)
+      setMediaFiles(filesWithUrls.filter(f => f.name !== '.emptyFolderPlaceholder'));
+    }
+  };
+
+  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingMedia(true);
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        // Clean filename to remove spaces and special characters
+        const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+        const fileName = `${Date.now()}_${cleanName}`;
+        
+        const { error } = await supabase.storage
+          .from('media')
+          .upload(fileName, file);
+
+        if (error) throw error;
+      }
+      fetchMedia();
+    } catch (error: any) {
+      alert(`Error uploading file: ${error.message}`);
+    } finally {
+      setUploadingMedia(false);
+      // Reset input
+      e.target.value = '';
+    }
+  };
+
+  const handleDeleteMedia = async (fileName: string) => {
+    if (!confirm('Are you sure you want to delete this file? This will break any pages currently linking to it.')) return;
+    
+    const { error } = await supabase.storage.from('media').remove([fileName]);
+    if (error) {
+      alert(error.message);
+    } else {
+      fetchMedia();
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert('URL copied to clipboard!');
+  };
 
   const fetchCareers = async () => {
     const { data } = await supabase.from('careers').select('*').order('created_at', { ascending: false });
@@ -715,6 +777,12 @@ export default function AdminCRM() {
             className={`pb-4 px-4 ${activeTab === 'careers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
           >
             Careers
+          </button>
+          <button
+            onClick={() => setActiveTab('media')}
+            className={`pb-4 px-4 ${activeTab === 'media' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+          >
+            Media Library
           </button>
         </div>
 
@@ -1772,6 +1840,95 @@ export default function AdminCRM() {
                 <p className="text-center text-gray-500 py-4">No job postings found.</p>
               )}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'media' && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Media Library</h2>
+              <div className="relative">
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleMediaUpload}
+                  disabled={uploadingMedia}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                />
+                <button
+                  disabled={uploadingMedia}
+                  className="py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center gap-2"
+                >
+                  {uploadingMedia ? <Loader2 className="w-5 h-5 animate-spin" /> : <Upload className="w-5 h-5" />}
+                  {uploadingMedia ? 'Uploading...' : 'Upload Files'}
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {mediaFiles.map((file) => {
+                const isImage = file.name.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i);
+                // We'll mask the URL for the frontend representation
+                const maskedUrl = `https://kairostudio.com/media/${file.name}`;
+                
+                return (
+                  <div key={file.name} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group relative bg-gray-50 dark:bg-gray-900">
+                    <div className="aspect-square w-full relative">
+                      {isImage ? (
+                        <img 
+                          src={file.publicUrl} 
+                          alt={file.name} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
+                          <FileText className="w-12 h-12 mb-2" />
+                          <span className="text-xs uppercase">{file.name.split('.').pop()}</span>
+                        </div>
+                      )}
+                      
+                      {/* Hover Overlay */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => copyToClipboard(maskedUrl)}
+                          className="p-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100"
+                          title="Copy Masked URL"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </button>
+                        <a
+                          href={file.publicUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100"
+                          title="Open Original File"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <button
+                          onClick={() => handleDeleteMedia(file.name)}
+                          className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
+                          title="Delete File"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="p-2 truncate text-xs text-center text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                      {file.name}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {mediaFiles.length === 0 && !uploadingMedia && (
+              <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl">
+                <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500 dark:text-gray-400">No files uploaded yet.</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Click the upload button to add images and documents.</p>
+              </div>
+            )}
           </div>
         )}
       </div>
