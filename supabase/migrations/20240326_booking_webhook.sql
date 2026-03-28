@@ -22,19 +22,54 @@ begin
     'to', NEW.client_email,
     'subject', 'Booking Confirmation: Kairo Studio Consultation',
     'html', format('
-      <div style="font-family: sans-serif; max-w: 600px; margin: 0 auto;">
-        <h2>Booking Confirmed!</h2>
-        <p>Hi %s,</p>
-        <p>Your 30-minute consultation with Kairo Studio is confirmed for:</p>
-        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <strong>Date:</strong> %s<br>
-          <strong>Time:</strong> %s<br>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Booking Confirmed - Kairo Studio</title>
+      </head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, ''Segoe UI'', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; margin: 0; padding: 40px 20px;">
+        <div style="max-w: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+          
+          <!-- Header Banner -->
+          <div style="background: linear-gradient(to right, #22d3ee, #0891b2, #2563eb); padding: 40px 32px; text-align: center;">
+            <div style="width: 64px; height: 64px; background-color: rgba(255, 255, 255, 0.2); border-radius: 50%%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+              <span style="color: white; font-size: 32px;">✓</span>
+            </div>
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Booking Confirmed!</h1>
+          </div>
+
+          <!-- Content -->
+          <div style="padding: 40px 32px;">
+            <p style="font-size: 16px; color: #374151; margin-top: 0;">Hi %s,</p>
+            <p style="font-size: 16px; color: #4b5563; line-height: 1.6;">Your 30-minute consultation with Kairo Studio has been successfully scheduled. We are looking forward to speaking with you!</p>
+            
+            <!-- Details Card -->
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 32px 0;">
+              <div style="margin-bottom: 16px;">
+                <p style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600;">Date</p>
+                <p style="margin: 4px 0 0 0; font-size: 18px; color: #0f172a; font-weight: 500;">%s</p>
+              </div>
+              <div>
+                <p style="margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600;">Time</p>
+                <p style="margin: 4px 0 0 0; font-size: 18px; color: #0891b2; font-weight: 600;">%s</p>
+              </div>
+            </div>
+
+            <p style="font-size: 15px; color: #4b5563; line-height: 1.6; margin-bottom: 24px;">
+              <strong>Next Steps:</strong> We will send you a calendar invitation containing the Google Meet video link shortly before the meeting.
+            </p>
+
+            <p style="font-size: 14px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 24px;">
+              If you need to reschedule or cancel, please reply directly to this email.<br><br>
+              Best regards,<br>
+              <strong>The Kairo Studio Team</strong>
+            </p>
+          </div>
         </div>
-        <p>We will send you a Google Meet link shortly before the meeting.</p>
-        <p>If you need to reschedule, please reply to this email.</p>
-        <br>
-        <p>Best regards,<br>The Kairo Studio Team</p>
-      </div>
+      </body>
+      </html>
     ', NEW.client_name, formatted_date, NEW.time_slot)
   );
 
