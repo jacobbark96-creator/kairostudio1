@@ -12,6 +12,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  trailingSlash: true, // This forces Next.js to generate folders with index.html, which Cloudflare Pages loves
   async rewrites() {
     return [
       {

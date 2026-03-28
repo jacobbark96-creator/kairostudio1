@@ -15,8 +15,8 @@ import confetti from 'canvas-confetti';
 export default function HomePage() {
   const { isJackpot, triggerJackpot } = useUI();
   const [heroTitle, setHeroTitle] = useState('We craft digital experiences that inspire');
-  const [heroTitleAlt1, setHeroTitleAlt1] = useState('');
-  const [heroTitleAlt2, setHeroTitleAlt2] = useState('');
+  const [heroTitleAlt1, setHeroTitleAlt1] = useState('We build brands that convert');
+  const [heroTitleAlt2, setHeroTitleAlt2] = useState('We design products that scale');
   const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
 
   const [auditUrl, setAuditUrl] = useState('');
