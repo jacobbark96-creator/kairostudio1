@@ -391,32 +391,40 @@ export default function AdminCRM() {
   };
 
   const fetchContent = async () => {
-    const { data } = await supabase.from('site_content').select('*');
-    if (data) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const title = (data as any[]).find(item => item.key === 'hero_title')?.value || '';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const titleAlt1 = (data as any[]).find(item => item.key === 'hero_title_alt_1')?.value || '';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value || '';
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value || '';
-      
-      // Fetch probabilities
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const probData = (data as any[]).find(item => item.key === 'offer_probabilities')?.value;
-      if (probData) {
-        try {
-            setProbabilities(JSON.parse(probData));
-        } catch (e) {
-            console.error('Failed to parse probabilities', e);
-        }
+    try {
+      const { data, error } = await supabase.from('site_content').select('*');
+      if (error) {
+        console.error("Error fetching site_content:", error);
+        return;
       }
+      if (data && data.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const title = (data as any[]).find(item => item.key === 'hero_title')?.value || '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const titleAlt1 = (data as any[]).find(item => item.key === 'hero_title_alt_1')?.value || '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value || '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value || '';
+        
+        // Fetch probabilities
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const probData = (data as any[]).find(item => item.key === 'offer_probabilities')?.value;
+        if (probData) {
+          try {
+              setProbabilities(JSON.parse(probData));
+          } catch (e) {
+              console.error('Failed to parse probabilities', e);
+          }
+        }
 
-      setHeroTitle(title);
-      setHeroTitleAlt1(titleAlt1);
-      setHeroTitleAlt2(titleAlt2);
-      setHeroSubtitle(subtitle);
+        setHeroTitle(title);
+        setHeroTitleAlt1(titleAlt1);
+        setHeroTitleAlt2(titleAlt2);
+        setHeroSubtitle(subtitle);
+      }
+    } catch (e) {
+      console.error("Failed to fetch site content", e);
     }
   };
 

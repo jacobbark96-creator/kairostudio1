@@ -94,20 +94,29 @@ export default function HomePage() {
   }, []);
 
   const fetchContent = async () => {
-    const { data } = await supabase.from('site_content').select('*');
-    if (data) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const title = (data as any[]).find(item => item.key === 'hero_title')?.value;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const titleAlt1 = (data as any[]).find(item => item.key === 'hero_title_alt_1')?.value;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value;
-      if (title) setHeroTitle(title);
-      if (titleAlt1) setHeroTitleAlt1(titleAlt1);
-      if (titleAlt2) setHeroTitleAlt2(titleAlt2);
-      if (subtitle) setHeroSubtitle(subtitle);
+    try {
+      const { data, error } = await supabase.from('site_content').select('*');
+      if (error) {
+        console.error("Error fetching site_content:", error);
+        return; // Fallback to default state values
+      }
+      if (data && data.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const title = (data as any[]).find(item => item.key === 'hero_title')?.value;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const titleAlt1 = (data as any[]).find(item => item.key === 'hero_title_alt_1')?.value;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const titleAlt2 = (data as any[]).find(item => item.key === 'hero_title_alt_2')?.value;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value;
+        
+        if (title) setHeroTitle(title);
+        if (titleAlt1) setHeroTitleAlt1(titleAlt1);
+        if (titleAlt2) setHeroTitleAlt2(titleAlt2);
+        if (subtitle) setHeroSubtitle(subtitle);
+      }
+    } catch (e) {
+      console.error("Failed to fetch site content", e);
     }
   };
 
