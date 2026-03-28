@@ -31,8 +31,8 @@ export async function POST(request: Request) {
 
     // 1. Send Email to Client
     try {
-      await resend.emails.send({
-        from: 'Kairo Studio <bookings@kairostudio.co.uk>', // Replace with your verified domain in Resend
+      const clientEmailRes = await resend.emails.send({
+        from: 'Kairo Studio <onboarding@resend.dev>', // Use the Resend testing domain until you verify kairostudio.co.uk in Resend dashboard
         to: email,
         subject: 'Booking Confirmation: Kairo Studio Consultation',
         html: `
@@ -51,16 +51,16 @@ export async function POST(request: Request) {
           </div>
         `
       });
+      console.log('Client Email Sent:', clientEmailRes);
     } catch (emailError) {
       console.error('Failed to send client email:', emailError);
-      // We don't fail the whole request if email fails, but we log it
     }
 
     // 2. Send Notification Email to Admin (You)
     try {
-      await resend.emails.send({
-        from: 'Kairo Studio System <system@kairostudio.co.uk>',
-        to: 'hello@kairostudio.co.uk', // Replace with your actual admin email
+      const adminEmailRes = await resend.emails.send({
+        from: 'Kairo Studio System <onboarding@resend.dev>', // Use the Resend testing domain
+        to: 'hello@kairostudio.co.uk', // Ensure this is the email you verified in Resend if you are still in testing mode
         subject: `NEW BOOKING: ${name} at ${time}`,
         html: `
           <h3>New Consultation Booked</h3>
@@ -71,6 +71,7 @@ export async function POST(request: Request) {
           <p><strong>Time:</strong> ${time}</p>
         `
       });
+      console.log('Admin Email Sent:', adminEmailRes);
     } catch (adminEmailError) {
       console.error('Failed to send admin email:', adminEmailError);
     }
