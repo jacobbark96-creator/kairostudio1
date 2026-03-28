@@ -8,7 +8,7 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://kairostudio.com'),
+  metadataBase: new URL('https://kairostudio.co.uk'),
   title: {
     default: 'Kairo Studio | High-Performance Digital Solutions & Web Design',
     template: '%s | Kairo Studio'
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_GB',
-    url: 'https://kairostudio.com',
+    url: 'https://kairostudio.co.uk',
     title: 'Kairo Studio | High-Performance Digital Solutions',
     description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, and scalable digital products.',
     siteName: 'Kairo Studio',
@@ -71,8 +71,8 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: 'Kairo Studio',
-    image: 'https://kairostudio.com/og-image.jpg',
-    url: 'https://kairostudio.com',
+    image: 'https://kairostudio.co.uk/og-image.jpg',
+    url: 'https://kairostudio.co.uk',
     description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, and scalable digital products.',
     address: {
       '@type': 'PostalAddress',

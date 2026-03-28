@@ -87,7 +87,7 @@ export default function CareersPage() {
                     <Briefcase className="w-16 h-16 text-gray-400 mx-auto mb-6" />
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">No open positions right now</h3>
                     <p className="text-gray-600 dark:text-gray-400">
-                        We don't have any active vacancies at the moment, but we're always interested in meeting talented people. Send your CV to hello@kairostudio.com.
+                        We don't have any active vacancies at the moment, but we're always interested in meeting talented people. Send your CV to hello@kairostudio.co.uk.
                     </p>
                 </div>
             ) : (
@@ -155,7 +155,7 @@ export default function CareersPage() {
                                             )}
                                             
                                             <a 
-                                                href={`mailto:hello@kairostudio.com?subject=Application for ${job.title}`}
+                                                href={`mailto:hello@kairostudio.co.uk?subject=Application for ${job.title}`}
                                                 className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-xl font-bold hover:opacity-90 transition-opacity active:scale-95"
                                             >
                                                 Apply Now

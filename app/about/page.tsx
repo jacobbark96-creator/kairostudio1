@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'About Us',
   description: 'Learn about Kairo Studio, our mission, and the expert team building high-performance digital solutions.',
   alternates: {
-    canonical: 'https://kairostudio.com/about',
+    canonical: 'https://kairostudio.co.uk/about',
   },
 };
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Pricing & Packages',
   description: 'Transparent pricing for custom web design, development, and ongoing maintenance packages.',
   alternates: {
-    canonical: 'https://kairostudio.com/pricing',
+    canonical: 'https://kairostudio.co.uk/pricing',
   },
 };
 

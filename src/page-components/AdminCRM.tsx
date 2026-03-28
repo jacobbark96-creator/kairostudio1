@@ -1869,7 +1869,7 @@ export default function AdminCRM() {
               {mediaFiles.map((file) => {
                 const isImage = file.name.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i);
                 // We'll mask the URL for the frontend representation
-                const maskedUrl = `https://kairostudio.com/media/${file.name}`;
+                const maskedUrl = `https://kairostudio.co.uk/media/${file.name}`;
                 
                 return (
                   <div key={file.name} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden group relative bg-gray-50 dark:bg-gray-900">

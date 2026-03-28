@@ -305,7 +305,7 @@ export default function ServicesPage() {
               <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
             </button>
             <a 
-              href="mailto:hello@kairostudio.com"
+              href="mailto:hello@kairostudio.co.uk"
               className="px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-white/5 dark:bg-white/5 sm:bg-white/10 sm:backdrop-blur-sm text-white rounded-full border-2 border-white/20 hover:border-white/40 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
             >
               Email Us Directly

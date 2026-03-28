@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/crm', '/dashboard', '/login', '/api/'],
     },
-    sitemap: 'https://kairostudio.com/sitemap.xml',
+    sitemap: 'https://kairostudio.co.uk/sitemap.xml',
   };
 }
