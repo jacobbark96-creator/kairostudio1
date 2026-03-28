@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe, Send } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -41,6 +41,7 @@ export default function AdminCRM() {
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserPassword, setNewUserPassword] = useState('');
   const [creatingUser, setCreatingUser] = useState(false);
+  const [sendingPortalEmail, setSendingPortalEmail] = useState<string | null>(null);
   
   // Content State
   const [heroTitle, setHeroTitle] = useState('');
@@ -614,6 +615,26 @@ export default function AdminCRM() {
     }
   };
 
+  const handleSendPortalLink = async (userEmail: string, userName?: string) => {
+    setSendingPortalEmail(userEmail);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-portal-link', {
+        body: { 
+          email: userEmail,
+          name: userName || 'there'
+        }
+      });
+
+      if (error) throw error;
+      alert(`Portal link sent successfully to ${userEmail}!`);
+    } catch (error: any) {
+      console.error('Error sending portal link:', error);
+      alert(`Failed to send portal link: ${error.message}`);
+    } finally {
+      setSendingPortalEmail(null);
+    }
+  };
+
   const openClientProjects = async (user: Profile) => {
     setManagingProjectsForUser(user);
     const { data } = await supabase.from('client_projects').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
@@ -1055,13 +1076,27 @@ export default function AdminCRM() {
                           {user.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-3">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-wrap gap-3">
                         <button
                           onClick={() => openClientProjects(user)}
                           className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center gap-1"
                         >
                           <FileText className="w-4 h-4" /> Edit Projects
                         </button>
+                        
+                        <button
+                          onClick={() => handleSendPortalLink(user.email, user.email.split('@')[0])}
+                          disabled={sendingPortalEmail === user.email}
+                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1 disabled:opacity-50"
+                        >
+                          {sendingPortalEmail === user.email ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Send className="w-4 h-4" />
+                          )}
+                          Send Portal
+                        </button>
+
                         {user.role !== 'admin' && (
                           <button
                             onClick={() => handlePromoteAdmin(user.id)}
