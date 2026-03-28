@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  // Removed output: 'export' because it breaks Next.js native Rewrites and API routes
+  output: 'export', // Required for Cloudflare Pages static hosting to generate HTML files
   images: {
     unoptimized: true,
   },
@@ -13,14 +13,8 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   trailingSlash: true, // This forces Next.js to generate folders with index.html, which Cloudflare Pages loves
-  async rewrites() {
-    return [
-      {
-        source: '/media/:path*',
-        destination: 'https://tqnvjeshgvmougtimygd.supabase.co/storage/v1/object/public/media/:path*',
-      },
-    ]
-  }
+  // Rewrites removed because they are incompatible with output: 'export'
+  // We will handle the /media/ rewrite via Cloudflare _routes.json / _redirects if needed
 }
 
 export default nextConfig;

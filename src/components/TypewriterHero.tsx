@@ -99,11 +99,16 @@ export const TypewriterHero: React.FC<TypewriterHeroProps> = ({
 
   // Reset if texts change
   useEffect(() => {
-    // Only reset if the actual content changes
-    setDisplayedText('');
-    setCurrentTextIndex(0);
-    setIsDeleting(false);
-  }, [JSON.stringify(texts)]);
+    // Check if texts actually changed (ignoring empty arrays which happen on first render)
+    if (!texts || texts.length === 0) return;
+    
+    // Only reset if we are wildly out of bounds or starting fresh
+    if (currentTextIndex >= texts.length) {
+      setDisplayedText('');
+      setCurrentTextIndex(0);
+      setIsDeleting(false);
+    }
+  }, [texts.length, currentTextIndex]);
 
   return (
     <motion.span 
