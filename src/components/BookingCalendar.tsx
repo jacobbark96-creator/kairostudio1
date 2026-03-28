@@ -120,16 +120,32 @@ export default function BookingCalendar() {
       } else {
         // Send confirmation email/sms
         try {
-          console.log('Sending confirmation email for:', email);
+          console.log('Sending confirmation email request to API...');
+          
+          // CRITICAL: Ensure we use the absolute URL if needed, but relative should work in Next.js
           const response = await fetch('/api/booking-confirmation', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, phone, date: formattedDate, time: selectedTime }),
+            headers: { 
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ 
+              name: name.trim(), 
+              email: email.trim(), 
+              phone: phone.trim(), 
+              date: formattedDate, 
+              time: selectedTime 
+            }),
           });
+          
           const result = await response.json();
-          console.log('Confirmation API response:', result);
+          console.log('Confirmation API response:', response.status, result);
+          
+          if (!response.ok) {
+            console.error('API Error Response:', result);
+          }
         } catch (err) {
-          console.error('Failed to send confirmation:', err);
+          console.error('Fetch request to /api/booking-confirmation failed entirely:', err);
         }
         setIsSuccess(true);
       }

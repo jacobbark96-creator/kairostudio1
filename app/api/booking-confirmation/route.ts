@@ -30,6 +30,7 @@ export async function POST(request: Request) {
     });
 
     // 1. Send Email to Client
+    let clientEmailStatus = null;
     try {
       const clientEmailRes = await resend.emails.send({
         from: 'Kairo Studio <hello@kairostudio.co.uk>',
@@ -52,14 +53,17 @@ export async function POST(request: Request) {
         `
       });
       console.log('Client Email Response:', JSON.stringify(clientEmailRes));
+      clientEmailStatus = clientEmailRes;
       if (clientEmailRes.error) {
         console.error('Resend Client Error:', clientEmailRes.error);
       }
     } catch (emailError) {
       console.error('Failed to send client email (exception):', emailError);
+      clientEmailStatus = { error: String(emailError) };
     }
 
     // 2. Send Notification Email to Admin (You)
+    let adminEmailStatus = null;
     try {
       const adminEmailRes = await resend.emails.send({
         from: 'Kairo Studio System <hello@kairostudio.co.uk>',
@@ -75,27 +79,39 @@ export async function POST(request: Request) {
         `
       });
       console.log('Admin Email Response:', JSON.stringify(adminEmailRes));
+      adminEmailStatus = adminEmailRes;
       if (adminEmailRes.error) {
         console.error('Resend Admin Error:', adminEmailRes.error);
       }
     } catch (adminEmailError) {
       console.error('Failed to send admin email (exception):', adminEmailError);
+      adminEmailStatus = { error: String(adminEmailError) };
     }
 
     // 3. Send SMS to Client (if phone number provided and Twilio is configured)
+    let smsStatus = null;
     if (phone && process.env.TWILIO_ACCOUNT_SID) {
       try {
-        await twilioClient.messages.create({
+        const smsRes = await twilioClient.messages.create({
           body: `Hi ${name}, your consultation with Kairo Studio is confirmed for ${formattedDate} at ${time}. We'll email you a meeting link.`,
           from: process.env.TWILIO_PHONE_NUMBER || 'dummy_number',
           to: phone
         });
+        smsStatus = { sid: smsRes.sid };
       } catch (smsError) {
         console.error('Failed to send SMS:', smsError);
+        smsStatus = { error: String(smsError) };
       }
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ 
+      success: true, 
+      diagnostics: {
+        clientEmail: clientEmailStatus,
+        adminEmail: adminEmailStatus,
+        sms: smsStatus
+      }
+    });
   } catch (error) {
     console.error('Booking Confirmation API Error:', error);
     return NextResponse.json(

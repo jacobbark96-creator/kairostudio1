@@ -1,8 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /crm
-Disallow: /dashboard
-Disallow: /login
-Disallow: /api/
-
-Sitemap: https://kairostudio.co.uk/sitemap.xml
