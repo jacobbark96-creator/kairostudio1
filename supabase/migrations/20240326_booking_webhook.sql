@@ -47,9 +47,11 @@ begin
       <h3>New Consultation Booked</h3>
       <p><strong>Client:</strong> %s</p>
       <p><strong>Email:</strong> %s</p>
+      <p><strong>Company:</strong> %s</p>
+      <p><strong>URL:</strong> %s</p>
       <p><strong>Date:</strong> %s</p>
       <p><strong>Time:</strong> %s</p>
-    ', NEW.client_name, NEW.client_email, formatted_date, NEW.time_slot)
+    ', NEW.client_name, NEW.client_email, COALESCE(NEW.company_name, 'Not provided'), COALESCE(NEW.company_url, 'Not provided'), formatted_date, NEW.time_slot)
   );
 
   -- 3. Fire the HTTP POST requests to Resend API asynchronously

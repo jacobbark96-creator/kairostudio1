@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -2016,8 +2016,18 @@ export default function AdminCRM() {
                             <div className="text-sm text-gray-500">{booking.time_slot}</div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900 dark:text-white">{booking.client_name}</div>
-                            <a href={`mailto:${booking.client_email}`} className="text-sm text-cyan-600 hover:underline">{booking.client_email}</a>
+                            <div className="text-sm text-gray-900 dark:text-white font-medium">{booking.client_name}</div>
+                            <a href={`mailto:${booking.client_email}`} className="text-sm text-cyan-600 hover:underline block">{booking.client_email}</a>
+                            {booking.company_name && (
+                              <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                <Building className="w-3 h-3" /> {booking.company_name}
+                              </div>
+                            )}
+                            {booking.company_url && (
+                              <a href={booking.company_url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-500 hover:underline flex items-center gap-1 mt-0.5">
+                                <Globe className="w-3 h-3" /> {booking.company_url.replace(/^https?:\/\//, '')}
+                              </a>
+                            )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <select

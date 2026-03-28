@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Mail, Loader2, CheckCircle, Phone } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, User, Mail, Loader2, CheckCircle, Phone, Building, Globe } from 'lucide-react';
 
 export default function BookingCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -14,6 +14,8 @@ export default function BookingCalendar() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [companyUrl, setCompanyUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -100,8 +102,10 @@ export default function BookingCalendar() {
 
     try {
       const { error } = await supabase.from('bookings').insert([{
-        client_name: name,
-        client_email: email,
+        client_name: name.trim(),
+        client_email: email.trim(),
+        company_name: companyName.trim() || null,
+        company_url: companyUrl.trim() || null,
         booking_date: formattedDate,
         time_slot: selectedTime,
         status: 'confirmed'
@@ -133,26 +137,52 @@ export default function BookingCalendar() {
 
   if (isSuccess) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-12 text-center max-w-2xl mx-auto border border-gray-100 dark:border-gray-700">
-        <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="w-10 h-10 text-green-600 dark:text-green-400" />
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 md:p-16 text-center max-w-2xl mx-auto border border-gray-100 dark:border-gray-700 transform transition-all duration-500 scale-100 opacity-100 relative overflow-hidden">
+        {/* Decorative Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 via-cyan-600 to-blue-600"></div>
+        <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-100 dark:bg-cyan-900/20 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-100 dark:bg-blue-900/20 rounded-full blur-3xl opacity-50"></div>
+
+        <div className="relative z-10">
+          <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-500/30">
+            <CheckCircle className="w-12 h-12 text-white" />
+          </div>
+          
+          <h2 className="text-4xl font-display font-bold text-gray-900 dark:text-white mb-6">Booking Confirmed!</h2>
+          
+          <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 mb-8 inline-block text-left w-full max-w-md border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+              <Clock className="w-6 h-6 text-cyan-600" />
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Date & Time</p>
+                <p className="font-semibold text-gray-900 dark:text-white">
+                  {selectedDate?.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                </p>
+                <p className="text-cyan-600 font-medium">{selectedTime}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <User className="w-6 h-6 text-cyan-600" />
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Booked By</p>
+                <p className="font-semibold text-gray-900 dark:text-white">{name}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{email}</p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto leading-relaxed">
+            We've sent a calendar invitation with the Google Meet link to your email. We look forward to speaking with you!
+          </p>
+          
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-8 py-3 bg-white dark:bg-gray-800 border-2 border-cyan-600 text-cyan-600 rounded-xl font-medium hover:bg-cyan-50 dark:hover:bg-cyan-900/20 transition-colors inline-flex items-center gap-2"
+          >
+            <CalendarIcon className="w-4 h-4" />
+            Book another appointment
+          </button>
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Booking Confirmed!</h2>
-        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
-          Thank you, {name}. We have successfully booked your consultation for:<br/>
-          <span className="font-bold text-cyan-600 dark:text-cyan-400 block mt-2">
-            {selectedDate?.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at {selectedTime}
-          </span>
-        </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-          We will send a calendar invitation and Google Meet link to {email} shortly.
-        </p>
-        <button 
-          onClick={() => window.location.reload()}
-          className="text-cyan-600 hover:text-cyan-700 font-medium"
-        >
-          Book another appointment
-        </button>
       </div>
     );
   }
@@ -332,6 +362,33 @@ export default function BookingCalendar() {
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">For SMS reminders</p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company Name (Optional)</label>
+                <div className="relative">
+                  <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="Acme Corp"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company URL (Optional)</label>
+                <div className="relative">
+                  <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="url"
+                    value={companyUrl}
+                    onChange={(e) => setCompanyUrl(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                    placeholder="https://acme.com"
+                  />
+                </div>
               </div>
 
               <div className="pt-4">
