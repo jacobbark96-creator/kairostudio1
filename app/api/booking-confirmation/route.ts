@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     // 1. Send Email to Client
     try {
       const clientEmailRes = await resend.emails.send({
-        from: 'Kairo Studio <onboarding@resend.dev>', // Use the Resend testing domain until you verify kairostudio.co.uk in Resend dashboard
+        from: 'Kairo Studio <hello@kairostudio.co.uk>',
         to: email,
         subject: 'Booking Confirmation: Kairo Studio Consultation',
         html: `
@@ -59,8 +59,8 @@ export async function POST(request: Request) {
     // 2. Send Notification Email to Admin (You)
     try {
       const adminEmailRes = await resend.emails.send({
-        from: 'Kairo Studio System <onboarding@resend.dev>', // Use the Resend testing domain
-        to: 'hello@kairostudio.co.uk', // Ensure this is the email you verified in Resend if you are still in testing mode
+        from: 'Kairo Studio System <hello@kairostudio.co.uk>',
+        to: 'hello@kairostudio.co.uk',
         subject: `NEW BOOKING: ${name} at ${time}`,
         html: `
           <h3>New Consultation Booked</h3>
