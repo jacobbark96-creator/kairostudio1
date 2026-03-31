@@ -216,38 +216,39 @@ export default function HomePage() {
               <div className="w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-transform duration-500 hidden md:block">
                 
                 {/* Site Assessment Feature (Desktop) */}
-                <div className="relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-gradient-to-br dark:from-brand-900 dark:to-purple-900 shadow-2xl border border-gray-200 dark:border-white/10">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 translate-x-[-200%] animate-shimmer hidden dark:block" />
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-white/60 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover/audit:animate-shimmer hidden dark:block" />
                     
                     <div className="relative z-10 p-8 text-center">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 dark:bg-white/10 backdrop-blur-md border border-brand-100 dark:border-black/10 text-brand-600 dark:text-white text-[10px] font-bold uppercase tracking-wider mb-4">
-                            <Sparkles className="w-3 h-3 animate-pulse" />
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-md border border-white/60 dark:border-white/10 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
+                            <Sparkles className="w-4 h-4 animate-pulse" />
                             Free Audit
                         </div>
                         
-                        <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-2 leading-tight">
+                        <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-3 leading-tight drop-shadow-sm">
                             Assess your <br/> 
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-200 dark:to-purple-200">current site</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-300 dark:to-purple-300">current site</span>
                         </h3>
                         
                         {auditSuccess ? (
                             <div className="py-2 text-center animate-fade-in-up">
-                                <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Your email will arrive any moment</h4>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Play for a discount while you wait.</p>
+                                <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl drop-shadow-sm">Your email will arrive any moment</h4>
+                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 font-medium">Play for a discount while you wait.</p>
                                 <div className="transform scale-90 origin-top">
                                     <RandomOffer />
                                 </div>
                             </div>
                         ) : (
                             <>
-                                <p className="text-gray-600 dark:text-white/80 text-sm font-medium mb-6 max-w-xs mx-auto">
+                                <p className="text-gray-700 dark:text-gray-200 text-sm font-medium mb-8 max-w-[16rem] mx-auto leading-relaxed drop-shadow-sm">
                                     Get instant feedback on your site and learn how Kairo can take you to the next level.
                                 </p>
                                 
-                                <div className="bg-gray-50 dark:bg-black/20 rounded-2xl p-5 border border-gray-100 dark:border-white/5">
+                                <div className="bg-white/40 dark:bg-black/20 backdrop-blur-md rounded-2xl p-6 border border-white/50 dark:border-white/10 shadow-inner">
                                     <form 
                                         onSubmit={handleAuditSubmit}
-                                        className="flex flex-col gap-3"
+                                        className="flex flex-col gap-4"
                                     >
                                     <input 
                                         type="text" 
@@ -255,7 +256,7 @@ export default function HomePage() {
                                         required
                                         value={auditUrl}
                                         onChange={(e) => setAuditUrl(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                                        className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
                                     />
                                     <input 
                                         type="email" 
@@ -263,23 +264,23 @@ export default function HomePage() {
                                         required
                                         value={auditEmail}
                                         onChange={(e) => setAuditEmail(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow"
+                                        className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
                                     />
                                     <button 
                                         type="submit"
                                         disabled={isSubmittingAudit}
-                                        className="w-full py-3 bg-brand-600 text-white rounded-xl font-bold shadow-md hover:bg-brand-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70"
+                                        className="w-full py-4 mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white rounded-xl font-bold shadow-lg shadow-brand-500/30 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 border border-brand-400/50"
                                     >
                                         {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
-                                        {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
+                                        {!isSubmittingAudit && <ArrowRight className="w-5 h-5" />}
                                     </button>
                                 </form>
-                                <p className="text-[10px] text-gray-400 mt-3 text-center">Powered by Kairo AI</p>
+                                <p className="text-[11px] font-semibold tracking-wider text-gray-500 dark:text-gray-400 mt-5 text-center uppercase">Powered by Kairo AI</p>
                             </div>
                             </>
                         )}
                     </div>
-                    <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] hidden dark:block pointer-events-none" />
+                    <div className="absolute inset-0 opacity-[0.03] dark:opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay" />
                 </div>
 
               </div>
