@@ -279,9 +279,9 @@ export default function HomePage() {
             
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-full blur-[80px] -z-10" />
-              <div className="w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-transform duration-500 hidden md:block">
+              <div className={`w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-all duration-500 ${showMobileAudit ? 'block mt-8 animate-fade-in-up' : 'hidden md:block'}`}>
                 
-                {/* Site Assessment Feature (Desktop) */}
+                {/* Site Assessment Feature */}
                 <div className="relative overflow-hidden rounded-[2.5rem] bg-white/60 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover/audit:animate-shimmer hidden dark:block" />
