@@ -48,7 +48,7 @@ export default function Layout({ children }: LayoutProps) {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'py-4 sm:py-4 pt-6 sm:pt-4 md:py-3 md:pt-4' // Increased mobile py from py-2 to py-4 when scrolled
+            ? 'py-6 sm:py-6 pt-8 sm:pt-6 md:py-3 md:pt-4' // Increased mobile padding heavily to accommodate the big logo
             : 'py-4 sm:py-6 pt-8 sm:pt-8 md:py-6 md:pt-8' 
         } md:bg-transparent ${scrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-lg md:bg-transparent md:backdrop-blur-none border-b border-gray-200 dark:border-white/10 md:border-none shadow-sm md:shadow-none' : ''}`}
       >
