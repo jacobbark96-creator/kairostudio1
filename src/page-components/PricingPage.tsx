@@ -38,15 +38,25 @@ export default function PricingPage() {
   };
 
   const formatPrice = (priceStr: string, targetCurrency: 'GBP' | 'USD' | 'AUD') => {
-    // If it's custom text (like "Custom"), just return it
-    if (isNaN(Number(priceStr.replace(/[^0-9.-]+/g, "")))) {
-      return priceStr;
+    // If the price string is completely empty or just says "Custom" or has no numbers
+    if (!priceStr || !/\d/.test(priceStr) || priceStr.toLowerCase().includes('custom')) {
+      return "Custom";
     }
 
-    const numericPrice = parseFloat(priceStr.replace(/[^0-9.-]+/g, ""));
+    // Extract just the numbers and decimals
+    const numericMatch = priceStr.match(/[\d.]+/);
+    if (!numericMatch) {
+      return "Custom";
+    }
+
+    const numericPrice = parseFloat(numericMatch[0]);
+    if (isNaN(numericPrice)) {
+        return "Custom";
+    }
+
     const converted = numericPrice * rates[targetCurrency];
     
-    // Round to nearest 9 or 0 for cleaner pricing (e.g. 124 -> 129)
+    // Round to nearest whole number
     const rounded = Math.round(converted);
     
     return `${currencySymbols[targetCurrency]}${rounded}`;
