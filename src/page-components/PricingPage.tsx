@@ -21,6 +21,36 @@ export default function PricingPage() {
   const { openContactModal } = useUI();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currency, setCurrency] = useState<'GBP' | 'USD' | 'AUD'>('GBP');
+
+  // Hardcoded conversion rates relative to GBP (for display purposes)
+  // In a real app, you might fetch live rates from an API
+  const rates = {
+    GBP: 1,
+    USD: 1.25, // £1 = $1.25
+    AUD: 1.95  // £1 = $1.95
+  };
+
+  const currencySymbols = {
+    GBP: '£',
+    USD: '$',
+    AUD: 'A$'
+  };
+
+  const formatPrice = (priceStr: string, targetCurrency: 'GBP' | 'USD' | 'AUD') => {
+    // If it's custom text (like "Custom"), just return it
+    if (isNaN(Number(priceStr.replace(/[^0-9.-]+/g, "")))) {
+      return priceStr;
+    }
+
+    const numericPrice = parseFloat(priceStr.replace(/[^0-9.-]+/g, ""));
+    const converted = numericPrice * rates[targetCurrency];
+    
+    // Round to nearest 9 or 0 for cleaner pricing (e.g. 124 -> 129)
+    const rounded = Math.round(converted);
+    
+    return `${currencySymbols[targetCurrency]}${rounded}`;
+  };
 
   useEffect(() => {
     fetchPlans();
@@ -109,9 +139,45 @@ export default function PricingPage() {
                     Invest in your <br className="hidden md:block" />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-400 dark:to-purple-400">digital future</span>
                 </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto font-light animate-fade-in-up animation-delay-400">
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto font-light animate-fade-in-up animation-delay-400 mb-12">
                     Simple, predictable pricing. No hidden fees, just exceptional value designed to help your business scale.
                 </p>
+
+                {/* Currency Switcher */}
+                <div className="flex justify-center animate-fade-in-up animation-delay-500">
+                    <div className="bg-gray-100 dark:bg-gray-900/80 backdrop-blur-sm p-1.5 rounded-full inline-flex border border-gray-200 dark:border-gray-800 shadow-inner">
+                        <button
+                            onClick={() => setCurrency('GBP')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                                currency === 'GBP' 
+                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md' 
+                                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
+                            }`}
+                        >
+                            GBP (£)
+                        </button>
+                        <button
+                            onClick={() => setCurrency('USD')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                                currency === 'USD' 
+                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md' 
+                                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
+                            }`}
+                        >
+                            USD ($)
+                        </button>
+                        <button
+                            onClick={() => setCurrency('AUD')}
+                            className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 ${
+                                currency === 'AUD' 
+                                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-md' 
+                                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
+                            }`}
+                        >
+                            AUD (A$)
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {loading ? (
@@ -147,7 +213,9 @@ export default function PricingPage() {
                             </div>
                             
                             <div className="mb-8 flex items-baseline gap-2">
-                                <span className="text-5xl font-display font-black tracking-tight">{plan.price}</span>
+                                <span className="text-5xl font-display font-black tracking-tight">
+                                    {formatPrice(plan.price, currency)}
+                                </span>
                                 {plan.billing_period && (
                                     <span className={`text-sm font-medium ${plan.is_popular ? 'text-gray-400 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'}`}>
                                         /{plan.billing_period}
