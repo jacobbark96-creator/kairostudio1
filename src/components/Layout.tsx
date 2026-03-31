@@ -60,21 +60,29 @@ export default function Layout({ children }: LayoutProps) {
               ? 'glass shadow-lg shadow-black/5 bg-white dark:bg-dark-surface sm:bg-white/80 sm:dark:bg-dark-surface/80 px-4 py-2' 
               : 'bg-transparent px-0'
           }`}>
-            <div className="flex items-center justify-between">
-            <Link 
-              href="/"
-              className="cursor-pointer flex-shrink-0 flex items-center group"
-            >
-              {kairoLogo && (
-                <div className="h-20 sm:h-24 w-auto flex items-center justify-center">
-                  <img 
-                    src={typeof kairoLogo === 'string' ? kairoLogo : (kairoLogo as any).src} 
-                    alt="Kairo Studio" 
-                    className="h-full w-auto object-contain object-left transition-transform duration-500 group-hover:scale-105" 
-                  />
-                </div>
-              )}
-            </Link>
+            <div className="flex items-center justify-between relative">
+            
+            {/* Logo - Centered on Mobile, Left on Desktop */}
+            <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 z-50">
+              <Link 
+                href="/"
+                className="cursor-pointer flex-shrink-0 flex items-center group"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {kairoLogo && (
+                  <div className="h-20 sm:h-24 w-auto flex items-center justify-center">
+                    <img 
+                      src={typeof kairoLogo === 'string' ? kairoLogo : (kairoLogo as any).src} 
+                      alt="Kairo Studio" 
+                      className="h-full w-auto object-contain object-left transition-transform duration-500 group-hover:scale-105" 
+                    />
+                  </div>
+                )}
+              </Link>
+            </div>
+
+            {/* Empty div to balance flex on mobile */}
+            <div className="w-10 h-10 md:hidden"></div>
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
@@ -204,7 +212,7 @@ export default function Layout({ children }: LayoutProps) {
                   openContactModal();
                   setMobileMenuOpen(false);
                 }}
-                className="mt-4 px-10 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full text-lg font-bold shadow-xl hover:scale-105 transition-transform"
+                className="mt-4 px-10 py-4 bg-gradient-to-r from-brand-600 to-purple-600 text-white rounded-full text-lg font-bold shadow-xl shadow-brand-500/30 hover:scale-105 transition-all duration-300"
               >
                 Get in Touch
               </button>

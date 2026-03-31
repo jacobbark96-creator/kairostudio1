@@ -194,18 +194,20 @@ export default function HomePage() {
               
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 px-4 sm:px-0">
                 <Link 
-                  href="/portfolio"
+                  href="/book"
                   className="group w-full sm:w-auto px-8 py-4 sm:py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition-all duration-300 flex items-center justify-center gap-2 text-base sm:text-lg font-bold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-1 active:scale-[0.98]"
                 >
-                  View Our Work
+                  Start Project
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <Link 
-                  href="/services"
-                  className="w-full sm:w-auto px-8 py-4 sm:py-4 border-2 sm:border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all duration-300 flex items-center justify-center gap-2 text-base sm:text-lg font-semibold sm:font-medium active:scale-[0.98]"
-                >
-                  Our Services
-                </Link>
+                <div className="md:hidden w-full relative h-14 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex items-center shadow-inner group cursor-pointer" onClick={() => document.getElementById('mobile-audit')?.scrollIntoView({ behavior: 'smooth' })}>
+                  <div className="absolute left-1 top-1 bottom-1 w-12 bg-brand-500 rounded-full flex items-center justify-center shadow-md z-10 animate-pulse group-hover:translate-x-full transition-transform duration-500">
+                    <ArrowRight className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="w-full text-center text-sm font-bold text-gray-500 dark:text-gray-400 pl-8 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                    Swipe to Analyse Site
+                  </span>
+                </div>
               </div>
             </div>
             
@@ -325,7 +327,9 @@ export default function HomePage() {
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`group p-6 sm:p-10 rounded-3xl hover:-translate-y-2 relative overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl dark:shadow-2xl dark:shadow-black/50`}
+                className={`group p-8 sm:p-10 rounded-3xl hover:-translate-y-2 relative overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl dark:shadow-2xl dark:shadow-black/50 ${
+                  index === 1 ? 'md:-translate-y-8' : ''
+                }`}
               >
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 w-full h-full -z-10 transition-transform duration-700 group-hover:scale-110">
@@ -338,6 +342,10 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-white/40 dark:bg-black/40" />
                 </div>
 
+                {/* Mobile-specific decorative elements */}
+                <div className="md:hidden absolute top-0 right-0 w-32 h-32 bg-white/20 dark:bg-white/5 rounded-bl-[100px] -z-10" />
+                <div className="md:hidden absolute bottom-0 left-0 w-24 h-24 bg-black/5 dark:bg-black/20 rounded-tr-[80px] -z-10" />
+
                 {/* Abstract Background Blob per card */}
                 <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-white/30 to-transparent dark:from-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
                 
@@ -348,9 +356,13 @@ export default function HomePage() {
                 <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10 drop-shadow-sm">
                   {service.title}
                 </h3>
-                <p className="text-gray-800 dark:text-gray-200 font-medium text-base leading-relaxed relative z-10 drop-shadow-sm">
+                <p className="text-gray-800 dark:text-gray-200 font-medium text-base leading-relaxed relative z-10 drop-shadow-sm mb-6">
                   {service.description}
                 </p>
+                
+                <div className="relative z-10 mt-auto flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white group-hover:gap-4 transition-all">
+                  Explore <ArrowRight className="w-4 h-4" />
+                </div>
               </div>
             ))}
           </div>
