@@ -23,6 +23,16 @@ export default function HomePage() {
   const [auditEmail, setAuditEmail] = useState('');
   const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
   const [auditSuccess, setAuditSuccess] = useState(false);
+  const [showMobileAudit, setShowMobileAudit] = useState(false);
+
+  // Auto-scroll or handle UI changes when mobile audit opens
+  useEffect(() => {
+    if (showMobileAudit) {
+        // Find the audit container and scroll it into view if needed,
+        // or let the UI handle the lightbox rendering
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  }, [showMobileAudit]);
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,7 +213,7 @@ export default function HomePage() {
                 
                 {/* Mobile Swipe to Analyse Slider */}
                 <div 
-                  className="md:hidden w-full relative h-[60px] bg-white/20 dark:bg-black/40 backdrop-blur-md rounded-full overflow-hidden border border-white/40 dark:border-white/10 shadow-inner flex items-center mt-2 touch-none"
+                  className="md:hidden w-full relative h-[60px] bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-full overflow-hidden border border-gray-300 dark:border-white/10 shadow-lg flex items-center mt-2 touch-none"
                   onTouchStart={(e) => {
                     const slider = e.currentTarget;
                     const touch = e.touches[0];
@@ -234,7 +244,7 @@ export default function HomePage() {
                       // If swiped all the way (or close enough), trigger action
                       if (diff > maxSlide * 0.85) {
                         handleTouchEnd();
-                        document.getElementById('mobile-audit')?.scrollIntoView({ behavior: 'smooth' });
+                        setShowMobileAudit(true);
                       }
                     };
 
@@ -260,7 +270,7 @@ export default function HomePage() {
                   </div>
                   
                   {/* The instructional text */}
-                  <span className="swipe-text w-full text-center text-sm font-bold text-gray-800 dark:text-gray-200 pl-10 pointer-events-none drop-shadow-sm">
+                  <span className="swipe-text w-full text-center text-sm font-bold text-gray-900 dark:text-gray-200 pl-10 pointer-events-none drop-shadow-sm">
                     Swipe to Analyse Site
                   </span>
                 </div>

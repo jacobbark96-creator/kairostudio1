@@ -156,12 +156,17 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
           {/* Mobile Menu Overlay */}
-          <div className={`md:hidden fixed inset-0 z-40 bg-white/90 dark:bg-black/90 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-          }`}>
-            <div className={`flex flex-col items-center justify-center h-full gap-8 p-8 transition-all duration-700 delay-100 ${
-              mobileMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            }`}>
+          <div 
+            className={`md:hidden fixed inset-0 z-40 bg-white/90 dark:bg-black/90 backdrop-blur-xl transform-gpu transition-[opacity,visibility] duration-300 ease-in-out ${
+              mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+            }`}
+            style={{ willChange: 'opacity, visibility' }}
+          >
+            <div className={`flex flex-col items-center justify-center h-full gap-8 p-8 transform-gpu transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              mobileMenuOpen ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
+            }`}
+            style={{ willChange: 'transform, opacity' }}
+            >
               <Link
                 href="/services"
                 onClick={() => setMobileMenuOpen(false)}
