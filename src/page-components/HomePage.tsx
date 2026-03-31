@@ -200,11 +200,67 @@ export default function HomePage() {
                   Start Project
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <div className="md:hidden w-full relative h-14 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 flex items-center shadow-inner group cursor-pointer" onClick={() => document.getElementById('mobile-audit')?.scrollIntoView({ behavior: 'smooth' })}>
-                  <div className="absolute left-1 top-1 bottom-1 w-12 bg-brand-500 rounded-full flex items-center justify-center shadow-md z-10 animate-pulse group-hover:translate-x-full transition-transform duration-500">
-                    <ArrowRight className="w-5 h-5 text-white" />
+                
+                {/* Mobile Swipe to Analyse Slider */}
+                <div 
+                  className="md:hidden w-full relative h-[60px] bg-white/20 dark:bg-black/40 backdrop-blur-md rounded-full overflow-hidden border border-white/40 dark:border-white/10 shadow-inner flex items-center mt-2 touch-none"
+                  onTouchStart={(e) => {
+                    const slider = e.currentTarget;
+                    const touch = e.touches[0];
+                    const startX = touch.clientX;
+                    const thumb = slider.querySelector('.swipe-thumb') as HTMLElement;
+                    const text = slider.querySelector('.swipe-text') as HTMLElement;
+                    const maxSlide = slider.offsetWidth - thumb.offsetWidth - 8; // 8px for padding
+                    
+                    thumb.style.transition = 'none';
+                    if(text) text.style.transition = 'none';
+
+                    const handleTouchMove = (e: TouchEvent) => {
+                      const currentX = e.touches[0].clientX;
+                      let diff = currentX - startX;
+                      
+                      // Clamp the swipe between 0 and maxSlide
+                      if (diff < 0) diff = 0;
+                      if (diff > maxSlide) diff = maxSlide;
+                      
+                      thumb.style.transform = `translateX(${diff}px)`;
+                      
+                      // Fade out text as you swipe
+                      if(text) {
+                          const opacity = 1 - (diff / (maxSlide * 0.5));
+                          text.style.opacity = Math.max(0, opacity).toString();
+                      }
+                      
+                      // If swiped all the way (or close enough), trigger action
+                      if (diff > maxSlide * 0.85) {
+                        handleTouchEnd();
+                        document.getElementById('mobile-audit')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    };
+
+                    const handleTouchEnd = () => {
+                      thumb.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                      thumb.style.transform = 'translateX(0px)';
+                      if(text) {
+                          text.style.transition = 'opacity 0.3s ease';
+                          text.style.opacity = '1';
+                      }
+                      
+                      document.removeEventListener('touchmove', handleTouchMove);
+                      document.removeEventListener('touchend', handleTouchEnd);
+                    };
+
+                    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    document.addEventListener('touchend', handleTouchEnd);
+                  }}
+                >
+                  {/* The swipeable thumb */}
+                  <div className="swipe-thumb absolute left-1 top-1 bottom-1 w-14 bg-gradient-to-r from-brand-600 to-brand-500 rounded-full flex items-center justify-center shadow-lg z-10">
+                    <ArrowRight className="w-6 h-6 text-white" />
                   </div>
-                  <span className="w-full text-center text-sm font-bold text-gray-500 dark:text-gray-400 pl-8 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                  
+                  {/* The instructional text */}
+                  <span className="swipe-text w-full text-center text-sm font-bold text-gray-800 dark:text-gray-200 pl-10 pointer-events-none drop-shadow-sm">
                     Swipe to Analyse Site
                   </span>
                 </div>
