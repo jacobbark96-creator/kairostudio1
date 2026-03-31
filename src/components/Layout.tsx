@@ -48,8 +48,8 @@ export default function Layout({ children }: LayoutProps) {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'py-2 sm:py-3'
-            : 'py-4 sm:py-6'
+            ? 'py-2 sm:py-3 pt-6 sm:pt-4' // Added extra padding top here
+            : 'py-4 sm:py-6 pt-8 sm:pt-8' // And here
         }`}
       >
         <div className={`mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ${

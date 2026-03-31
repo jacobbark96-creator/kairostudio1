@@ -188,7 +188,7 @@ export default function HomePage() {
                 )}
               </div>
               
-              <p className="text-lg sm:text-2xl text-gray-800 dark:text-gray-100 max-w-[20rem] sm:max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-10 leading-relaxed font-medium sm:font-light drop-shadow-md sm:drop-shadow-sm bg-white/40 dark:bg-black/40 sm:bg-transparent sm:dark:bg-transparent backdrop-blur-sm sm:backdrop-blur-none p-4 sm:p-0 rounded-2xl sm:rounded-none">
+              <p className="text-lg sm:text-2xl text-gray-800 dark:text-gray-100 max-w-[20rem] sm:max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-10 leading-relaxed font-medium sm:font-light drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] sm:drop-shadow-sm p-2 sm:p-0">
                 {heroSubtitle}
               </p>
               
