@@ -54,6 +54,15 @@
 		display: none;
 	}
 
+  /* Specific scrollbar hide class for horizontal scrolling */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* 3D Card Transforms */
   .perspective-1000 {
     perspective: 1000px;

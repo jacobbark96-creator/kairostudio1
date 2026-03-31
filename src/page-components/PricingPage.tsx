@@ -195,17 +195,24 @@ export default function PricingPage() {
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
                 </div>
             ) : (
-                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
-                    {plans.map((plan, index) => (
-                        <div 
-                            key={plan.id} 
-                            className={`relative rounded-[2.5rem] p-8 sm:p-10 transition-all duration-500 animate-fade-in-up 
-                                ${plan.is_popular 
-                                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-2xl scale-100 md:scale-105 z-10 border border-gray-800 dark:border-gray-200' 
-                                    : 'bg-white dark:bg-gray-900/60 backdrop-blur-md text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 shadow-xl'
-                                }`}
-                            style={{ animationDelay: `${(index + 3) * 200}ms` }}
-                        >
+                <div className="relative">
+                    {/* Swipe indicator hint for mobile */}
+                    <div className="md:hidden text-center mb-4 text-sm font-medium text-gray-500 dark:text-gray-400 flex items-center justify-center gap-2 animate-pulse">
+                        <span>Swipe to compare plans</span>
+                        <ArrowRight className="w-4 h-4" />
+                    </div>
+                    
+                    <div className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto items-center overflow-x-auto pb-8 pt-4 px-4 sm:px-0 snap-x snap-mandatory hide-scrollbar">
+                        {plans.map((plan, index) => (
+                            <div 
+                                key={plan.id} 
+                                className={`relative rounded-[2.5rem] p-8 sm:p-10 transition-all duration-500 animate-fade-in-up flex-shrink-0 w-[85vw] sm:w-[400px] md:w-auto snap-center
+                                    ${plan.is_popular 
+                                        ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-2xl scale-100 md:scale-105 z-10 border border-gray-800 dark:border-gray-200' 
+                                        : 'bg-white dark:bg-gray-900/60 backdrop-blur-md text-gray-900 dark:text-white border border-gray-200 dark:border-white/10 shadow-xl'
+                                    }`}
+                                style={{ animationDelay: `${(index + 3) * 200}ms` }}
+                            >
                             {plan.is_popular && (
                                 <div className="absolute -top-5 left-1/2 -translate-x-1/2">
                                     <div className="bg-gradient-to-r from-brand-500 to-purple-500 text-white text-xs font-bold px-4 py-2 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1">
@@ -261,6 +268,7 @@ export default function PricingPage() {
                             </ul>
                         </div>
                     ))}
+                    </div>
                 </div>
             )}
         </div>
