@@ -60,7 +60,7 @@ export default function Layout({ children }: LayoutProps) {
               ? 'md:glass md:shadow-lg md:shadow-black/5 md:bg-white md:dark:bg-dark-surface sm:md:bg-white/80 sm:md:dark:bg-dark-surface/80 md:px-4 md:py-2 md:rounded-2xl' 
               : 'bg-transparent px-0 rounded-2xl'
           }`}>
-            <div className="flex items-center justify-between relative">
+            <div className={`flex items-center justify-between relative transition-all duration-300 ${scrolled ? 'pt-2 md:pt-0' : 'pt-0'}`}>
             
             {/* Logo - Centered on Mobile, Left on Desktop */}
             <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 z-50 w-full md:w-auto flex justify-center md:justify-start pointer-events-none">
