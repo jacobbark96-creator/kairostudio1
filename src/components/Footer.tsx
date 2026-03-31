@@ -13,87 +13,68 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
     <footer className="py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 border-t border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto">
         {/* Mobile Layout */}
-        <div className="md:hidden space-y-8 mb-8">
-          {/* Row 1: Quick Links & Get in Touch */}
-          <div className="grid grid-cols-2 gap-6">
+        <div className="md:hidden space-y-12 mb-12">
+          {/* Logo & Description */}
+          <div className="flex flex-col items-center text-center gap-4">
+            {logo && (
+              <div className="h-20 w-auto flex items-center justify-center">
+                <img 
+                  src={logo} 
+                  alt="Kairo Studio" 
+                  className="h-full w-auto object-contain" 
+                  style={{ maxHeight: '100%', maxWidth: '200px' }}
+                />
+              </div>
+            )}
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-[16rem]">
+              Crafting digital excellence through innovative design and strategic development.
+            </p>
+          </div>
+
+          {/* Links & Contact Grid */}
+          <div className="grid grid-cols-1 gap-10 text-center">
             {/* Quick Links */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-widest mb-6 border-b border-gray-200 dark:border-gray-800 pb-4 inline-block px-4">
                 Quick Links
               </h3>
-              <ul className="grid grid-cols-2 gap-x-2 gap-y-2">
+              <ul className="flex flex-col gap-4">
                 <li>
-                  <Link 
-                    href="/services"
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
+                  <Link href="/services" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                     Services
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    href="/about"
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
+                  <Link href="/portfolio" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    Portfolio
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link 
-                    href="/blog"
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href="/careers"
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <button 
-                    onClick={onShowContact}
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
+                  <button onClick={onShowContact} className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                     Contact
                   </button>
-                </li>
-                <li>
-                  <Link 
-                    href="/portfolio"
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
-                    Our Work
-                  </Link>
-                </li>
-                <li>
-                  <Link 
-                    href="/dashboard"
-                    className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
-                  >
-                    Client Portal
-                  </Link>
                 </li>
               </ul>
             </div>
 
-            {/* Get in Touch */}
+            {/* Contact Info */}
             <div>
-              <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-3">
+              <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-widest mb-6 border-b border-gray-200 dark:border-gray-800 pb-4 inline-block px-4">
                 Get in Touch
               </h3>
-              <ul className="space-y-2">
+              <ul className="flex flex-col gap-4">
                 <li>
-                  <a href="mailto:hello@kairostudio.co.uk" className="text-xs text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200 break-all">
+                  <a href="mailto:hello@kairostudio.co.uk" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
                     hello@kairostudio.co.uk
                   </a>
                 </li>
                 <li>
-                  <span className="text-xs text-gray-600 dark:text-gray-400">
+                  <span className="text-sm font-medium text-gray-500 dark:text-gray-500">
                     Glasgow | Bali | Sydney
                   </span>
                 </li>
@@ -101,54 +82,39 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
             </div>
           </div>
 
-          {/* Row 2: Follow Us & Logo */}
-          <div className="flex flex-col items-center gap-6">
-            {/* Logo */}
-            {logo && (
-              <div className="h-16 w-auto flex items-center justify-center">
-                <img 
-                  src={logo} 
-                  alt="Kairo Studio" 
-                  className="h-16 w-auto object-contain" 
-                  style={{ maxHeight: '100%', maxWidth: '180px' }}
-                />
-              </div>
-            )}
-            
-            {/* Follow Us */}
-            <div className="w-full">
-              <h3 className="text-xs font-semibold text-gray-900 dark:text-gray-100 uppercase tracking-wider mb-4 text-center">
-                Follow Us
-              </h3>
-              <div className="flex gap-4 justify-center">
-                <a 
-                  href="https://instagram.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent transition-all duration-300"
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a 
-                  href="https://linkedin.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-300"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a 
-                  href="https://github.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="GitHub"
-                  className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-md border border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-900 hover:text-white hover:border-transparent transition-all duration-300"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-              </div>
+          {/* Social Icons */}
+          <div className="flex flex-col items-center pt-8 border-t border-gray-200 dark:border-gray-800">
+            <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-widest mb-6">
+              Follow Us
+            </h3>
+            <div className="flex gap-6 justify-center">
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gradient-to-br hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent transition-all duration-300 hover:scale-110 active:scale-95"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://linkedin.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all duration-300 hover:scale-110 active:scale-95"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://github.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-900 hover:text-white hover:border-transparent transition-all duration-300 hover:scale-110 active:scale-95"
+              >
+                <Github className="w-5 h-5" />
+              </a>
             </div>
           </div>
         </div>
