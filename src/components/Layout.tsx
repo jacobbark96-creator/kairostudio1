@@ -63,18 +63,18 @@ export default function Layout({ children }: LayoutProps) {
             <div className="flex items-center justify-between relative">
             
             {/* Logo - Centered on Mobile, Left on Desktop */}
-            <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 z-50">
+            <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 z-50 w-full md:w-auto flex justify-center md:justify-start pointer-events-none">
               <Link 
                 href="/"
-                className="cursor-pointer flex-shrink-0 flex items-center group"
+                className="cursor-pointer flex-shrink-0 flex items-center group pointer-events-auto"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {kairoLogo && (
-                  <div className="h-20 sm:h-24 w-auto flex items-center justify-center">
+                  <div className="h-24 sm:h-28 md:h-24 w-auto flex items-center justify-center">
                     <img 
                       src={typeof kairoLogo === 'string' ? kairoLogo : (kairoLogo as any).src} 
                       alt="Kairo Studio" 
-                      className="h-full w-auto object-contain object-left transition-transform duration-500 group-hover:scale-105" 
+                      className="h-full w-auto object-contain object-center md:object-left transition-transform duration-500 group-hover:scale-105" 
                     />
                   </div>
                 )}

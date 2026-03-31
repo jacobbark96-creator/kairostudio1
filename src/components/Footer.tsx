@@ -13,7 +13,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
     <footer className="py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 border-t border-gray-200 dark:border-gray-800">
       <div className="max-w-7xl mx-auto">
         {/* Mobile Layout */}
-        <div className="sm:hidden space-y-6">
+        <div className="md:hidden space-y-8 mb-8">
           {/* Row 1: Quick Links & Get in Touch */}
           <div className="grid grid-cols-2 gap-6">
             {/* Quick Links */}
@@ -109,7 +109,8 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                 <img 
                   src={logo} 
                   alt="Kairo Studio" 
-                  className="h-full w-auto max-w-[180px] object-contain opacity-90 hover:opacity-100 transition-opacity duration-300" 
+                  className="h-16 w-auto object-contain" 
+                  style={{ maxHeight: '100%', maxWidth: '180px' }}
                 />
               </div>
             )}
@@ -153,7 +154,7 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mb-6 sm:mb-8">
+        <div className="hidden md:grid md:grid-cols-4 gap-6 lg:gap-10 mb-6 sm:mb-8">
           {/* Brand Column */}
           <div className="lg:col-span-1 text-center sm:text-left">
             {logo && (
