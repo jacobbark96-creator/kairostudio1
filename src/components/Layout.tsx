@@ -48,17 +48,17 @@ export default function Layout({ children }: LayoutProps) {
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'py-2 sm:py-3 pt-6 sm:pt-4' // Added extra padding top here
-            : 'py-4 sm:py-6 pt-8 sm:pt-8' // And here
-        }`}
+            ? 'py-2 sm:py-3 pt-6 sm:pt-4 md:py-3 md:pt-4' // Kept padding top but removed the floating look on mobile
+            : 'py-4 sm:py-6 pt-8 sm:pt-8 md:py-6 md:pt-8' 
+        } md:bg-transparent ${scrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-lg md:bg-transparent md:backdrop-blur-none border-b border-gray-200 dark:border-white/10 md:border-none shadow-sm md:shadow-none' : ''}`}
       >
         <div className={`mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ${
           scrolled ? 'max-w-7xl' : 'max-w-7xl'
         }`}>
-          <div className={`rounded-2xl transition-all duration-300 ${
+          <div className={`transition-all duration-300 ${
             scrolled 
-              ? 'glass shadow-lg shadow-black/5 bg-white dark:bg-dark-surface sm:bg-white/80 sm:dark:bg-dark-surface/80 px-4 py-2' 
-              : 'bg-transparent px-0'
+              ? 'md:glass md:shadow-lg md:shadow-black/5 md:bg-white md:dark:bg-dark-surface sm:md:bg-white/80 sm:md:dark:bg-dark-surface/80 md:px-4 md:py-2 md:rounded-2xl' 
+              : 'bg-transparent px-0 rounded-2xl'
           }`}>
             <div className="flex items-center justify-between relative">
             
