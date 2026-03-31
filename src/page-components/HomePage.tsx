@@ -150,7 +150,7 @@ export default function HomePage() {
         title="Digital Experiences That Inspire" 
         description="Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert." 
       />
-      <section className="relative z-0 pt-32 sm:pt-40 md:pt-48 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
+      <section className="relative z-0 pt-28 sm:pt-40 md:pt-48 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
             <img 
@@ -158,53 +158,51 @@ export default function HomePage() {
                 alt="Night Sky" 
                 className="absolute inset-0 w-full h-full object-cover"
             />
-            {/* Dark Mode: No overlay, just raw image */}
-            
             {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/50 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/70 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
         </div>
 
         {/* Background Blobs - Static on mobile, animated on desktop */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-30 sm:opacity-80 mix-blend-overlay">
-          <div className="absolute top-[-10%] left-[-10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-brand-400/40 dark:bg-brand-500/30 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob will-change-transform" />
-          <div className="absolute top-[20%] right-[-10%] w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-purple-400/40 dark:bg-purple-500/30 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob sm:animation-delay-2000 will-change-transform" />
-          <div className="absolute bottom-[-10%] left-[20%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-blue-400/40 dark:bg-blue-500/30 rounded-full blur-[60px] sm:blur-[100px] sm:animate-blob sm:animation-delay-4000 will-change-transform" />
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-40 sm:opacity-80 mix-blend-overlay">
+          <div className="absolute top-[-5%] left-[-10%] w-[250px] sm:w-[500px] h-[250px] sm:h-[500px] bg-brand-400/50 dark:bg-brand-500/30 rounded-full blur-[50px] sm:blur-[100px] sm:animate-blob will-change-transform" />
+          <div className="absolute top-[30%] right-[-10%] w-[200px] sm:w-[400px] h-[200px] sm:h-[400px] bg-purple-400/50 dark:bg-purple-500/30 rounded-full blur-[50px] sm:blur-[100px] sm:animate-blob sm:animation-delay-2000 will-change-transform" />
+          <div className="absolute bottom-[-5%] left-[10%] w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-blue-400/50 dark:bg-blue-500/30 rounded-full blur-[50px] sm:blur-[100px] sm:animate-blob sm:animation-delay-4000 will-change-transform" />
         </div>
 
         <div className="max-w-7xl mx-auto w-full relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div className="text-center lg:text-left">
-              <div className="min-h-[140px] sm:min-h-[200px] mb-2 sm:mb-8">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            <div className="text-center lg:text-left mt-8 sm:mt-0">
+              <div className="min-h-[120px] sm:min-h-[200px] mb-4 sm:mb-8">
                 {isJackpot ? (
                     <TypewriterHero 
                       texts={["JACKPOT!!!"]} 
-                      className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 pb-2 sm:pb-4 scale-110 origin-left transition-all duration-500"
+                      className="block text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 pb-2 sm:pb-4 scale-110 origin-center lg:origin-left transition-all duration-500"
                       speed={150}
                     />
                 ) : (
                     <TypewriterHero 
                       texts={[heroTitle, heroTitleAlt1, heroTitleAlt2].filter(t => t && t.trim().length > 0)} 
-                      className="block text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-display font-bold leading-[1.1] sm:leading-[0.9] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-200 dark:to-brand-300 pb-2 sm:pb-4"
+                      className="block text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black leading-[1.1] sm:leading-[1.05] tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-brand-800 to-brand-600 dark:from-white dark:via-gray-100 dark:to-brand-200 pb-2 sm:pb-4 drop-shadow-sm"
                       speed={70}
                     />
                 )}
               </div>
               
-              <p className="text-xl sm:text-2xl text-gray-600 dark:text-white max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed font-light drop-shadow-md">
+              <p className="text-lg sm:text-2xl text-gray-600 dark:text-gray-200 max-w-[20rem] sm:max-w-2xl mx-auto lg:mx-0 mb-8 sm:mb-10 leading-relaxed font-normal sm:font-light drop-shadow-sm">
                 {heroSubtitle}
               </p>
               
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 px-4 sm:px-0">
                 <Link 
                   href="/portfolio"
-                  className="group w-full sm:w-auto px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition-all duration-300 flex items-center justify-center gap-2 text-lg font-bold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-1"
+                  className="group w-full sm:w-auto px-8 py-4 sm:py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition-all duration-300 flex items-center justify-center gap-2 text-base sm:text-lg font-bold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-1 active:scale-[0.98]"
                 >
                   View Our Work
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link 
                   href="/services"
-                  className="w-full sm:w-auto px-8 py-4 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all duration-300 flex items-center justify-center gap-2 text-lg font-medium"
+                  className="w-full sm:w-auto px-8 py-4 sm:py-4 border-2 sm:border border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 hover:text-brand-600 dark:hover:text-brand-400 transition-all duration-300 flex items-center justify-center gap-2 text-base sm:text-lg font-semibold sm:font-medium active:scale-[0.98]"
                 >
                   Our Services
                 </Link>
@@ -288,13 +286,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden block md:hidden">
+      <section className="py-16 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden block md:hidden">
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold mb-6 text-gray-900 dark:text-white tracking-tight">
+          <div className="text-center mb-10 sm:mb-24">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4 text-gray-900 dark:text-white tracking-tight">
               Selected Work
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 font-light">
+            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-[18rem] mx-auto mb-8 font-normal leading-relaxed">
               See how we help brands grow through digital innovation.
             </p>
           </div>
@@ -305,29 +303,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="py-16 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold mb-6 text-gray-900 dark:text-white tracking-tight">
+          <div className="text-center mb-12 sm:mb-24">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4 text-gray-900 dark:text-white tracking-tight">
               Our Services
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-10 font-light">
+            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-[20rem] sm:max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
               Explore our comprehensive service offerings designed to elevate your brand.
             </p>
             <Link 
               href="/services"
-              className="inline-flex items-center gap-2 text-brand-600 dark:text-brand-400 font-semibold hover:gap-4 transition-all duration-300 group"
+              className="inline-flex items-center gap-2 text-brand-600 dark:text-brand-400 font-bold hover:gap-4 transition-all duration-300 group bg-brand-50 dark:bg-brand-900/20 px-6 py-3 rounded-full"
             >
               View All Services
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1" />
             </Link>
           </div>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
             {services.map((service, index) => (
               <div
                 key={index}
-                className={`group p-8 sm:p-10 rounded-[2rem] hover:-translate-y-2 relative overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-xl`}
+                className={`group p-6 sm:p-10 rounded-3xl hover:-translate-y-2 relative overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl dark:shadow-2xl dark:shadow-black/50`}
               >
                 {/* Background Image with Overlay */}
                 <div className="absolute inset-0 w-full h-full -z-10 transition-transform duration-700 group-hover:scale-110">
