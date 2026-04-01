@@ -75,7 +75,7 @@ export default function PortfolioPage() {
         title="Portfolio" 
         description="View our latest projects and success stories. See how Kairo Studio transforms ideas into digital reality." 
       />
-      <section className="relative pt-40 sm:pt-56 md:pt-64 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[50vh] flex items-center">
+      <section className="relative pt-24 sm:pt-56 md:pt-64 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[40vh] sm:min-h-[50vh] flex items-center">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 
@@ -247,25 +247,30 @@ export default function PortfolioPage() {
       {/* Other Projects */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-black/50">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4 sm:gap-6">
             <div>
                 <h2 className="text-3xl sm:text-4xl font-display font-bold text-black dark:text-white mb-2">
                 Selected Archive
                 </h2>
-                <p className="text-gray-500 dark:text-gray-400 max-w-lg">
+                <p className="text-gray-500 dark:text-gray-400 max-w-lg text-sm sm:text-base">
                 Explore a curation of our diverse projects across various industries and technologies.
                 </p>
             </div>
+            {/* Mobile swipe indicator */}
+            <div className="md:hidden flex items-center gap-2 text-xs font-medium text-gray-400">
+                <span>Swipe to explore</span>
+                <ArrowRight className="w-3 h-3" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 overflow-x-auto pb-8 pt-4 -mx-4 px-4 sm:mx-0 sm:px-0 sm:overflow-visible snap-x snap-mandatory hide-scrollbar">
             {projects.filter(p => !p.featured).map((project) => (
               <a
                 key={project.id}
                 href={project.link || '#'}
                 target={project.link ? "_blank" : "_self"}
                 rel={project.link ? "noopener noreferrer" : ""}
-                className={`group flex flex-col gap-4 ${!project.link ? 'cursor-default' : 'cursor-pointer'}`}
+                className={`group flex flex-col gap-4 min-w-[85vw] sm:min-w-0 snap-center ${!project.link ? 'cursor-default' : 'cursor-pointer'}`}
                 onClick={(e) => !project.link && e.preventDefault()}
               >
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 p-0 sm:p-0">
