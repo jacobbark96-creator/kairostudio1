@@ -146,12 +146,12 @@ export default function PricingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-            <div className="text-center mb-20 mt-8 sm:mt-16">
+            <div className="text-center mb-10 mt-8 sm:mt-16">
                 <h1 className="text-5xl md:text-7xl font-display font-black text-gray-900 dark:text-white mb-6 tracking-tight drop-shadow-sm animate-fade-in-up animation-delay-200">
                     Invest in your <br className="hidden md:block" />
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-400 dark:to-purple-400">digital future</span>
                 </h1>
-                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto font-light animate-fade-in-up animation-delay-400 mb-12">
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto font-light animate-fade-in-up animation-delay-400 mb-8">
                     Simple, predictable pricing. No hidden fees, just exceptional value designed to help your business scale.
                 </p>
 
