@@ -280,22 +280,10 @@ export default function HomePage() {
             
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-full blur-[80px] -z-10" />
-              <div className={`w-full max-w-lg transform hover:scale-[1.02] transition-all duration-500 ${
-                showMobileAudit 
-                  ? 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm md:relative md:inset-auto md:p-0 md:bg-transparent md:backdrop-blur-none animate-fade-in-up md:animate-none' 
-                  : 'relative z-10 hidden md:block'
-              }`}>
-                {showMobileAudit && (
-                  <button 
-                    onClick={() => setShowMobileAudit(false)}
-                    className="md:hidden absolute top-4 right-4 z-[110] p-2 bg-white/20 dark:bg-white/10 rounded-full text-white backdrop-blur-md shadow-lg border border-white/20"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                )}
-                
-                {/* Site Assessment Feature */}
-                <div className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-white/90 dark:bg-black/80 md:bg-white/60 md:dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
+              
+              {/* DESKTOP BOX - Hidden on mobile */}
+              <div className="hidden md:block w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-all duration-500">
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-white/60 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover/audit:animate-shimmer hidden dark:block" />
                     
@@ -361,10 +349,99 @@ export default function HomePage() {
                     </div>
                     <div className="absolute inset-0 opacity-[0.03] dark:opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay" />
                 </div>
-
               </div>
+              
+              {/* MOBILE MODAL - Smooth Lightbox Transition */}
+              <div 
+                className={`md:hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transform-gpu transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  showMobileAudit ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+                }`}
+                style={{ willChange: 'opacity, visibility' }}
+              >
+                {/* Modal Container */}
+                <div 
+                  className={`relative w-full max-w-lg transform-gpu transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                    showMobileAudit ? 'translate-y-0 scale-100 opacity-100 delay-100' : 'translate-y-12 scale-95 opacity-0'
+                  }`}
+                  style={{ willChange: 'transform, opacity' }}
+                >
+                  <button 
+                    onClick={() => setShowMobileAudit(false)}
+                    className="absolute -top-12 right-0 z-[110] p-2 bg-white/20 dark:bg-white/10 rounded-full text-white backdrop-blur-md shadow-lg border border-white/20"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                  
+                  {/* Site Assessment Feature */}
+                  <div className="relative w-full overflow-hidden rounded-[2.5rem] bg-white/90 dark:bg-black/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
+                      
+                      <div className="relative z-10 p-8 text-center">
+                          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-md border border-white/60 dark:border-white/10 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
+                              <Sparkles className="w-4 h-4 animate-pulse" />
+                              Free Audit
+                          </div>
+                          
+                          <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-3 leading-tight drop-shadow-sm">
+                              Assess your <br/> 
+                              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-300 dark:to-purple-300">current site</span>
+                          </h3>
+                          
+                          {auditSuccess ? (
+                              <div className="py-2 text-center animate-fade-in-up">
+                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl drop-shadow-sm">Your email will arrive any moment</h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 font-medium">Play for a discount while you wait.</p>
+                                  <div className="transform scale-90 origin-top">
+                                      <RandomOffer />
+                                  </div>
+                              </div>
+                          ) : (
+                              <>
+                                  <p className="text-gray-700 dark:text-gray-200 text-sm font-medium mb-8 max-w-[16rem] mx-auto leading-relaxed drop-shadow-sm">
+                                      Get instant feedback on your site and learn how Kairo can take you to the next level.
+                                  </p>
+                                  
+                                  <div className="bg-white/40 dark:bg-black/20 backdrop-blur-md rounded-2xl p-6 border border-white/50 dark:border-white/10 shadow-inner">
+                                      <form 
+                                          onSubmit={handleAuditSubmit}
+                                          className="flex flex-col gap-4"
+                                      >
+                                      <input 
+                                          type="text" 
+                                          placeholder="yourdomain.com" 
+                                          required
+                                          value={auditUrl}
+                                          onChange={(e) => setAuditUrl(e.target.value)}
+                                          className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
+                                      />
+                                      <input 
+                                          type="email" 
+                                          placeholder="Enter your email" 
+                                          required
+                                          value={auditEmail}
+                                          onChange={(e) => setAuditEmail(e.target.value)}
+                                          className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
+                                      />
+                                      <button 
+                                          type="submit"
+                                          disabled={isSubmittingAudit}
+                                          className="w-full py-4 mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white rounded-xl font-bold shadow-lg shadow-brand-500/30 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 border border-brand-400/50"
+                                      >
+                                          {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
+                                          {!isSubmittingAudit && <ArrowRight className="w-5 h-5" />}
+                                      </button>
+                                  </form>
+                                  <p className="text-[11px] font-semibold tracking-wider text-gray-500 dark:text-gray-400 mt-5 text-center uppercase">Powered by Kairo AI</p>
+                              </div>
+                              </>
+                          )}
+                      </div>
+                      <div className="absolute inset-0 opacity-[0.03] dark:opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay" />
+                  </div>
+                </div>
+              </div>
+
             </div>
-          </div>
         </div>
       </section>
 
