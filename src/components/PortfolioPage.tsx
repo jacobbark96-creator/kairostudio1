@@ -93,7 +93,7 @@ export default function PortfolioPage() {
            <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/10 dark:bg-purple-500/5 rounded-full blur-[100px] animate-blob animation-delay-2000" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10 mt-16 sm:mt-0">
+        <div className="max-w-7xl mx-auto w-full relative z-10 mt-24 sm:mt-0">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-300 mb-12 group"
