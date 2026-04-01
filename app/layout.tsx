@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: 'Kairo Studio',
     images: [
       {
-        url: '/og-image.jpg', // You should place an og-image.jpg in the public folder
+        url: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop', // Beautiful hero image placeholder for OG graph
         width: 1200,
         height: 630,
         alt: 'Kairo Studio - Digital Agency',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     title: 'Kairo Studio | High-Performance Digital Solutions',
     description: 'Award-winning digital agency specializing in custom web design and high-performance web applications.',
     creator: '@kairostudio',
-    images: ['/og-image.jpg'],
+    images: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop'],
   },
   robots: {
     index: true,
@@ -62,7 +62,10 @@ export const metadata: Metadata = {
     google: 'your-google-site-verification-code', // We can update this later when you register on Google Search Console
   },
   icons: {
-    icon: '/icon.png',
+    icon: [
+        { url: '/favicon.ico' },
+        { url: '/icon.png' }
+    ],
     shortcut: '/icon.png',
     apple: '/icon.png',
   },
@@ -77,7 +80,8 @@ export default function RootLayout({
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: 'Kairo Studio',
-    image: 'https://kairostudio.co.uk/og-image.jpg',
+    image: 'https://kairostudio.co.uk/icon.png',
+    logo: 'https://kairostudio.co.uk/icon.png',
     url: 'https://kairostudio.co.uk',
     description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, and scalable digital products.',
     address: {
