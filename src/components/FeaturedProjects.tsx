@@ -70,7 +70,7 @@ export default function FeaturedProjects() {
                 <img
                     src={p.image_url}
                     alt={p.title}
-                    className="w-full h-full object-cover opacity-60 dark:opacity-40 group-hover:scale-105 transition-transform duration-[10s]"
+                    className="w-full h-full object-contain sm:object-cover scale-[0.85] sm:scale-100 opacity-60 dark:opacity-40 group-hover:scale-[0.9] sm:group-hover:scale-105 transition-transform duration-[10s]"
                 />
             ) : (
                 <div className={`w-full h-full bg-gradient-to-br ${p.color || 'from-gray-800 to-black'} opacity-50`} />

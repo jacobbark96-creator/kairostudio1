@@ -258,12 +258,12 @@ export default function PortfolioPage() {
                 className={`group flex flex-col gap-4 ${!project.link ? 'cursor-default' : 'cursor-pointer'}`}
                 onClick={(e) => !project.link && e.preventDefault()}
               >
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800">
+                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 p-0 sm:p-0">
                     {project.image_url ? (
                         <img
                         src={project.image_url}
                         alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-contain sm:object-cover scale-[0.85] sm:scale-100 group-hover:scale-[0.9] sm:group-hover:scale-105 transition-transform duration-500"
                         />
                     ) : (
                         <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${project.color} opacity-20`}>
