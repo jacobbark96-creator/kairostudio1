@@ -44,7 +44,7 @@ export default function AboutPage() {
       />
       
       {/* Hero Section */}
-      <section className="relative pt-48 sm:pt-56 md:pt-64 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
+      <section className="relative pt-40 sm:pt-56 md:pt-64 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 
@@ -62,7 +62,7 @@ export default function AboutPage() {
            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10 text-center">
+        <div className="max-w-7xl mx-auto w-full relative z-10 text-center mt-16 sm:mt-0">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/20 sm:bg-brand-50/50 sm:dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 sm:backdrop-blur-sm mb-8 animate-fade-in">
             <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400 animate-pulse" />
             <span className="text-sm font-medium text-brand-900 dark:text-brand-100 tracking-wide uppercase">

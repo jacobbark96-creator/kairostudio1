@@ -75,7 +75,7 @@ export default function PortfolioPage() {
         title="Portfolio" 
         description="View our latest projects and success stories. See how Kairo Studio transforms ideas into digital reality." 
       />
-      <section className="relative pt-48 sm:pt-56 md:pt-64 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[50vh] flex items-center">
+      <section className="relative pt-40 sm:pt-56 md:pt-64 pb-16 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[50vh] flex items-center">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 
@@ -93,7 +93,7 @@ export default function PortfolioPage() {
            <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/10 dark:bg-purple-500/5 rounded-full blur-[100px] animate-blob animation-delay-2000" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10">
+        <div className="max-w-7xl mx-auto w-full relative z-10 mt-16 sm:mt-0">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors duration-300 mb-12 group"

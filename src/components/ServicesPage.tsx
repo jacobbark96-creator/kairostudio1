@@ -74,14 +74,14 @@ export default function ServicesPage() {
         title="Services" 
         description="From brand identity to web development and digital strategy, Kairo Studio offers comprehensive services for every budget." 
       />
-      <section className="relative pt-48 sm:pt-56 md:pt-64 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
+      <section className="relative pt-40 sm:pt-56 md:pt-64 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
         {/* Background Blobs */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
            <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
            <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10">
+        <div className="max-w-7xl mx-auto w-full relative z-10 mt-16 sm:mt-0">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-300 mb-8 group"
