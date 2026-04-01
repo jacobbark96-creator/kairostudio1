@@ -128,7 +128,7 @@ export default function PricingPage() {
         description="Transparent, value-driven pricing for custom web design, development, and digital strategy." 
       />
       
-      <div className="min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 relative z-0">
+      <div className="min-h-screen pt-48 sm:pt-56 pb-24 px-4 sm:px-6 lg:px-8 relative z-0">
         {/* Background */}
         <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 

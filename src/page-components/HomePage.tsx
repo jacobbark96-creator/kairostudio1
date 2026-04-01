@@ -160,7 +160,7 @@ export default function HomePage() {
         title="Digital Experiences That Inspire" 
         description="Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert." 
       />
-      <section className="relative z-0 pt-28 sm:pt-40 md:pt-48 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
+      <section className="relative z-0 pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
             <img 

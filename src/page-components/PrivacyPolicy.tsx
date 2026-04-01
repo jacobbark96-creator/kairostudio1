@@ -10,7 +10,7 @@ export default function PrivacyPolicy() {
         title="Privacy Policy | Kairo Studio" 
         description="Our privacy policy outlining how we handle your data, payments, and project terms." 
       />
-      <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative z-10">
+      <div className="pt-48 sm:pt-56 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto relative z-10">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 

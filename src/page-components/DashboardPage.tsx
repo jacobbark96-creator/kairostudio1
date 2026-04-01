@@ -144,7 +144,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 pb-12">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-32 pb-12">
       <SEO 
         title="Client Dashboard" 
         description="Manage your invoices and project details in the Kairo Studio Client Portal." 

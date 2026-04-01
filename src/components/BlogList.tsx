@@ -90,7 +90,7 @@ export default function BlogList() {
         description="Expert insights, strategies, and tutorials on web design, development, and digital marketing." 
       />
       
-      <div className="min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 relative z-0">
+      <div className="min-h-screen pt-48 sm:pt-56 pb-24 px-4 sm:px-6 lg:px-8 relative z-0">
         {/* Background */}
         <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
             <img 
