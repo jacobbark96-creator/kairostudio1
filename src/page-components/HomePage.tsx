@@ -288,10 +288,6 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover/audit:animate-shimmer hidden dark:block" />
                     
                     <div className="relative z-10 p-8 text-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-md border border-white/60 dark:border-white/10 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
-                            <Sparkles className="w-4 h-4 animate-pulse" />
-                            Free Audit
-                        </div>
                         
                         <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-3 leading-tight drop-shadow-sm">
                             Assess your <br/> 
@@ -377,10 +373,6 @@ export default function HomePage() {
                       <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
                       
                       <div className="relative z-10 p-8 text-center">
-                          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-md border border-white/60 dark:border-white/10 text-brand-600 dark:text-brand-400 text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
-                              <Sparkles className="w-4 h-4 animate-pulse" />
-                              Free Audit
-                          </div>
                           
                           <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-3 leading-tight drop-shadow-sm">
                               Assess your <br/> 
