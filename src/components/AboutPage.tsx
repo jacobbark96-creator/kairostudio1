@@ -63,13 +63,6 @@ export default function AboutPage() {
         </div>
 
         <div className="max-w-7xl mx-auto w-full relative z-10 text-center mt-16 sm:mt-0">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/20 sm:bg-brand-50/50 sm:dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 sm:backdrop-blur-sm mb-8 animate-fade-in">
-            <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400 animate-pulse" />
-            <span className="text-sm font-medium text-brand-900 dark:text-brand-100 tracking-wide uppercase">
-              Who We Are
-            </span>
-          </div>
-          
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-8 tracking-tight text-gray-900 dark:text-white">
             We Build Digital
             <br />
@@ -168,41 +161,6 @@ export default function AboutPage() {
                  </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gray-50/50 dark:bg-gray-800/20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-3xl sm:text-4xl font-display font-bold mb-6 text-gray-900 dark:text-white">
-              Our Core Values
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light">
-              The principles that guide our work and relationships.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <div
-                key={index}
-                className="group p-8 bg-white dark:bg-dark-card rounded-[2rem] border border-gray-100 dark:border-gray-800 hover:border-brand-200 dark:hover:border-brand-800 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-              >
-                <div className="w-14 h-14 bg-brand-50 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                  <value.icon className="w-7 h-7 text-brand-600 dark:text-brand-400" />
-                </div>
-                
-                <h3 className="text-xl font-display font-bold mb-3 text-gray-900 dark:text-white">
-                  {value.title}
-                </h3>
-                
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {value.description}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
