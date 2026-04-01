@@ -10,6 +10,7 @@ interface Project {
   category: string;
   description: string;
   image_url: string | null;
+  mobile_image_url?: string | null;
   link?: string;
   featured: boolean;
   color?: string;
@@ -67,11 +68,22 @@ export default function FeaturedProjects() {
             className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
         >
             {p.image_url ? (
-                <img
-                    src={p.image_url}
-                    alt={p.title}
-                    className="w-full h-full object-contain sm:object-cover scale-[0.85] sm:scale-100 opacity-60 dark:opacity-40 group-hover:scale-[0.9] sm:group-hover:scale-105 transition-transform duration-[10s]"
-                />
+                <>
+                  {/* Desktop Image */}
+                  <img
+                      src={p.image_url}
+                      alt={p.title}
+                      className={`w-full h-full object-cover opacity-60 dark:opacity-40 group-hover:scale-105 transition-transform duration-[10s] ${p.mobile_image_url ? 'hidden sm:block' : 'block'}`}
+                  />
+                  {/* Mobile Image */}
+                  {p.mobile_image_url && (
+                    <img
+                        src={p.mobile_image_url}
+                        alt={`${p.title} mobile`}
+                        className="w-full h-full object-cover opacity-60 dark:opacity-40 group-hover:scale-105 transition-transform duration-[10s] block sm:hidden"
+                    />
+                  )}
+                </>
             ) : (
                 <div className={`w-full h-full bg-gradient-to-br ${p.color || 'from-gray-800 to-black'} opacity-50`} />
             )}

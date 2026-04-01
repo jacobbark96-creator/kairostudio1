@@ -26,6 +26,7 @@ export default function AdminCRM() {
     color: 'from-cyan-500 to-blue-600'
   });
   const [projectImage, setProjectImage] = useState<File | null>(null);
+  const [mobileProjectImage, setMobileProjectImage] = useState<File | null>(null);
   const [savingProject, setSavingProject] = useState(false);
   
   // Invoice State
@@ -709,6 +710,7 @@ export default function AdminCRM() {
     setSavingProject(true);
     try {
       let imageUrl = editingProject?.image_url;
+      let mobileImageUrl = editingProject?.mobile_image_url;
 
       if (projectImage) {
         const fileExt = projectImage.name.split('.').pop();
@@ -728,9 +730,28 @@ export default function AdminCRM() {
         imageUrl = publicUrl;
       }
 
+      if (mobileProjectImage) {
+        const fileExt = mobileProjectImage.name.split('.').pop();
+        const fileName = `mobile_${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('portfolio')
+          .upload(filePath, mobileProjectImage);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('portfolio')
+          .getPublicUrl(filePath);
+        
+        mobileImageUrl = publicUrl;
+      }
+
       const projectData = {
         ...projectForm,
-        image_url: imageUrl
+        image_url: imageUrl,
+        mobile_image_url: mobileImageUrl
       };
 
       if (editingProject) {
@@ -758,6 +779,7 @@ export default function AdminCRM() {
         color: 'from-cyan-500 to-blue-600'
       });
       setProjectImage(null);
+      setMobileProjectImage(null);
       setEditingProject(null);
       fetchProjects();
     } catch (error: any) {
@@ -1312,6 +1334,21 @@ export default function AdminCRM() {
                   />
                   {editingProject?.image_url && !projectImage && (
                     <p className="text-xs text-gray-500 mt-1">Current image: <a href={editingProject.image_url} target="_blank" rel="noreferrer" className="text-cyan-600 underline">View</a></p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mobile Banner Image (1080x1350px)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files && setMobileProjectImage(e.target.files[0])}
+                    className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100"
+                  />
+                  {editingProject?.mobile_image_url && !mobileProjectImage && (
+                    <p className="text-xs text-gray-500 mt-1">Current mobile image: <a href={editingProject.mobile_image_url} target="_blank" rel="noreferrer" className="text-cyan-600 underline">View</a></p>
                   )}
                 </div>
               </div>

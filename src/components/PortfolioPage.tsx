@@ -13,6 +13,7 @@ interface Project {
   category: string;
   description: string;
   image_url: string | null;
+  mobile_image_url?: string | null;
   color: string;
   featured: boolean;
   link?: string;
@@ -127,11 +128,20 @@ export default function PortfolioPage() {
                 <div className="absolute -inset-4 bg-gradient-to-r from-brand-500/10 to-purple-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <div className="relative rounded-[2rem] overflow-hidden border border-gray-200 dark:border-gray-800 shadow-2xl bg-white dark:bg-gray-900">
                   {featuredProject.image_url ? (
-                    <img
-                      src={featuredProject.image_url}
-                      alt={featuredProject.title}
-                      className="w-full h-auto object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                    />
+                    <>
+                      <img
+                        src={featuredProject.image_url}
+                        alt={featuredProject.title}
+                        className={`w-full h-auto object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out ${featuredProject.mobile_image_url ? 'hidden sm:block' : 'block'}`}
+                      />
+                      {featuredProject.mobile_image_url && (
+                        <img
+                          src={featuredProject.mobile_image_url}
+                          alt={`${featuredProject.title} mobile`}
+                          className="w-full h-auto object-cover transform group-hover:scale-[1.02] transition-transform duration-700 ease-out block sm:hidden"
+                        />
+                      )}
+                    </>
                   ) : (
                     <div className="aspect-[16/10] flex items-center justify-center bg-gray-50 dark:bg-gray-800">
                         <Globe className="w-20 h-20 text-gray-300 dark:text-gray-600" />
@@ -260,11 +270,20 @@ export default function PortfolioPage() {
               >
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-800 p-0 sm:p-0">
                     {project.image_url ? (
-                        <img
-                        src={project.image_url}
-                        alt={project.title}
-                        className="w-full h-full object-contain sm:object-cover scale-[0.85] sm:scale-100 group-hover:scale-[0.9] sm:group-hover:scale-105 transition-transform duration-500"
-                        />
+                        <>
+                          <img
+                            src={project.image_url}
+                            alt={project.title}
+                            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${project.mobile_image_url ? 'hidden sm:block' : 'block'}`}
+                          />
+                          {project.mobile_image_url && (
+                            <img
+                              src={project.mobile_image_url}
+                              alt={`${project.title} mobile`}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 block sm:hidden"
+                            />
+                          )}
+                        </>
                     ) : (
                         <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${project.color} opacity-20`}>
                             <Globe className="w-12 h-12 text-black dark:text-white" />
