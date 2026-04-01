@@ -143,7 +143,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 relative z-50 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="md:hidden p-2 relative z-[60] rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -154,76 +154,76 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
         </div>
-
-          {/* Mobile Menu Overlay */}
-          <div 
-            className={`md:hidden fixed inset-0 z-40 bg-white/90 dark:bg-black/90 backdrop-blur-xl transform-gpu transition-[opacity,visibility] duration-300 ease-in-out ${
-              mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-            }`}
-            style={{ willChange: 'opacity, visibility' }}
-          >
-            <div className={`flex flex-col items-center justify-center h-full gap-8 p-8 transform-gpu transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              mobileMenuOpen ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
-            }`}
-            style={{ willChange: 'transform, opacity' }}
-            >
-              <Link
-                href="/services"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-              >
-                Services
-              </Link>
-              <Link
-                href="/portfolio"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-              >
-                Portfolio
-              </Link>
-              <Link
-                href="/pricing"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-              >
-                Pricing
-              </Link>
-              <Link
-                href="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-              >
-                About
-              </Link>
-              <Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-              >
-                Client Portal
-              </Link>
-              
-              <div className="w-16 h-px bg-gray-200 dark:bg-gray-800 my-4"></div>
-
-              <button 
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="text-xl font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-2"
-              >
-                {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              </button>
-              
-              <button
-                onClick={() => {
-                  openContactModal();
-                  setMobileMenuOpen(false);
-                }}
-                className="mt-4 px-10 py-4 bg-gradient-to-r from-brand-600 to-purple-600 text-white rounded-full text-lg font-bold shadow-xl shadow-brand-500/30 hover:scale-105 transition-all duration-300"
-              >
-                Get in Touch
-              </button>
-            </div>
-          </div>
       </nav>
+
+      {/* Mobile Menu Overlay - Moved OUTSIDE the nav to fix scroll positioning */}
+      <div 
+        className={`md:hidden fixed inset-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-xl transform-gpu transition-[opacity,visibility] duration-300 ease-in-out ${
+          mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+        style={{ willChange: 'opacity, visibility' }}
+      >
+        <div className={`flex flex-col items-center justify-center h-full gap-8 p-8 transform-gpu transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          mobileMenuOpen ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-8 opacity-0 scale-95'
+        }`}
+        style={{ willChange: 'transform, opacity' }}
+        >
+          <Link
+            href="/services"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Services
+          </Link>
+          <Link
+            href="/portfolio"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Portfolio
+          </Link>
+          <Link
+            href="/pricing"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Pricing
+          </Link>
+          <Link
+            href="/about"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            About
+          </Link>
+          <Link
+            href="/dashboard"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            Client Portal
+          </Link>
+          
+          <div className="w-16 h-px bg-gray-200 dark:bg-gray-800 my-4"></div>
+
+          <button 
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="text-xl font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors flex items-center gap-2"
+          >
+            {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          </button>
+          
+          <button
+            onClick={() => {
+              openContactModal();
+              setMobileMenuOpen(false);
+            }}
+            className="mt-4 px-10 py-4 bg-gradient-to-r from-brand-600 to-purple-600 text-white rounded-full text-lg font-bold shadow-xl shadow-brand-500/30 hover:scale-105 transition-all duration-300"
+          >
+            Get in Touch
+          </button>
+        </div>
+      </div>
 
       <main>
         {children}
