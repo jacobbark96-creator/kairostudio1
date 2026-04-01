@@ -136,13 +136,13 @@ export default function PricingPage() {
                 alt="Night Sky" 
                 className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:from-black/70 dark:via-black/90 dark:to-black pointer-events-none transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-white/95 dark:from-black/70 dark:via-black/90 dark:to-black pointer-events-none transition-opacity duration-500" />
         </div>
 
         {/* Animated Background Blobs */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-40 sm:opacity-80 mix-blend-overlay">
-          <div className="absolute top-[10%] left-[10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-brand-400/40 dark:bg-brand-500/20 rounded-full blur-[80px] sm:blur-[120px] animate-blob will-change-transform" />
-          <div className="absolute bottom-[20%] right-[10%] w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-purple-400/40 dark:bg-purple-500/20 rounded-full blur-[80px] sm:blur-[120px] animate-blob animation-delay-2000 will-change-transform" />
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none opacity-60 sm:opacity-80 mix-blend-multiply dark:mix-blend-overlay">
+          <div className="absolute top-[10%] left-[10%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-brand-400/50 dark:bg-brand-500/20 rounded-full blur-[80px] sm:blur-[120px] animate-blob will-change-transform" />
+          <div className="absolute bottom-[20%] right-[10%] w-[250px] sm:w-[450px] h-[250px] sm:h-[450px] bg-purple-400/50 dark:bg-purple-500/20 rounded-full blur-[80px] sm:blur-[120px] animate-blob animation-delay-2000 will-change-transform" />
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -210,13 +210,15 @@ export default function PricingPage() {
                                 key={plan.id} 
                                 className={`relative rounded-[2.5rem] p-8 sm:p-10 transition-all duration-500 animate-fade-in-up flex-shrink-0 w-[85vw] sm:w-[400px] md:w-auto snap-center group
                                     ${plan.is_popular 
-                                        ? 'bg-gray-900/95 dark:bg-white/95 backdrop-blur-2xl text-white dark:text-gray-900 shadow-[0_8px_30px_rgb(0,0,0,0.2)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.1)] scale-100 md:scale-105 z-10 border border-gray-800 dark:border-gray-200' 
-                                        : 'bg-white/60 dark:bg-black/40 backdrop-blur-xl text-gray-900 dark:text-white border border-white/40 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]'
+                                        ? 'bg-gray-900/95 dark:bg-white/95 backdrop-blur-2xl text-white dark:text-gray-900 shadow-[0_8px_30px_rgb(0,0,0,0.15)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.15)] scale-100 md:scale-105 z-10 border border-gray-800 dark:border-gray-200' 
+                                        : 'bg-white/70 dark:bg-black/40 backdrop-blur-xl text-gray-900 dark:text-white border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]'
                                     } hover:-translate-y-2`}
                                 style={{ animationDelay: `${(index + 3) * 200}ms` }}
                             >
                             <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50 rounded-[2.5rem] pointer-events-none" />
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover:animate-shimmer hidden dark:block rounded-[2.5rem] pointer-events-none" />
+                            {plan.is_popular && (
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-gray-900/10 to-transparent skew-x-12 translate-x-[-200%] animate-[shimmer_3s_infinite] rounded-[2.5rem] pointer-events-none" />
+                            )}
                             
                             <div className="relative z-10">
                                 {plan.is_popular && (
