@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Palette, Code, Zap, Sparkles } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Sparkles, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -25,13 +25,14 @@ export default function HomePage() {
   const [auditSuccess, setAuditSuccess] = useState(false);
   const [showMobileAudit, setShowMobileAudit] = useState(false);
 
-  // Auto-scroll or handle UI changes when mobile audit opens
+  // Prevent scroll when mobile audit modal is open
   useEffect(() => {
     if (showMobileAudit) {
-        // Find the audit container and scroll it into view if needed,
-        // or let the UI handle the lightbox rendering
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'unset';
     }
+    return () => { document.body.style.overflow = 'unset'; }
   }, [showMobileAudit]);
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
@@ -279,10 +280,22 @@ export default function HomePage() {
             
             <div className="flex justify-center lg:justify-end relative">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-full blur-[80px] -z-10" />
-              <div className={`w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-all duration-500 ${showMobileAudit ? 'block mt-8 animate-fade-in-up' : 'hidden md:block'}`}>
+              <div className={`w-full max-w-lg transform hover:scale-[1.02] transition-all duration-500 ${
+                showMobileAudit 
+                  ? 'fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm md:relative md:inset-auto md:p-0 md:bg-transparent md:backdrop-blur-none animate-fade-in-up md:animate-none' 
+                  : 'relative z-10 hidden md:block'
+              }`}>
+                {showMobileAudit && (
+                  <button 
+                    onClick={() => setShowMobileAudit(false)}
+                    className="md:hidden absolute top-4 right-4 z-[110] p-2 bg-white/20 dark:bg-white/10 rounded-full text-white backdrop-blur-md shadow-lg border border-white/20"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                )}
                 
                 {/* Site Assessment Feature */}
-                <div className="relative overflow-hidden rounded-[2.5rem] bg-white/60 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
+                <div className="relative w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-white/90 dark:bg-black/80 md:bg-white/60 md:dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover/audit:animate-shimmer hidden dark:block" />
                     
