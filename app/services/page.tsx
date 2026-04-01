@@ -1,6 +1,4 @@
 import ServicesPage from '../../src/components/ServicesPage';
-import MobileServices from '../../src/mobile/pages/MobileServices';
-import PageClientWrapper from '../../src/components/PageClientWrapper';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -13,9 +11,6 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <PageClientWrapper 
-      desktop={<ServicesPage />} 
-      mobile={<MobileServices />} 
-    />
+    <ServicesPage />
   );
 }
