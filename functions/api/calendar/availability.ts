@@ -63,21 +63,15 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.readonly']);
 
-    // Fetch Calendar Metadata to get the exact Timezone of the owner
-    const metaRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const metaData: any = await metaRes.json();
-    const ownerTimeZone = metaData.timeZone || 'UTC';
-
-    // Generate local time bounds
-    // We request a broader range in UTC and manually parse the overlapping times.
-    const startOfDayUTC = new Date(`${dateStr}T00:00:00Z`);
-    const endOfDayUTC = new Date(`${dateStr}T23:59:59Z`);
+    // Generate strict GMT (UTC) time bounds
+    // The website calendar operates 100% in GMT/UTC time.
+    const startOfDayGMT = new Date(`${dateStr}T00:00:00Z`);
+    const endOfDayGMT = new Date(`${dateStr}T23:59:59Z`);
     
-    // Expand by 14 hours in both directions to safely cover any global Timezone shifts
-    const timeMin = new Date(startOfDayUTC.getTime() - 14 * 60 * 60 * 1000).toISOString();
-    const timeMax = new Date(endOfDayUTC.getTime() + 14 * 60 * 60 * 1000).toISOString();
+    // Expand by 14 hours in both directions to safely cover any global Timezone shifts 
+    // that might pull events across midnight boundaries.
+    const timeMin = new Date(startOfDayGMT.getTime() - 14 * 60 * 60 * 1000).toISOString();
+    const timeMax = new Date(endOfDayGMT.getTime() + 14 * 60 * 60 * 1000).toISOString();
 
     const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime`, {
       headers: {
@@ -112,48 +106,21 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
       if (!event.start?.dateTime || !event.end?.dateTime) return;
       
-      const eventStart = new Date(event.start.dateTime);
-      const eventEnd = new Date(event.end.dateTime);
+      // Parse Google event times into absolute milliseconds
+      const eventStartMs = new Date(event.start.dateTime).getTime();
+      const eventEndMs = new Date(event.end.dateTime).getTime();
 
-      // Generate 30 min slots for the requested date and check overlap
+      // Generate 30 min slots for the requested date in strict GMT (UTC+0) and check overlap
       for (let hour = 8; hour < 18; hour++) {
         for (const min of [0, 30]) {
           const timeString = `${hour.toString().padStart(2, '0')}:${min === 0 ? '00' : '30'}`;
           
-          // Format slot start time for comparison (in owner's timezone)
-          const slotStartString = `${dateStr} ${timeString}:00`;
-          
-          // Get event start/end strings in owner's timezone for safe comparison
-          const formatOptions: Intl.DateTimeFormatOptions = { 
-            timeZone: ownerTimeZone, 
-            year: 'numeric', month: '2-digit', day: '2-digit', 
-            hour: '2-digit', minute: '2-digit', second: '2-digit',
-            hour12: false 
-          };
-          
-          const eStartStr = eventStart.toLocaleString('en-GB', formatOptions).replace(',', '');
-          const eEndStr = eventEnd.toLocaleString('en-GB', formatOptions).replace(',', '');
-          
-          // Format from "DD/MM/YYYY HH:MM:SS" to "YYYY-MM-DD HH:MM:SS"
-          const partsS = eStartStr.split(' ');
-          const datePartsS = partsS[0].split('/');
-          const formattedEStart = `${datePartsS[2]}-${datePartsS[1]}-${datePartsS[0]} ${partsS[1]}`;
-          
-          const partsE = eEndStr.split(' ');
-          const datePartsE = partsE[0].split('/');
-          const formattedEEnd = `${datePartsE[2]}-${datePartsE[1]}-${datePartsE[0]} ${partsE[1]}`;
+          // Construct absolute timestamp for the slot in GMT
+          const slotStartMs = new Date(`${dateStr}T${timeString}:00Z`).getTime();
+          const slotEndMs = slotStartMs + 30 * 60000; // +30 minutes
 
-          // Slot end string (add 30 mins)
-          let endHour = hour;
-          let endMin = min + 30;
-          if (endMin >= 60) {
-            endHour += 1;
-            endMin -= 60;
-          }
-          const endTimeString = `${endHour.toString().padStart(2, '0')}:${endMin === 0 ? '00' : '30'}`;
-          const slotEndString = `${dateStr} ${endTimeString}:00`;
-
-          if (formattedEStart < slotEndString && formattedEEnd > slotStartString) {
+          // Check if event overlaps this 30m slot mathematically
+          if (eventStartMs < slotEndMs && eventEndMs > slotStartMs) {
             if (!busySlots.includes(timeString)) {
               busySlots.push(timeString);
             }
@@ -164,7 +131,6 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     return new Response(JSON.stringify({ 
       busySlots,
-      timeZone: ownerTimeZone,
       debug: {
         eventsFound: debugEventsFound,
         eventsList: debugEventsList,

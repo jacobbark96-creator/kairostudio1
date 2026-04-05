@@ -9,7 +9,6 @@ export default function BookingCalendar() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [bookedSlots, setBookedSlots] = useState<string[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
-  const [calendarTimeZone, setCalendarTimeZone] = useState('GMT');
   
   // Form State
   const [name, setName] = useState('');
@@ -87,11 +86,6 @@ export default function BookingCalendar() {
             const result = await res.json();
             if (result.busySlots) {
               googleSlots = result.busySlots;
-            }
-            if (result.timeZone) {
-              // Convert "Asia/Jakarta" into "Jakarta Time"
-              const tzCity = result.timeZone.split('/').pop()?.replace('_', ' ') || 'GMT';
-              setCalendarTimeZone(tzCity);
             }
           }
         } catch (apiError) {
@@ -204,7 +198,7 @@ export default function BookingCalendar() {
             <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
               <Clock className="w-6 h-6 text-cyan-600" />
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Date & Time ({calendarTimeZone} Time)</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Date & Time (GMT)</p>
                 <p className="font-semibold text-gray-900 dark:text-white">
                   {selectedDate?.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                 </p>

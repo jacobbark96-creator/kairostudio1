@@ -56,39 +56,25 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ success: true, message: 'No Google Calendar credentials provided' }), { status: 200 });
     }
 
-    const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar.readonly']);
+    const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events']);
     
-    // Fetch Calendar Metadata to get the exact Timezone of the owner
-    const metaRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const metaData: any = await metaRes.json();
-    const ownerTimeZone = metaData.timeZone || 'UTC';
-
-    // Calculate the start time 
-    const startDateTime = `${date}T${timeSlot}:00`;
+    // Calculate the absolute UTC start time 
+    // Example: "2024-04-06T10:00:00Z"
+    const startDateTime = `${date}T${timeSlot}:00Z`;
     
     // Calculate end time (30 mins later)
-    const [hourStr, minStr] = timeSlot.split(':');
-    let endHour = parseInt(hourStr, 10);
-    let endMin = parseInt(minStr, 10) + 30;
-    if (endMin >= 60) {
-      endHour += 1;
-      endMin -= 60;
-    }
-    const endTimeString = `${endHour.toString().padStart(2, '0')}:${endMin.toString().padStart(2, '0')}:00`;
-    const endDateTime = `${date}T${endTimeString}`;
+    const slotStartMs = new Date(startDateTime).getTime();
+    const slotEndMs = slotStartMs + 30 * 60000;
+    const endDateTime = new Date(slotEndMs).toISOString(); // Naturally outputs UTC 'Z' string
     
     const event = {
       summary: `Consultation: ${name} / Kairo Studio`,
       description: `New booking received via Kairo Studio Website.\n\nName: ${name}\nEmail: ${email}\n${companyName ? `Company: ${companyName}` : ''}\n${phone ? `Phone: ${phone}` : ''}`,
       start: {
         dateTime: startDateTime,
-        timeZone: ownerTimeZone,
       },
       end: {
         dateTime: endDateTime,
-        timeZone: ownerTimeZone,
       }
     };
 
