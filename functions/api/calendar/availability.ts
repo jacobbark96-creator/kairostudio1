@@ -63,15 +63,14 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.readonly']);
 
-    // Generate strict GMT (UTC) time bounds
-    // The website calendar operates 100% in GMT/UTC time.
-    const startOfDayGMT = new Date(`${dateStr}T00:00:00Z`);
-    const endOfDayGMT = new Date(`${dateStr}T23:59:59Z`);
+    // Generate time bounds based on London Time to ensure we grab all relevant events for that day.
+    // For simplicity, we just use a broad 24-hour window from midnight to midnight UTC.
+    // This provides enough buffer to catch any London-time events overlapping with the requested date.
+    const startOfDayUTC = new Date(`${dateStr}T00:00:00Z`);
+    const endOfDayUTC = new Date(`${dateStr}T23:59:59Z`);
     
-    // Expand by 14 hours in both directions to safely cover any global Timezone shifts 
-    // that might pull events across midnight boundaries.
-    const timeMin = new Date(startOfDayGMT.getTime() - 14 * 60 * 60 * 1000).toISOString();
-    const timeMax = new Date(endOfDayGMT.getTime() + 14 * 60 * 60 * 1000).toISOString();
+    const timeMin = new Date(startOfDayUTC.getTime() - 14 * 60 * 60 * 1000).toISOString();
+    const timeMax = new Date(endOfDayUTC.getTime() + 14 * 60 * 60 * 1000).toISOString();
 
     const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime`, {
       headers: {
@@ -106,26 +105,53 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
       if (!event.start?.dateTime || !event.end?.dateTime) return;
       
-      // Parse Google event times into absolute milliseconds
-      const eventStartMs = new Date(event.start.dateTime).getTime();
-      const eventEndMs = new Date(event.end.dateTime).getTime();
+      // The Google event objects contain absolute `dateTime` strings.
+      // We parse them into JavaScript Date objects.
+      const eventStart = new Date(event.start.dateTime);
+      const eventEnd = new Date(event.end.dateTime);
 
-      // Generate 30 min slots for the requested date in strict GMT (UTC+0) and check overlap
+      // Generate 30 min slots for the requested date and check overlap
       for (let hour = 8; hour < 18; hour++) {
         for (const min of [0, 30]) {
           const timeString = `${hour.toString().padStart(2, '0')}:${min === 0 ? '00' : '30'}`;
           
-          // E.g. website wants to know if "12:00" is booked.
-          // Because the website is strictly GMT, "12:00" means "12:00:00Z".
-          // By comparing everything in absolute milliseconds (Epoch time), it is 100% immune to timezones.
-          // If you add an event at 6pm Jakarta (UTC+7), Google saves it as 11am UTC.
-          // The website checks 11am UTC, matches the Epoch time, and blocks it out.
+          // Format slot start time for comparison in explicit UK Time
+          const slotStartString = `${dateStr} ${timeString}:00`;
           
-          const slotStartMs = new Date(`${dateStr}T${timeString}:00Z`).getTime();
-          const slotEndMs = slotStartMs + 30 * 60000; // +30 minutes
+          // Use Intl.DateTimeFormat to force Google's absolute Event Time 
+          // into the UK Timezone ('Europe/London') accounting for BST/DST.
+          const formatOptions: Intl.DateTimeFormatOptions = { 
+            timeZone: 'Europe/London', 
+            year: 'numeric', month: '2-digit', day: '2-digit', 
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+            hour12: false 
+          };
+          
+          const eStartStr = eventStart.toLocaleString('en-GB', formatOptions).replace(',', '');
+          const eEndStr = eventEnd.toLocaleString('en-GB', formatOptions).replace(',', '');
+          
+          // Format from "DD/MM/YYYY HH:MM:SS" back to comparable "YYYY-MM-DD HH:MM:SS"
+          const partsS = eStartStr.split(' ');
+          const datePartsS = partsS[0].split('/');
+          const formattedEStart = `${datePartsS[2]}-${datePartsS[1]}-${datePartsS[0]} ${partsS[1]}`;
+          
+          const partsE = eEndStr.split(' ');
+          const datePartsE = partsE[0].split('/');
+          const formattedEEnd = `${datePartsE[2]}-${datePartsE[1]}-${datePartsE[0]} ${partsE[1]}`;
 
-          // Check if event overlaps this 30m slot mathematically
-          if (eventStartMs < slotEndMs && eventEndMs > slotStartMs) {
+          // Calculate slot end time string (+30 mins)
+          let endHour = hour;
+          let endMin = min + 30;
+          if (endMin >= 60) {
+            endHour += 1;
+            endMin -= 60;
+          }
+          const endTimeString = `${endHour.toString().padStart(2, '0')}:${endMin === 0 ? '00' : '30'}`;
+          const slotEndString = `${dateStr} ${endTimeString}:00`;
+
+          // Lexicographical string comparison natively handles the local overlap 
+          // after DST has been mathematically resolved by Intl.DateTimeFormat
+          if (formattedEStart < slotEndString && formattedEEnd > slotStartString) {
             if (!busySlots.includes(timeString)) {
               busySlots.push(timeString);
             }

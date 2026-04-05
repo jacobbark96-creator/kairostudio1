@@ -58,38 +58,34 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 
     const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events']);
     
-    // Cloudflare Edge Workers are weird with Timezones. 
-    // Sometimes new Date(`${date}T${timeSlot}:00Z`) gets offset by the internal server time of the edge node handling the request!
-    // To fix the "24 hours behind" bug, we explicitly extract the year, month, and day and manually construct the timestamp.
+    // We want to book the slot as explicitly 'Europe/London' time.
+    // If the user books "12:00" on April 15th, it means "12:00 PM London Time".
+    // London observes DST (BST = UTC+1 in April).
+    // The safest way to pass this to Google Calendar so it natively calculates the correct DST offset
+    // is to pass the local ISO string WITHOUT a 'Z', and pair it with the explicit `timeZone` property.
+
+    const startDateTimeLocal = `${date}T${timeSlot}:00`;
     
-    const [yearStr, monthStr, dayStr] = date.split('-');
+    // To calculate the end time 30 mins later locally without math bugs:
     const [hourStr, minStr] = timeSlot.split(':');
-    
-    // Using Date.UTC guarantees the exact milliseconds since Epoch, 
-    // completely immune to ANY timezone offsets on the edge server running this code.
-    const startMs = Date.UTC(
-      parseInt(yearStr, 10),
-      parseInt(monthStr, 10) - 1, // JS Months are 0-indexed
-      parseInt(dayStr, 10),
-      parseInt(hourStr, 10),
-      parseInt(minStr, 10),
-      0
-    );
-    
-    const endMs = startMs + 30 * 60000;
-    
-    // .toISOString() natively converts absolute epoch milliseconds into a "Z" string
-    const startDateTime = new Date(startMs).toISOString();
-    const endDateTime = new Date(endMs).toISOString();
+    let endHour = parseInt(hourStr, 10);
+    let endMin = parseInt(minStr, 10) + 30;
+    if (endMin >= 60) {
+      endHour += 1;
+      endMin -= 60;
+    }
+    const endDateTimeLocal = `${date}T${endHour.toString().padStart(2, '0')}:${endMin.toString().padStart(2, '0')}:00`;
 
     const event = {
       summary: `Consultation: ${name} / Kairo Studio`,
       description: `New booking received via Kairo Studio Website.\n\nName: ${name}\nEmail: ${email}\n${companyName ? `Company: ${companyName}` : ''}\n${phone ? `Phone: ${phone}` : ''}`,
       start: {
-        dateTime: startDateTime,
+        dateTime: startDateTimeLocal,
+        timeZone: 'Europe/London',
       },
       end: {
-        dateTime: endDateTime,
+        dateTime: endDateTimeLocal,
+        timeZone: 'Europe/London',
       }
     };
 
