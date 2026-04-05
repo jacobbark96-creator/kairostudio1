@@ -66,30 +66,36 @@ export default function BookingCalendar() {
       const formattedDate = selectedDate.toISOString().split('T')[0];
       
       try {
-        // Fetch from Supabase Database
-        const { data, error } = await supabase
-          .from('bookings')
-          .select('time_slot')
-          .eq('booking_date', formattedDate)
-          .in('status', ['confirmed']);
-
-        let dbSlots: string[] = [];
-        if (!error && data) {
-          dbSlots = (data as any[]).map(b => b.time_slot);
-        }
-
         // Fetch from Google Calendar API
         let googleSlots: string[] = [];
+        let isGoogleConfigured = false;
         try {
           const res = await fetch(`/api/calendar/availability?date=${formattedDate}`);
           if (res.ok) {
             const result = await res.json();
+            if (result.debug !== 'Missing Env Vars') {
+              isGoogleConfigured = true;
+            }
             if (result.busySlots) {
               googleSlots = result.busySlots;
             }
           }
         } catch (apiError) {
           console.error('Failed to fetch Google Calendar slots:', apiError);
+        }
+
+        // Only fetch from Supabase if Google Calendar is NOT configured or failed
+        let dbSlots: string[] = [];
+        if (!isGoogleConfigured) {
+          const { data, error } = await supabase
+            .from('bookings')
+            .select('time_slot')
+            .eq('booking_date', formattedDate)
+            .in('status', ['confirmed']);
+
+          if (!error && data) {
+            dbSlots = (data as any[]).map(b => b.time_slot);
+          }
         }
 
         // Combine and deduplicate
