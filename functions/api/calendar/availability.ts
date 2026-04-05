@@ -52,7 +52,13 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
     const calendarId = env.GOOGLE_CALENDAR_ID;
 
     if (!privateKey || !clientEmail || !calendarId) {
-      return new Response(JSON.stringify({ busySlots: [] }), { status: 200 });
+      return new Response(JSON.stringify({ 
+        busySlots: [], 
+        debug: 'Missing Env Vars',
+        hasPrivateKey: !!privateKey,
+        hasClientEmail: !!clientEmail,
+        hasCalendarId: !!calendarId
+      }), { status: 200 });
     }
 
     const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.readonly']);
@@ -78,6 +84,9 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     const events = calData.items || [];
     const busySlots: string[] = [];
+
+    // Debug tracking
+    const debugEventsFound = events.length;
 
     events.forEach((event: any) => {
       // All day event blocks the whole day
@@ -141,7 +150,15 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       }
     });
 
-    return new Response(JSON.stringify({ busySlots }), { 
+    return new Response(JSON.stringify({ 
+      busySlots,
+      debug: {
+        eventsFound: debugEventsFound,
+        dateRequested: dateStr,
+        timeMinRequested: timeMin,
+        timeMaxRequested: timeMax
+      }
+    }), { 
       status: 200, 
       headers: { 'Content-Type': 'application/json' } 
     });
