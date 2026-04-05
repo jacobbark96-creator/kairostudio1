@@ -63,7 +63,11 @@ export default function BookingCalendar() {
 
     const fetchBookedSlots = async () => {
       setLoadingSlots(true);
-      const formattedDate = selectedDate.toISOString().split('T')[0];
+      
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
       
       try {
         // Fetch from Google Calendar API
@@ -129,7 +133,15 @@ export default function BookingCalendar() {
     if (!selectedDate || !selectedTime || !name || !email) return;
 
     setIsSubmitting(true);
-    const formattedDate = selectedDate.toISOString().split('T')[0];
+    
+    // Create a local Date string avoiding the timezone offset bug
+    // Example: Date object is "Wed Apr 15 2026 00:00:00 GMT+0700"
+    // toISOString() turns it into "2026-04-14T17:00:00.000Z" (which is 1 day earlier!)
+    // So we manually extract the correct local numbers to format the YYYY-MM-DD string
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
 
     try {
       const { error } = await supabase.from('bookings').insert([{
