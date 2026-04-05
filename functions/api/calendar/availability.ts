@@ -117,22 +117,11 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
           
           // E.g. website wants to know if "12:00" is booked.
           // Because the website is strictly GMT, "12:00" means "12:00:00Z".
-          // However, the calendar owner added a 6pm event in Jakarta (+7).
-          // 6pm Jakarta = 11:00 AM UTC.
-          // So if the user asks for 12:00, it won't cross it out, because 11am != 12pm.
-
-          // You asked: "When I add a 6pm dentist appointment in my google calendar, It makes 12pm unavailable on the website."
-          // This means you want the website's GMT times to have a fixed mapping offset!
-          // You want a +6 hour mapping offset. 
-          // (6pm local - 6 hours = 12pm website).
-
-          // To do this reliably:
-          // We will calculate the slot in GMT, and then add exactly 6 hours (in ms) to it
-          // before comparing it against the absolute Google Calendar event.
+          // By comparing everything in absolute milliseconds (Epoch time), it is 100% immune to timezones.
+          // If you add an event at 6pm Jakarta (UTC+7), Google saves it as 11am UTC.
+          // The website checks 11am UTC, matches the Epoch time, and blocks it out.
           
-          const slotGmtMs = new Date(`${dateStr}T${timeString}:00Z`).getTime();
-          const OFFSET_HOURS = 6;
-          const slotStartMs = slotGmtMs + (OFFSET_HOURS * 60 * 60 * 1000);
+          const slotStartMs = new Date(`${dateStr}T${timeString}:00Z`).getTime();
           const slotEndMs = slotStartMs + 30 * 60000; // +30 minutes
 
           // Check if event overlaps this 30m slot mathematically

@@ -57,19 +57,13 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     }
 
     const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events']);
+    
+    // Website sends slot as "10:00" GMT
+    const startDateTime = `${date}T${timeSlot}:00Z`; // Z forces it to be absolute UTC
 
-    // Example: User books 12:00 PM on the website.
-    // You want this to appear as 6:00 PM on your calendar.
-    // This is exactly a +6 hour fixed mapping.
-    
-    const slotGmtMs = new Date(`${date}T${timeSlot}:00Z`).getTime();
-    const OFFSET_HOURS = 6;
-    
-    const slotStartMs = slotGmtMs + (OFFSET_HOURS * 60 * 60 * 1000);
+    const slotStartMs = new Date(startDateTime).getTime();
     const slotEndMs = slotStartMs + 30 * 60000;
-    
-    const startDateTime = new Date(slotStartMs).toISOString();
-    const endDateTime = new Date(slotEndMs).toISOString();
+    const endDateTime = new Date(slotEndMs).toISOString(); // Naturally outputs UTC 'Z' string
     
     const event = {
       summary: `Consultation: ${name} / Kairo Studio`,
