@@ -56,35 +56,30 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ success: true, message: 'No Google Calendar credentials provided' }), { status: 200 });
     }
 
-    const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar.readonly']);
+    const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events']);
     
-    // The website sends the slot as if it's GMT. Example: "17:00".
-    // 5pm GMT = 5pm UTC.
-    // However, when creating events via the Google Calendar API, simply passing `dateTime: "2026-04-15T17:00:00Z"` 
-    // sometimes causes Google to apply the calendar owner's timezone offset TWICE if the `timeZone` property isn't explicitly set, 
-    // or if the service account has a weird default timezone.
+    // Cloudflare Edge Workers are weird with Timezones. 
+    // Sometimes new Date(`${date}T${timeSlot}:00Z`) gets offset by the internal server time of the edge node handling the request!
+    // To fix the "24 hours behind" bug, we explicitly extract the year, month, and day and manually construct the timestamp.
     
-    // To fix this reliably, we will explicitly pass the owner's timezone to Google,
-    // but we will calculate the correct local time so that it lands exactly on the GMT hour you requested.
+    const [yearStr, monthStr, dayStr] = date.split('-');
+    const [hourStr, minStr] = timeSlot.split(':');
     
-    const metaRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const metaData: any = await metaRes.json();
-    const ownerTimeZone = metaData.timeZone || 'UTC';
-
-    // We want the event to occur at exactly `timeSlot` GMT.
-    // Example: user selects "17:00". We want this to land at 17:00 GMT on Google Calendar.
-    // The easiest and most bulletproof way to tell Google Calendar "This is exactly 17:00 GMT"
-    // is to construct an absolute ISO 8601 string with a "Z" (Zulu time) and omit the `timeZone` property.
-    // Google will automatically place this exact absolute moment in time on the owner's calendar,
-    // and visually translate it into the owner's local timezone (e.g. 17:00 GMT -> 00:00 Jakarta).
+    // Using Date.UTC guarantees the exact milliseconds since Epoch, 
+    // completely immune to ANY timezone offsets on the edge server running this code.
+    const startMs = Date.UTC(
+      parseInt(yearStr, 10),
+      parseInt(monthStr, 10) - 1, // JS Months are 0-indexed
+      parseInt(dayStr, 10),
+      parseInt(hourStr, 10),
+      parseInt(minStr, 10),
+      0
+    );
     
-    const startDateTime = `${date}T${timeSlot}:00Z`;
-    
-    // Calculate the end time 30 mins later
-    const startMs = new Date(startDateTime).getTime();
     const endMs = startMs + 30 * 60000;
+    
+    // .toISOString() natively converts absolute epoch milliseconds into a "Z" string
+    const startDateTime = new Date(startMs).toISOString();
     const endDateTime = new Date(endMs).toISOString();
 
     const event = {
