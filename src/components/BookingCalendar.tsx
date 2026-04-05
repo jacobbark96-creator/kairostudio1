@@ -65,16 +65,41 @@ export default function BookingCalendar() {
       setLoadingSlots(true);
       const formattedDate = selectedDate.toISOString().split('T')[0];
       
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('time_slot')
-        .eq('booking_date', formattedDate)
-        .in('status', ['confirmed']);
+      try {
+        // Fetch from Supabase Database
+        const { data, error } = await supabase
+          .from('bookings')
+          .select('time_slot')
+          .eq('booking_date', formattedDate)
+          .in('status', ['confirmed']);
 
-      if (!error && data) {
-        setBookedSlots(data.map(b => b.time_slot));
+        let dbSlots: string[] = [];
+        if (!error && data) {
+          dbSlots = (data as any[]).map(b => b.time_slot);
+        }
+
+        // Fetch from Google Calendar API
+        let googleSlots: string[] = [];
+        try {
+          const res = await fetch(`/api/calendar/availability?date=${formattedDate}`);
+          if (res.ok) {
+            const result = await res.json();
+            if (result.busySlots) {
+              googleSlots = result.busySlots;
+            }
+          }
+        } catch (apiError) {
+          console.error('Failed to fetch Google Calendar slots:', apiError);
+        }
+
+        // Combine and deduplicate
+        const combinedSlots = Array.from(new Set([...dbSlots, ...googleSlots]));
+        setBookedSlots(combinedSlots);
+      } catch (err) {
+        console.error('Error fetching slots:', err);
+      } finally {
+        setLoadingSlots(false);
       }
-      setLoadingSlots(false);
     };
 
     fetchBookedSlots();
@@ -122,6 +147,25 @@ export default function BookingCalendar() {
           throw error;
         }
       } else {
+        // 2. Insert into Google Calendar via API
+        try {
+          await fetch('/api/calendar/book', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: name.trim(),
+              email: email.trim(),
+              companyName: companyName.trim(),
+              phone: phone.trim(),
+              date: formattedDate,
+              timeSlot: selectedTime
+            })
+          });
+        } catch (calError) {
+          console.error('Failed to sync to Google Calendar:', calError);
+          // Even if Google Calendar sync fails, we still consider the booking successful locally
+        }
+
         // We no longer manually send the email from the frontend!
         // The Postgres Database Trigger will automatically catch the insertion
         // and fire the email logic securely in the background.
