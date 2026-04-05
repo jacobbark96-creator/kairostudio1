@@ -119,7 +119,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
           
           // Get event start/end strings in London timezone for safe comparison
           const formatOptions: Intl.DateTimeFormatOptions = { 
-            timeZone: 'Europe/London', 
+            timeZone: 'UTC', 
             year: 'numeric', month: '2-digit', day: '2-digit', 
             hour: '2-digit', minute: '2-digit', second: '2-digit',
             hour12: false 

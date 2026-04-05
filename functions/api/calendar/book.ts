@@ -82,11 +82,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       description: `New booking received via Kairo Studio Website.\n\nName: ${name}\nEmail: ${email}\n${companyName ? `Company: ${companyName}` : ''}\n${phone ? `Phone: ${phone}` : ''}`,
       start: {
         dateTime: startDateTime,
-        timeZone: 'Europe/London',
+        timeZone: 'UTC',
       },
       end: {
         dateTime: endDateTime,
-        timeZone: 'Europe/London',
+        timeZone: 'UTC',
       }
     };
 
