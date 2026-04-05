@@ -74,54 +74,27 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const ownerTimeZone = metaData.timeZone || 'UTC';
 
     // We want the event to occur at exactly `timeSlot` GMT.
-    const slotGmtMs = new Date(`${date}T${timeSlot}:00Z`).getTime();
-    const slotEndGmtMs = slotGmtMs + 30 * 60000;
-
-    const dt = new Date(`${date}T12:00:00Z`);
-    const tzDateStr = new Intl.DateTimeFormat('en-US', { 
-      timeZone: ownerTimeZone, 
-      year: 'numeric', month: 'numeric', day: 'numeric', 
-      hour: 'numeric', minute: 'numeric', second: 'numeric', 
-      hour12: false 
-    }).format(dt);
+    // Example: user selects "17:00". We want this to land at 17:00 GMT on Google Calendar.
+    // The easiest and most bulletproof way to tell Google Calendar "This is exactly 17:00 GMT"
+    // is to construct an absolute ISO 8601 string with a "Z" (Zulu time) and omit the `timeZone` property.
+    // Google will automatically place this exact absolute moment in time on the owner's calendar,
+    // and visually translate it into the owner's local timezone (e.g. 17:00 GMT -> 00:00 Jakarta).
     
-    const utcDateStr = new Intl.DateTimeFormat('en-US', { 
-      timeZone: 'UTC', 
-      year: 'numeric', month: 'numeric', day: 'numeric', 
-      hour: 'numeric', minute: 'numeric', second: 'numeric', 
-      hour12: false 
-    }).format(dt);
+    const startDateTime = `${date}T${timeSlot}:00Z`;
     
-    const tzTime = new Date(tzDateStr).getTime();
-    const utcTime = new Date(utcDateStr).getTime();
-    const offsetMs = tzTime - utcTime; // E.g. +7 hours in ms
-
-    // Now, if you request 17:00 GMT, that's exactly 17:00 UTC.
-    // If you are in Jakarta (+7 hours), we want Google to place an event on your calendar 
-    // at exactly 00:00 local time (which mathematically resolves to 17:00 UTC).
-    // Because we are explicitly passing the `timeZone: ownerTimeZone` field to Google,
-    // we need to give Google the local string of the time you want.
-    
-    // GMT Time = 17:00.
-    // Local Time in Jakarta = 17:00 + 7 hours = 00:00 (Next day).
-    const localStartMs = slotGmtMs + offsetMs;
-    const localEndMs = slotEndGmtMs + offsetMs;
-    
-    // Strip the "Z" off the end so Google treats it as a "Local Time" string 
-    // mapped to the `timeZone` property we provide.
-    const startLocalString = new Date(localStartMs).toISOString().replace('Z', '');
-    const endLocalString = new Date(localEndMs).toISOString().replace('Z', '');
+    // Calculate the end time 30 mins later
+    const startMs = new Date(startDateTime).getTime();
+    const endMs = startMs + 30 * 60000;
+    const endDateTime = new Date(endMs).toISOString();
 
     const event = {
       summary: `Consultation: ${name} / Kairo Studio`,
       description: `New booking received via Kairo Studio Website.\n\nName: ${name}\nEmail: ${email}\n${companyName ? `Company: ${companyName}` : ''}\n${phone ? `Phone: ${phone}` : ''}`,
       start: {
-        dateTime: startLocalString,
-        timeZone: ownerTimeZone,
+        dateTime: startDateTime,
       },
       end: {
-        dateTime: endLocalString,
-        timeZone: ownerTimeZone,
+        dateTime: endDateTime,
       }
     };
 
