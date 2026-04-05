@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Sparkles, Palette, Code, Zap, Mail, CheckCircle, TrendingUp, DollarSign, Users, Rocket, Award, ArrowLeft, ArrowDown } from 'lucide-react';
+import { ArrowRight, Sparkles, Palette, Code, Zap, Mail, CheckCircle, TrendingUp, DollarSign, Users, Rocket, Award, ArrowLeft, ArrowDown, Layout, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 
 import { useUI } from '../context/UIContext';
@@ -10,40 +10,22 @@ export default function ServicesPage() {
 
   const services = [
     {
+      icon: Layout,
+      title: 'Done-For-You Web Presence',
+      description: 'We build, host, and manage your entire website for a flat monthly fee. No huge upfront costs, just a high-performing site that works.',
+      features: ['Custom Design & Build', 'Premium Hosting Included', 'Unlimited Edits', '24/7 Technical Support'],
+    },
+    {
+      icon: Smartphone,
+      title: 'Continuous SEO & Growth',
+      description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimize your presence so customers can actually find you on Google.',
+      features: ['Local SEO Optimization', 'Keyword Strategy', 'Performance Monitoring', 'Monthly Analytics'],
+    },
+    {
       icon: Palette,
-      title: 'Brand Identity',
-      description: 'Crafting memorable brands that resonate with your audience and stand the test of time.',
+      title: 'Modern Brand Identity',
+      description: 'Look like the premium business you are. We craft logos and visual systems that build immediate trust with your future customers.',
       features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy'],
-    },
-    {
-      icon: Code,
-      title: 'Web Development',
-      description: 'Building fast, responsive websites with cutting-edge technologies and seamless experiences.',
-      features: ['Custom Websites', 'E-commerce Solutions', 'Web Applications', 'Performance Optimization'],
-    },
-    {
-      icon: Zap,
-      title: 'Digital Strategy',
-      description: 'Strategic planning and execution to elevate your digital presence and drive growth.',
-      features: ['SEO Optimization', 'Content Strategy', 'Marketing Automation', 'Analytics & Insights'],
-    },
-    {
-      icon: Rocket,
-      title: 'Growth Marketing',
-      description: 'Data-driven campaigns that scale your business and maximize ROI.',
-      features: ['Paid Advertising', 'Social Media', 'Email Marketing', 'Conversion Optimization'],
-    },
-    {
-      icon: Users,
-      title: 'Operations & Support',
-      description: 'Streamlined operations and dedicated support to keep your business running smoothly.',
-      features: ['POS Integration', 'Inventory Management', 'Staff Scheduling', 'Customer Support'],
-    },
-    {
-      icon: Award,
-      title: 'Ongoing Management',
-      description: 'Continuous improvement and maintenance to ensure your digital presence stays ahead.',
-      features: ['Monthly Retainers', 'Regular Updates', 'Performance Monitoring', 'Dedicated Support'],
     },
   ];
 

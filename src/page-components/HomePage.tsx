@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Palette, Code, Zap, Sparkles, X } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -133,25 +133,25 @@ export default function HomePage() {
 
   const services = [
     {
-      icon: Palette,
-      title: 'Brand Identity',
-      description: 'Crafting memorable brands that resonate with your audience and stand the test of time.',
+      icon: Layout,
+      title: 'Done-For-You Web Presence',
+      description: 'We build, host, and manage your entire website for a flat monthly fee. No huge upfront costs, just a high-performing site that works.',
       bgClass: 'bg-brand-500/5 dark:bg-brand-500/10',
       image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', // Pinkish abstract
     },
     {
-      icon: Code,
-      title: 'Web Development',
-      description: 'Building fast, responsive websites with cutting-edge technologies and seamless experiences.',
-      bgClass: 'bg-blue-500/5 dark:bg-blue-500/10',
-      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop', // Coding/Tech
+      icon: Smartphone,
+      title: 'Continuous SEO & Growth',
+      description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimize your presence so customers can actually find you on Google.',
+      bgClass: 'bg-purple-500/5 dark:bg-purple-500/10',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop', // Digital dashboard
     },
     {
-      icon: Zap,
-      title: 'Digital Strategy',
-      description: 'Strategic planning and execution to elevate your digital presence and drive growth.',
-      bgClass: 'bg-purple-500/5 dark:bg-purple-500/10',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2015&auto=format&fit=crop', // Strategy/Graph
+      icon: Palette,
+      title: 'Modern Brand Identity',
+      description: 'Look like the premium business you are. We craft logos and visual systems that build immediate trust with your future customers.',
+      bgClass: 'bg-pink-500/5 dark:bg-pink-500/10',
+      image: 'https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=1974&auto=format&fit=crop', // Abstract waves
     },
   ];
 
