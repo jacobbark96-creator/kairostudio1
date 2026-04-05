@@ -87,18 +87,10 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       end: {
         dateTime: endDateTime,
         timeZone: 'Europe/London',
-      },
-      conferenceData: {
-        createRequest: {
-          requestId: `kairo-${Date.now()}`,
-          conferenceSolutionKey: {
-            type: 'hangoutsMeet'
-          }
-        }
       }
     };
 
-    const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?conferenceDataVersion=1&sendUpdates=all`, {
+    const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
