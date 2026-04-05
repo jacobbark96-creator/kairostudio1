@@ -56,14 +56,16 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ success: true, message: 'No Google Calendar credentials provided' }), { status: 200 });
     }
 
-    const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events']);
+    const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar.readonly']);
     
-    // In Edge functions, date-fns-tz might be too heavy.
-    // Calculate the start time by creating an ISO string representing the London time offset.
-    // UK time is UTC+0 (winter) or UTC+1 (summer).
-    // The easiest way is to construct a Date object, check the timezone offset in London, and manually build the UTC time.
-    // However, the Google Calendar API accepts datetime strings with a trailing timezone format or just `timeZone` property!
-    // Example: "2024-04-06T10:00:00" and timeZone: "Europe/London".
+    // Fetch Calendar Metadata to get the exact Timezone of the owner
+    const metaRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const metaData: any = await metaRes.json();
+    const ownerTimeZone = metaData.timeZone || 'UTC';
+
+    // Calculate the start time 
     const startDateTime = `${date}T${timeSlot}:00`;
     
     // Calculate end time (30 mins later)
@@ -82,11 +84,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       description: `New booking received via Kairo Studio Website.\n\nName: ${name}\nEmail: ${email}\n${companyName ? `Company: ${companyName}` : ''}\n${phone ? `Phone: ${phone}` : ''}`,
       start: {
         dateTime: startDateTime,
-        timeZone: 'UTC',
+        timeZone: ownerTimeZone,
       },
       end: {
         dateTime: endDateTime,
-        timeZone: 'UTC',
+        timeZone: ownerTimeZone,
       }
     };
 

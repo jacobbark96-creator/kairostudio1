@@ -63,15 +63,21 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     const token = await getGoogleToken(clientEmail, privateKey, ['https://www.googleapis.com/auth/calendar.readonly']);
 
-    // Generate local time bounds (London Time)
-    // For simplicity without date-fns-tz on Edge, we'll request a slightly broader range in UTC 
-    // and manually parse the overlapping times.
+    // Fetch Calendar Metadata to get the exact Timezone of the owner
+    const metaRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const metaData: any = await metaRes.json();
+    const ownerTimeZone = metaData.timeZone || 'UTC';
+
+    // Generate local time bounds
+    // We request a broader range in UTC and manually parse the overlapping times.
     const startOfDayUTC = new Date(`${dateStr}T00:00:00Z`);
     const endOfDayUTC = new Date(`${dateStr}T23:59:59Z`);
     
-    // Expand by 12 hours in both directions to safely cover London Timezone shifts
-    const timeMin = new Date(startOfDayUTC.getTime() - 12 * 60 * 60 * 1000).toISOString();
-    const timeMax = new Date(endOfDayUTC.getTime() + 12 * 60 * 60 * 1000).toISOString();
+    // Expand by 14 hours in both directions to safely cover any global Timezone shifts
+    const timeMin = new Date(startOfDayUTC.getTime() - 14 * 60 * 60 * 1000).toISOString();
+    const timeMax = new Date(endOfDayUTC.getTime() + 14 * 60 * 60 * 1000).toISOString();
 
     const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&singleEvents=true&orderBy=startTime`, {
       headers: {
@@ -114,12 +120,12 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
         for (const min of [0, 30]) {
           const timeString = `${hour.toString().padStart(2, '0')}:${min === 0 ? '00' : '30'}`;
           
-          // Format slot start time for comparison (in London timezone)
+          // Format slot start time for comparison (in owner's timezone)
           const slotStartString = `${dateStr} ${timeString}:00`;
           
-          // Get event start/end strings in London timezone for safe comparison
+          // Get event start/end strings in owner's timezone for safe comparison
           const formatOptions: Intl.DateTimeFormatOptions = { 
-            timeZone: 'UTC', 
+            timeZone: ownerTimeZone, 
             year: 'numeric', month: '2-digit', day: '2-digit', 
             hour: '2-digit', minute: '2-digit', second: '2-digit',
             hour12: false 
@@ -158,6 +164,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     return new Response(JSON.stringify({ 
       busySlots,
+      timeZone: ownerTimeZone,
       debug: {
         eventsFound: debugEventsFound,
         eventsList: debugEventsList,
