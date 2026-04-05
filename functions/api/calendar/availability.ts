@@ -84,11 +84,17 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     const events = calData.items || [];
     const busySlots: string[] = [];
+    const debugEventsList: any[] = [];
 
     // Debug tracking
     const debugEventsFound = events.length;
 
     events.forEach((event: any) => {
+      debugEventsList.push({
+        start: event.start,
+        end: event.end,
+        summary: event.summary
+      });
       // All day event blocks the whole day
       if (event.start?.date) {
          for (let hour = 8; hour < 18; hour++) {
@@ -154,6 +160,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       busySlots,
       debug: {
         eventsFound: debugEventsFound,
+        eventsList: debugEventsList,
         dateRequested: dateStr,
         timeMinRequested: timeMin,
         timeMaxRequested: timeMax

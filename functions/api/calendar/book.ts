@@ -88,9 +88,6 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
         dateTime: endDateTime,
         timeZone: 'Europe/London',
       },
-      attendees: [
-        { email } // Send an invite to the person who booked
-      ],
       conferenceData: {
         createRequest: {
           requestId: `kairo-${Date.now()}`,
