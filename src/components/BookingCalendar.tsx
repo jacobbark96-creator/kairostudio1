@@ -198,7 +198,7 @@ export default function BookingCalendar() {
             <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
               <Clock className="w-6 h-6 text-cyan-600" />
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Date & Time</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Date & Time (UK)</p>
                 <p className="font-semibold text-gray-900 dark:text-white">
                   {selectedDate?.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
                 </p>
