@@ -279,71 +279,73 @@ export default function HomePage() {
             </div>
             
             <div className="flex justify-center lg:justify-end relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-full blur-[80px] -z-10" />
-              
               {/* DESKTOP BOX - Hidden on mobile */}
-              <div className="hidden md:block w-full max-w-lg relative z-10 transform hover:scale-[1.02] transition-all duration-500">
-                <div className="relative overflow-hidden rounded-[2.5rem] bg-white/60 dark:bg-black/40 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 translate-x-[-200%] group-hover/audit:animate-shimmer hidden dark:block" />
-                    
-                    <div className="relative z-10 p-8 text-center">
+              <div className="hidden md:block w-full max-w-lg relative z-10 transform hover:scale-[1.01] transition-all duration-500">
+                <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-gray-200 dark:border-gray-800">
+                    <div className="relative z-10 p-10 text-center">
                         
-                        <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-3 leading-tight drop-shadow-sm">
-                            Assess your <br/> 
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-300 dark:to-purple-300">current site</span>
+                        <h3 className="text-4xl font-display font-black text-gray-900 dark:text-white mb-3 tracking-tight">
+                            Analyse your site
                         </h3>
                         
                         {auditSuccess ? (
-                            <div className="py-2 text-center animate-fade-in-up">
-                                <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl drop-shadow-sm">Your email will arrive any moment</h4>
-                                <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 font-medium">Play for a discount while you wait.</p>
-                                <div className="transform scale-90 origin-top">
+                            <div className="py-4 text-center animate-fade-in-up">
+                                <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-2xl">Report generated.</h4>
+                                <p className="text-base text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
+                                <div className="transform scale-95 origin-top">
                                     <RandomOffer />
                                 </div>
                             </div>
                         ) : (
                             <>
-                                <p className="text-gray-700 dark:text-gray-200 text-sm font-medium mb-8 max-w-[16rem] mx-auto leading-relaxed drop-shadow-sm">
-                                    Get instant feedback on your site and learn how Kairo can take you to the next level.
+                                <p className="text-gray-500 dark:text-gray-400 text-base mb-8 max-w-sm mx-auto leading-relaxed">
+                                    Enter your URL below to get a comprehensive performance and SEO breakdown.
                                 </p>
                                 
-                                <div className="bg-white/40 dark:bg-black/20 backdrop-blur-md rounded-2xl p-6 border border-white/50 dark:border-white/10 shadow-inner">
+                                <div className="w-full">
                                     <form 
                                         onSubmit={handleAuditSubmit}
                                         className="flex flex-col gap-4"
                                     >
                                     <input 
-                                        type="text" 
-                                        placeholder="yourdomain.com" 
+                                        type="url" 
+                                        placeholder="https://yourdomain.com" 
                                         required
                                         value={auditUrl}
                                         onChange={(e) => setAuditUrl(e.target.value)}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
+                                        className="w-full px-6 py-5 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-lg text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
                                     />
                                     <input 
                                         type="email" 
-                                        placeholder="Enter your email" 
+                                        placeholder="name@company.com" 
                                         required
                                         value={auditEmail}
                                         onChange={(e) => setAuditEmail(e.target.value)}
-                                        className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
+                                        className="w-full px-6 py-5 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-lg text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
                                     />
                                     <button 
                                         type="submit"
                                         disabled={isSubmittingAudit}
-                                        className="w-full py-4 mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white rounded-xl font-bold shadow-lg shadow-brand-500/30 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 border border-brand-400/50"
+                                        className="w-full py-5 mt-2 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 disabled:active:scale-100"
                                     >
-                                        {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
+                                        {isSubmittingAudit ? 'Scanning your site...' : 'Get Free Analysis'}
                                         {!isSubmittingAudit && <ArrowRight className="w-5 h-5" />}
                                     </button>
                                 </form>
-                                <p className="text-[11px] font-semibold tracking-wider text-gray-500 dark:text-gray-400 mt-5 text-center uppercase">Powered by Kairo AI</p>
+                                
+                                {/* Trust Signals */}
+                                <div className="mt-6 flex flex-col items-center justify-center gap-2">
+                                  <div className="flex items-center gap-1 text-yellow-400">
+                                    {[...Array(5)].map((_, i) => (
+                                      <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    ))}
+                                  </div>
+                                  <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Takes 30 seconds. 100% Free.</p>
+                                </div>
                             </div>
                             </>
                         )}
                     </div>
-                    <div className="absolute inset-0 opacity-[0.03] dark:opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay" />
                 </div>
               </div>
               
@@ -369,66 +371,70 @@ export default function HomePage() {
                   </button>
                   
                   {/* Site Assessment Feature */}
-                  <div className="relative w-full overflow-hidden rounded-[2.5rem] bg-white/90 dark:bg-black/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5)] border border-white/40 dark:border-white/10 group/audit">
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-white/5 dark:to-transparent opacity-50" />
-                      
-                      <div className="relative z-10 p-8 text-center">
+                  <div className="relative w-full overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-gray-200 dark:border-gray-800">
+                      <div className="relative z-10 p-8 text-center max-h-[85vh] overflow-y-auto">
                           
-                          <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-3 leading-tight drop-shadow-sm">
-                              Assess your <br/> 
-                              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-purple-600 dark:from-brand-300 dark:to-purple-300">current site</span>
+                          <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-2 tracking-tight">
+                              Analyse your site
                           </h3>
                           
                           {auditSuccess ? (
-                              <div className="py-2 text-center animate-fade-in-up">
-                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl drop-shadow-sm">Your email will arrive any moment</h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-6 font-medium">Play for a discount while you wait.</p>
-                                  <div className="transform scale-90 origin-top">
+                              <div className="py-4 text-center animate-fade-in-up">
+                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Report generated.</h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
+                                  <div className="transform scale-95 origin-top">
                                       <RandomOffer />
                                   </div>
                               </div>
                           ) : (
                               <>
-                                  <p className="text-gray-700 dark:text-gray-200 text-sm font-medium mb-8 max-w-[16rem] mx-auto leading-relaxed drop-shadow-sm">
-                                      Get instant feedback on your site and learn how Kairo can take you to the next level.
+                                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-sm mx-auto leading-relaxed">
+                                      Enter your URL below to get a comprehensive performance and SEO breakdown.
                                   </p>
                                   
-                                  <div className="bg-white/40 dark:bg-black/20 backdrop-blur-md rounded-2xl p-6 border border-white/50 dark:border-white/10 shadow-inner">
+                                  <div className="w-full">
                                       <form 
                                           onSubmit={handleAuditSubmit}
-                                          className="flex flex-col gap-4"
+                                          className="flex flex-col gap-3"
                                       >
                                       <input 
-                                          type="text" 
-                                          placeholder="yourdomain.com" 
+                                          type="url" 
+                                          placeholder="https://yourdomain.com" 
                                           required
                                           value={auditUrl}
                                           onChange={(e) => setAuditUrl(e.target.value)}
-                                          className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
+                                          className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
                                       />
                                       <input 
                                           type="email" 
-                                          placeholder="Enter your email" 
+                                          placeholder="name@company.com" 
                                           required
                                           value={auditEmail}
                                           onChange={(e) => setAuditEmail(e.target.value)}
-                                          className="w-full px-5 py-3.5 rounded-xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-white/60 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500/50 transition-all shadow-sm"
+                                          className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
                                       />
                                       <button 
                                           type="submit"
                                           disabled={isSubmittingAudit}
-                                          className="w-full py-4 mt-2 bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white rounded-xl font-bold shadow-lg shadow-brand-500/30 active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 border border-brand-400/50"
+                                          className="w-full py-4 mt-2 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-bold text-base shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 disabled:active:scale-100"
                                       >
-                                          {isSubmittingAudit ? 'Sending...' : 'Analyse Now'}
-                                          {!isSubmittingAudit && <ArrowRight className="w-5 h-5" />}
+                                          {isSubmittingAudit ? 'Scanning your site...' : 'Get Free Analysis'}
+                                          {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
                                       </button>
                                   </form>
-                                  <p className="text-[11px] font-semibold tracking-wider text-gray-500 dark:text-gray-400 mt-5 text-center uppercase">Powered by Kairo AI</p>
+                                  
+                                  <div className="mt-5 flex flex-col items-center justify-center gap-1.5">
+                                    <div className="flex items-center gap-1 text-yellow-400">
+                                      {[...Array(5)].map((_, i) => (
+                                        <svg key={i} className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                      ))}
+                                    </div>
+                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Takes 30 seconds. 100% Free.</p>
+                                  </div>
                               </div>
                               </>
                           )}
                       </div>
-                      <div className="absolute inset-0 opacity-[0.03] dark:opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay" />
                   </div>
                 </div>
               </div>
