@@ -72,58 +72,60 @@ export default function BlogPost({ post, slug }: { post: BlogPost | null, slug: 
         description={currentPost.excerpt} 
       />
       
-      <article className="min-h-screen pt-24 pb-24 relative z-0">
-        {/* Background */}
-        <div className="fixed inset-0 w-full h-full -z-20 bg-gray-50 dark:bg-black pointer-events-none" />
-
-        {/* Hero Image Header */}
-        <header className="w-full h-[50vh] sm:h-[60vh] relative mb-12 sm:mb-20">
-            <img 
-                src={currentPost.image_url} 
-                alt={currentPost.title} 
-                className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/50 to-transparent dark:from-black dark:via-black/50 dark:to-transparent" />
+      <article className="min-h-screen bg-white dark:bg-[#0a0a0a] pt-32 pb-24 selection:bg-brand-500/30">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             
-            <div className="absolute bottom-0 left-0 w-full px-4 sm:px-6 lg:px-8 translate-y-1/2 sm:translate-y-1/4">
-                <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900/90 backdrop-blur-xl p-8 sm:p-12 rounded-[2rem] shadow-2xl border border-gray-100 dark:border-white/10">
-                    <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-brand-600 dark:text-brand-400 uppercase tracking-wider mb-6 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
-                        <ArrowLeft className="w-4 h-4" />
-                        Back to Journal
-                    </Link>
-                    
-                    <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-black text-gray-900 dark:text-white leading-tight mb-6">
-                        {currentPost.title}
-                    </h1>
-                    
-                    <div className="flex flex-wrap items-center gap-6 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                        <span className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            {new Date(currentPost.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            {currentPost.reading_time || '5 min read'}
-                        </span>
-                    </div>
-                </div>
+            {/* Back Link */}
+            <div className="mb-10">
+                <Link href="/blog" className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white uppercase tracking-wider transition-colors">
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Journal
+                </Link>
             </div>
-        </header>
 
-        {/* Article Content */}
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 sm:pt-56">
-            <div className="prose prose-lg sm:prose-xl dark:prose-invert prose-headings:font-display prose-headings:font-bold prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-a:text-brand-600 dark:prose-a:text-brand-400 hover:prose-a:text-brand-700 prose-img:rounded-2xl prose-img:shadow-xl max-w-none font-light">
+            {/* Header (Title & Meta) */}
+            <header className="mb-12">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-black text-gray-900 dark:text-white leading-[1.1] mb-6 tracking-tight">
+                    {currentPost.title}
+                </h1>
+                
+                <div className="flex flex-wrap items-center gap-6 text-sm font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    <span className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        {new Date(currentPost.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    </span>
+                    <span className="flex items-center gap-2">
+                        <Clock className="w-4 h-4" />
+                        {currentPost.reading_time || '5 min read'}
+                    </span>
+                </div>
+            </header>
+
+            {/* Featured Image */}
+            {currentPost.image_url && (
+                <div className="mb-16 rounded-3xl overflow-hidden shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-900 aspect-video relative">
+                    <img 
+                        src={currentPost.image_url} 
+                        alt={currentPost.title} 
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            )}
+
+            {/* Article Content */}
+            <div className="prose prose-lg md:prose-xl dark:prose-invert prose-headings:font-display prose-headings:font-black prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-a:text-brand-600 dark:prose-a:text-brand-400 hover:prose-a:text-brand-700 prose-img:rounded-3xl prose-img:shadow-xl max-w-none font-normal">
                 <ReactMarkdown>{currentPost.content}</ReactMarkdown>
             </div>
             
             <hr className="my-16 border-gray-200 dark:border-gray-800" />
             
-            <div className="bg-brand-50 dark:bg-brand-900/20 rounded-[2rem] p-8 sm:p-12 text-center border border-brand-100 dark:border-brand-800/30">
-                <h3 className="text-2xl font-display font-bold text-gray-900 dark:text-white mb-4">Ready to elevate your digital presence?</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto">
+            {/* CTA */}
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-3xl p-10 sm:p-12 text-center border border-gray-200 dark:border-gray-800">
+                <h3 className="text-2xl sm:text-3xl font-display font-black text-gray-900 dark:text-white mb-4 tracking-tight">Ready to elevate your digital presence?</h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-xl mx-auto text-lg">
                     Let's discuss how Kairo can help you achieve your goals with a custom digital solution.
                 </p>
-                <Link href="/" className="inline-flex px-8 py-4 bg-brand-600 text-white rounded-xl font-bold shadow-lg hover:bg-brand-700 transition-colors">
+                <Link href="/" className="inline-flex px-8 py-4 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-bold shadow-lg active:scale-[0.98] transition-all items-center gap-2">
                     Start Your Project
                 </Link>
             </div>
