@@ -2,7 +2,7 @@ import BlogPost from '../../../src/components/BlogPost';
 import { createClient } from '@supabase/supabase-js';
 import { Metadata } from 'next';
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 // Generate metadata dynamically for each blog post
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -56,17 +56,35 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-// Since this is a static export, we can't fetch from Supabase at build time if the env vars aren't available to the static generator.
-// Let's fallback to allowing the client to fetch it, but provide a dummy path to satisfy the static exporter.
-export function generateStaticParams() {
-  // We need to return an array of all possible slugs so Next.js knows what to build.
-  // We'll include the mock post slug so it works out of the box.
-  return [
-    { slug: 'custom-web-design-vs-templates' },
-    { slug: 'dummy-post' }
-  ];
+export async function generateStaticParams() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return [
+      { slug: 'custom-web-design-vs-templates' },
+      { slug: 'dummy-post' }
+    ];
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const { data: posts, error } = await supabase
+    .from('blog_posts')
+    .select('slug')
+    .eq('published', true);
+
+  if (error || !posts || posts.length === 0) {
+    return [
+      { slug: 'custom-web-design-vs-templates' },
+      { slug: 'dummy-post' }
+    ];
+  }
+
+  return posts.map((post) => ({
+    slug: post.slug,
+  }));
 }
 
 export default function Page({ params }: { params: { slug: string } }) {
-  return <BlogPost slug={params.slug} />;
+  return <BlogPost />;
 }
