@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X, Layout } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X, Layout, TrendingUp } from 'lucide-react';
 import RandomOffer from '../../components/RandomOffer';
 import { useUI } from '../../context/UIContext';
 import { supabase } from '../../lib/supabase';
@@ -87,29 +87,23 @@ export default function MobileHome() {
 
   const services = [
     { 
+        icon: Layout, 
+        title: 'Web Presence', 
+        desc: 'Done-for-you sites & hosting.',
+        color: 'from-brand-500 to-brand-600',
+    },
+    { 
+        icon: TrendingUp, 
+        title: 'SEO & Growth', 
+        desc: 'Continuous market optimization.',
+        color: 'from-purple-500 to-purple-600',
+    },
+    { 
         icon: Palette, 
         title: 'Brand Identity', 
-        desc: 'Crafting logos and visual systems.',
+        desc: 'Modern, high-trust visual systems.',
         color: 'from-pink-500 to-rose-500',
-    },
-    { 
-        icon: Code, 
-        title: 'Web Dev', 
-        desc: 'Lightning-fast, responsive websites.',
-        color: 'from-blue-500 to-cyan-500',
-    },
-    { 
-        icon: Zap, 
-        title: 'Digital Strategy', 
-        desc: 'Data-driven SEO strategies.',
-        color: 'from-amber-400 to-orange-500',
-    },
-    { 
-        icon: Rocket, 
-        title: 'Growth', 
-        desc: 'Targeted campaigns that convert.',
-        color: 'from-purple-500 to-indigo-500',
-    },
+    }
   ];
 
   return (
@@ -267,16 +261,20 @@ export default function MobileHome() {
             <Link href="/services" className="text-xs text-brand-600 font-medium">View All</Link>
         </div>
         
-        <div className="grid grid-cols-2 gap-3 px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4">
             {services.map((s, i) => (
-                <div key={i} className="group relative overflow-hidden rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-4 shadow-sm hover:shadow-md transition-all">
-                    <div className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br ${s.color} opacity-10 rounded-bl-full`} />
-                    <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white mb-3 shadow-sm`}>
-                        <s.icon className="w-5 h-5" />
+                <Link key={i} href="/services" className="group flex flex-col relative overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div className="mb-4">
+                        <s.icon className={`w-8 h-8 text-brand-600 dark:text-brand-500 transition-transform duration-300 group-hover:scale-110`} />
+                        <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${s.color} opacity-[0.03] dark:opacity-5 rounded-bl-full`} />
                     </div>
-                    <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-1">{s.title}</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{s.desc}</p>
-                </div>
+                    <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">{s.title}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 flex-grow">{s.desc}</p>
+                    
+                    <div className="mt-auto flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white transition-all">
+                        Explore <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </div>
+                </Link>
             ))}
         </div>
       </section>

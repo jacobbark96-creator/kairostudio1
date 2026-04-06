@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone, TrendingUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -140,7 +140,7 @@ export default function HomePage() {
       image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop', // Pinkish abstract
     },
     {
-      icon: Smartphone,
+      icon: TrendingUp,
       title: 'Continuous SEO & Growth',
       description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimize your presence so customers can actually find you on Google.',
       bgClass: 'bg-purple-500/5 dark:bg-purple-500/10',
@@ -481,45 +481,29 @@ export default function HomePage() {
           
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
             {services.map((service, index) => (
-              <div
+              <Link
                 key={index}
-                className={`group p-8 sm:p-10 rounded-3xl hover:-translate-y-2 relative overflow-hidden transition-all duration-300 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl dark:shadow-2xl dark:shadow-black/50 ${
+                href="/services"
+                className={`group flex flex-col p-8 sm:p-10 bg-white dark:bg-[#0a0a0a] rounded-3xl border border-gray-200 dark:border-gray-800 hover:border-brand-500/50 dark:hover:border-brand-500/50 shadow-sm hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden ${
                   index === 1 ? 'md:-translate-y-8' : ''
                 }`}
               >
-                {/* Background Image with Overlay */}
-                <div className="absolute inset-0 w-full h-full -z-10 transition-transform duration-700 group-hover:scale-110">
-                    <img 
-                        src={service.image} 
-                        alt={service.title} 
-                        className="w-full h-full object-cover opacity-20 dark:opacity-30 group-hover:opacity-30 dark:group-hover:opacity-40 transition-opacity"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${service.bgClass.replace('/5', '/80').replace('/10', '/90')} mix-blend-multiply dark:mix-blend-multiply`} />
-                    <div className="absolute inset-0 bg-white/40 dark:bg-black/40" />
-                </div>
-
-                {/* Mobile-specific decorative elements */}
-                <div className="md:hidden absolute top-0 right-0 w-32 h-32 bg-white/20 dark:bg-white/5 rounded-bl-[100px] -z-10" />
-                <div className="md:hidden absolute bottom-0 left-0 w-24 h-24 bg-black/5 dark:bg-black/20 rounded-tr-[80px] -z-10" />
-
-                {/* Abstract Background Blob per card */}
-                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gradient-to-br from-white/30 to-transparent dark:from-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
-                
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/80 dark:bg-black/50 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 border border-white/40 dark:border-white/20 shadow-lg relative z-10">
-                  <service.icon className="w-7 h-7 sm:w-8 sm:h-8 text-gray-900 dark:text-white" />
+                <div className="mb-8">
+                  <service.icon className="w-8 h-8 text-brand-600 dark:text-brand-500 transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 
-                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10 drop-shadow-sm">
+                <h3 className="text-2xl font-display font-bold mb-3 text-gray-900 dark:text-white">
                   {service.title}
                 </h3>
-                <p className="text-gray-800 dark:text-gray-200 font-medium text-base leading-relaxed relative z-10 drop-shadow-sm mb-6">
+                
+                <p className="text-gray-500 dark:text-gray-400 font-medium text-base leading-relaxed mb-8 flex-grow">
                   {service.description}
                 </p>
                 
-                <div className="relative z-10 mt-auto flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white group-hover:gap-4 transition-all">
-                  Explore <ArrowRight className="w-4 h-4" />
+                <div className="mt-auto flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white transition-all">
+                  Explore <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
