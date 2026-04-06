@@ -50,50 +50,10 @@ As your business grows, your website needs to adapt. Templates often hit a wall 
     }
 };
 
-export default function BlogPost() {
-  const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+export default function BlogPost({ post, slug }: { post: BlogPost | null, slug: string }) {
+  const currentPost = post || MOCK_POSTS[slug] || null;
 
-  useEffect(() => {
-    fetchPost();
-  }, [slug]);
-
-  const fetchPost = async () => {
-    if (!slug) return;
-    
-    setLoading(true);
-    try {
-        const { data, error } = await supabase
-            .from('blog_posts')
-            .select('*')
-            .eq('slug', slug)
-            .single();
-
-        if (error) throw error;
-        
-        if (data) {
-            setPost(data as BlogPost);
-        } else {
-            setPost(MOCK_POSTS[slug] || null);
-        }
-    } catch (error) {
-        console.log("Using mock blog post", error);
-        setPost(MOCK_POSTS[slug] || null);
-    } finally {
-        setLoading(false);
-    }
-  };
-
-  if (loading) {
-      return (
-          <div className="min-h-screen flex justify-center items-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
-          </div>
-      );
-  }
-
-  if (!post) {
+  if (!currentPost) {
       return (
           <div className="min-h-screen flex flex-col justify-center items-center text-center px-4">
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Post not found</h1>
@@ -108,8 +68,8 @@ export default function BlogPost() {
   return (
     <>
       <SEO 
-        title={`${post.title} | Kairo Blog`} 
-        description={post.excerpt} 
+        title={`${currentPost.title} | Kairo Blog`} 
+        description={currentPost.excerpt} 
       />
       
       <article className="min-h-screen pt-24 pb-24 relative z-0">
@@ -119,8 +79,8 @@ export default function BlogPost() {
         {/* Hero Image Header */}
         <header className="w-full h-[50vh] sm:h-[60vh] relative mb-12 sm:mb-20">
             <img 
-                src={post.image_url} 
-                alt={post.title} 
+                src={currentPost.image_url} 
+                alt={currentPost.title} 
                 className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-gray-50/50 to-transparent dark:from-black dark:via-black/50 dark:to-transparent" />
@@ -133,17 +93,17 @@ export default function BlogPost() {
                     </Link>
                     
                     <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-black text-gray-900 dark:text-white leading-tight mb-6">
-                        {post.title}
+                        {currentPost.title}
                     </h1>
                     
                     <div className="flex flex-wrap items-center gap-6 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         <span className="flex items-center gap-2">
                             <Calendar className="w-4 h-4" />
-                            {new Date(post.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                            {new Date(currentPost.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                         </span>
                         <span className="flex items-center gap-2">
                             <Clock className="w-4 h-4" />
-                            {post.reading_time || '5 min read'}
+                            {currentPost.reading_time || '5 min read'}
                         </span>
                     </div>
                 </div>
@@ -153,7 +113,7 @@ export default function BlogPost() {
         {/* Article Content */}
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pt-48 sm:pt-56">
             <div className="prose prose-lg sm:prose-xl dark:prose-invert prose-headings:font-display prose-headings:font-bold prose-h1:text-4xl prose-h2:text-3xl prose-h3:text-2xl prose-p:leading-relaxed prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-a:text-brand-600 dark:prose-a:text-brand-400 hover:prose-a:text-brand-700 prose-img:rounded-2xl prose-img:shadow-xl max-w-none font-light">
-                <ReactMarkdown>{post.content}</ReactMarkdown>
+                <ReactMarkdown>{currentPost.content}</ReactMarkdown>
             </div>
             
             <hr className="my-16 border-gray-200 dark:border-gray-800" />

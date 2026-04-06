@@ -85,6 +85,20 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function Page({ params }: { params: { slug: string } }) {
-  return <BlogPost />;
+export default async function Page({ params }: { params: { slug: string } }) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return <BlogPost post={null} slug={params.slug} />;
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
+  const { data: post } = await supabase
+    .from('blog_posts')
+    .select('*')
+    .eq('slug', params.slug)
+    .single();
+
+  return <BlogPost post={post || null} slug={params.slug} />;
 }

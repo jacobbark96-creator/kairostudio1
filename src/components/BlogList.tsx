@@ -51,37 +51,8 @@ const MOCK_POSTS: BlogPost[] = [
     }
 ];
 
-export default function BlogList() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
-    try {
-        // Attempt to fetch from Supabase. If the table doesn't exist yet, we'll catch the error and use mock data.
-        const { data, error } = await supabase
-            .from('blog_posts')
-            .select('*')
-            .eq('published', true)
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-            setPosts(data as BlogPost[]);
-        } else {
-            setPosts(MOCK_POSTS);
-        }
-    } catch (error) {
-        console.log("Using mock blog posts (table might not exist yet)", error);
-        setPosts(MOCK_POSTS);
-    } finally {
-        setLoading(false);
-    }
-  };
+export default function BlogList({ initialPosts }: { initialPosts?: BlogPost[] | null }) {
+  const posts = initialPosts || MOCK_POSTS;
 
   return (
     <>
@@ -111,16 +82,11 @@ export default function BlogList() {
                 </p>
             </div>
 
-            {loading ? (
-                <div className="flex justify-center py-20">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
-                </div>
-            ) : (
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {posts.map((post) => (
-                        <Link 
-                            key={post.id} 
-                            href={`/blog/${post.slug}`}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {posts.map((post) => (
+                    <Link 
+                        key={post.id} 
+                        href={`/blog/${post.slug}`}
                             className="group bg-white dark:bg-gray-900/60 backdrop-blur-md rounded-[2rem] overflow-hidden border border-gray-100 dark:border-white/10 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 flex flex-col"
                         >
                             <div className="aspect-video w-full overflow-hidden relative">
@@ -160,7 +126,6 @@ export default function BlogList() {
                         </Link>
                     ))}
                 </div>
-            )}
         </div>
       </div>
     </>
