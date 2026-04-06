@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Briefcase, MapPin, Clock, ArrowRight, Sparkles, ChevronDown } from 'lucide-react';
+import { Briefcase, MapPin, Clock, ArrowRight, Sparkles, ChevronDown, CheckCircle2, PoundSterling, Building, ArrowLeft } from 'lucide-react';
 import SEO from '../components/SEO';
 
 interface Career {
@@ -42,8 +42,128 @@ export default function CareersPage() {
   };
 
   const toggleJob = (id: string) => {
-    setOpenJob(openJob === id ? null : id);
+    setOpenJob(id);
   };
+
+  const closeJob = () => {
+    setOpenJob(null);
+  };
+
+  const selectedJob = jobs.find(j => j.id === openJob);
+
+  if (selectedJob) {
+    return (
+      <>
+        <SEO 
+          title={`${selectedJob.title} | Careers | Kairo Studio`} 
+          description={selectedJob.description.substring(0, 150)} 
+        />
+        <div className="min-h-screen bg-white dark:bg-[#0a0a0a] pt-32 pb-24 selection:bg-brand-500/30">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {/* Back Button */}
+            <div className="mb-10">
+              <button 
+                onClick={closeJob}
+                className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white uppercase tracking-wider transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Roles
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+              
+              {/* Main Content Column (2/3) */}
+              <div className="lg:col-span-2">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-black text-gray-900 dark:text-white leading-[1.1] mb-8 tracking-tight">
+                  {selectedJob.title}
+                </h1>
+                
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">About the Role</h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {selectedJob.description}
+                  </p>
+                </div>
+                
+                {selectedJob.requirements && selectedJob.requirements.length > 0 && (
+                  <div className="mb-12">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Responsibilities & Qualifications</h2>
+                    <ul className="space-y-4">
+                      {selectedJob.requirements.map((req, idx) => (
+                        <li key={idx} className="flex items-start gap-4">
+                          <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Sidebar Details Column (1/3) */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-32 bg-gray-50 dark:bg-gray-900/50 rounded-3xl p-8 border border-gray-200 dark:border-gray-800 shadow-sm">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Key Details</h3>
+                  
+                  <div className="space-y-6 mb-8">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <PoundSterling className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Salary</p>
+                        <p className="font-bold text-gray-900 dark:text-white">Competitive</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <MapPin className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</p>
+                        <p className="font-bold text-gray-900 dark:text-white">{selectedJob.location}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <Clock className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Job Type</p>
+                        <p className="font-bold text-gray-900 dark:text-white">{selectedJob.type}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center flex-shrink-0 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <Building className="w-5 h-5 text-brand-600 dark:text-brand-400" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Department</p>
+                        <p className="font-bold text-gray-900 dark:text-white">{selectedJob.department}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <a 
+                    href={`mailto:hello@kairostudio.co.uk?subject=Application for ${selectedJob.title}`}
+                    className="flex items-center justify-center w-full py-4 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all"
+                  >
+                    Apply Now
+                  </a>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -93,24 +213,20 @@ export default function CareersPage() {
             ) : (
                 <div className="space-y-4 animate-fade-in-up animation-delay-600">
                     {jobs.map((job) => {
-                        const isOpen = openJob === job.id;
                         return (
                             <div 
                                 key={job.id} 
-                                className={`bg-white dark:bg-gray-900/80 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden shadow-lg transition-all duration-300 ${isOpen ? 'ring-2 ring-brand-500 shadow-brand-500/20' : 'hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-700'}`}
+                                onClick={() => toggleJob(job.id)}
+                                className="bg-white dark:bg-gray-900/80 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-gray-300 dark:hover:border-gray-700 transition-all duration-300 cursor-pointer group"
                             >
-                                {/* Header / Trigger */}
-                                <div 
-                                    onClick={() => toggleJob(job.id)}
-                                    className="p-6 sm:p-8 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-                                >
+                                <div className="p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div>
                                         <div className="flex items-center gap-3 mb-2">
                                             <span className="text-xs font-bold px-3 py-1 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-full uppercase tracking-wider">
                                                 {job.department}
                                             </span>
                                         </div>
-                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{job.title}</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{job.title}</h3>
                                         
                                         <div className="flex flex-wrap items-center gap-4 mt-4 text-sm text-gray-500 dark:text-gray-400">
                                             <div className="flex items-center gap-1.5">
@@ -125,42 +241,8 @@ export default function CareersPage() {
                                     </div>
                                     
                                     <div className="flex items-center justify-between sm:justify-end gap-4 mt-4 sm:mt-0">
-                                        <ChevronDown className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-brand-500' : ''}`} />
-                                    </div>
-                                </div>
-
-                                {/* Expandable Content */}
-                                <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                                    <div className="overflow-hidden">
-                                        <div className="p-6 sm:p-8 pt-0 border-t border-gray-100 dark:border-gray-800">
-                                            <div className="mt-6 mb-8">
-                                                <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-3">About the Role</h4>
-                                                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                                                    {job.description}
-                                                </p>
-                                            </div>
-                                            
-                                            {job.requirements && job.requirements.length > 0 && (
-                                                <div className="mb-8">
-                                                    <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Requirements</h4>
-                                                    <ul className="space-y-3">
-                                                        {job.requirements.map((req, idx) => (
-                                                            <li key={idx} className="flex items-start gap-3">
-                                                                <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-500 flex-shrink-0" />
-                                                                <span className="text-gray-600 dark:text-gray-300">{req}</span>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
-                                            
-                                            <a 
-                                                href={`mailto:hello@kairostudio.co.uk?subject=Application for ${job.title}`}
-                                                className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-xl font-bold hover:opacity-90 transition-opacity active:scale-95"
-                                            >
-                                                Apply Now
-                                                <ArrowRight className="w-4 h-4" />
-                                            </a>
+                                        <div className="flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white transition-all">
+                                            View Role <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                                         </div>
                                     </div>
                                 </div>
