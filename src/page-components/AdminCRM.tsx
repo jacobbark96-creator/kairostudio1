@@ -148,31 +148,47 @@ export default function AdminCRM() {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) return;
     
-    const { data: roleData } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .single() as { data: any, error: any };
-      
-    if (roleData) {
-      setUserRole(roleData.role as 'super_admin' | 'admin' | 'client');
-      
-      if (roleData.role === 'admin') {
-        const { data: permissions } = await supabase
-          .from('admin_permissions')
-          .select('allowed_tab')
-          .eq('user_id', session.user.id) as { data: any[], error: any };
-          
-        if (permissions) {
-          const tabs = permissions.map((p: any) => p.allowed_tab);
-          setAllowedTabs(tabs);
-          if (tabs.length > 0) {
-            setActiveTab(tabs[0]);
+    try {
+      const { data: roleData, error } = await (supabase as any)
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .single();
+        
+      if (roleData) {
+        setUserRole(roleData.role as 'super_admin' | 'admin' | 'client');
+        
+        if (roleData.role === 'admin') {
+          const { data: permissions } = await (supabase as any)
+            .from('admin_permissions')
+            .select('allowed_tab')
+            .eq('user_id', session.user.id);
+            
+          if (permissions) {
+            const tabs = permissions.map((p: any) => p.allowed_tab);
+            setAllowedTabs(tabs);
+            if (tabs.length > 0) {
+              setActiveTab(tabs[0]);
+            }
           }
+        } else if (roleData.role === 'super_admin') {
+          setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings']);
         }
-      } else if (roleData.role === 'super_admin') {
-        setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings']);
+      } else {
+        // Fallback to legacy profiles table if user_roles doesn't exist yet
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single() as { data: any };
+          
+        if (profile?.role === 'admin') {
+          setUserRole('super_admin');
+          setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings']);
+        }
       }
+    } catch (err) {
+      console.error("Error fetching user role:", err);
     }
   };
 
