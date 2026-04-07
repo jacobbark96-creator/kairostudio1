@@ -9,30 +9,33 @@ type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function ClientDashboard() {
   const { user, isAdmin } = useAuth();
-  const [activeTab, setActiveTab] = useState<'invoices' | 'projects'>('invoices');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'invoices'>('dashboard');
   const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [projects, setProjects] = useState<any[]>([]);
+  const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
       fetchInvoices();
-      fetchProjects();
+      fetchProject();
     }
   }, [user]);
 
-  const fetchProjects = async () => {
+  const fetchProject = async () => {
     try {
       const { data, error } = await supabase
         .from('client_projects')
         .select('*')
         .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
 
-      if (error) throw error;
-      setProjects(data || []);
+      if (!error && data) {
+        setProject(data);
+      }
     } catch (err: unknown) {
-      console.error('Error fetching projects:', err);
+      console.error('Error fetching project:', err);
     }
   };
 
@@ -118,6 +121,17 @@ export default function ClientDashboard() {
 
         <div className="flex space-x-4 mb-8 border-b border-gray-200 dark:border-gray-700">
           <button
+            onClick={() => setActiveTab('dashboard')}
+            className={`pb-4 px-4 flex items-center gap-2 font-medium transition-colors ${
+              activeTab === 'dashboard' 
+                ? 'border-b-2 border-cyan-600 text-cyan-600 dark:text-cyan-400' 
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            }`}
+          >
+            <LayoutIcon className="w-4 h-4" />
+            Dashboard
+          </button>
+          <button
             onClick={() => setActiveTab('invoices')}
             className={`pb-4 px-4 flex items-center gap-2 font-medium transition-colors ${
               activeTab === 'invoices' 
@@ -127,17 +141,6 @@ export default function ClientDashboard() {
           >
             <FileText className="w-4 h-4" />
             Invoices
-          </button>
-          <button
-            onClick={() => setActiveTab('projects')}
-            className={`pb-4 px-4 flex items-center gap-2 font-medium transition-colors ${
-              activeTab === 'projects' 
-                ? 'border-b-2 border-cyan-600 text-cyan-600 dark:text-cyan-400' 
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-            }`}
-          >
-            <LayoutIcon className="w-4 h-4" />
-            My Projects
           </button>
         </div>
 
@@ -221,46 +224,66 @@ export default function ClientDashboard() {
             </div>
           )
         ) : (
-          projects.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-12 text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <LayoutIcon className="w-8 h-8 text-gray-400" />
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Active Project Module */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-brand-50 dark:bg-brand-900/20 rounded-xl flex items-center justify-center mb-6">
+                  <LayoutIcon className="w-6 h-6 text-brand-600 dark:text-brand-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Active Project</h3>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
+                  {project?.project_name || 'No active project currently assigned.'}
+                </p>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No projects yet</h3>
-              <p className="text-gray-500 dark:text-gray-400">Links to your active projects will appear here.</p>
-            </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project) => (
+              
+              {project?.live_link && (
                 <a 
-                  key={project.id}
-                  href={project.project_url}
+                  href={project.live_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700 block"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-xl font-bold hover:opacity-90 transition-opacity"
                 >
-                  <div className="h-48 w-full bg-gray-100 dark:bg-gray-700 relative overflow-hidden">
-                    {/* Visual representation of a website using an iframe pointer event none */}
-                    <iframe 
-                      src={project.project_url} 
-                      className="w-[1024px] h-[768px] scale-[0.4] origin-top-left pointer-events-none opacity-50 group-hover:opacity-80 transition-opacity duration-500"
-                      title={project.project_name}
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent flex items-end p-6">
-                      <div className="text-white">
-                        <h3 className="text-xl font-bold mb-1 flex items-center gap-2">
-                          {project.project_name}
-                          <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0" />
-                        </h3>
-                        <p className="text-sm text-gray-300 truncate w-full max-w-[200px]">{project.project_url}</p>
-                      </div>
-                    </div>
-                  </div>
+                  <ExternalLink className="w-4 h-4" />
+                  View Live Project
                 </a>
-              ))}
+              )}
             </div>
-          )
+
+            {/* Latest Update Module */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 rounded-xl flex items-center justify-center mb-6">
+                  <Clock className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Latest Update</h3>
+                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl mt-4">
+                  <p className="text-gray-700 dark:text-gray-300">
+                    {project?.latest_update || 'No recent updates. Check back soon!'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Quick Stats / Billing Snapshot */}
+            <div className="md:col-span-2 bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-sm p-8 text-white">
+               <h3 className="text-xl font-bold mb-6">Billing Snapshot</h3>
+               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Total Due</p>
+                    <p className="text-3xl font-bold">
+                      ${invoices.filter(i => i.status !== 'paid').reduce((acc, curr) => acc + (curr.amount - (curr.amount_paid || 0)), 0).toFixed(2)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Pending Invoices</p>
+                    <p className="text-3xl font-bold">
+                      {invoices.filter(i => i.status !== 'paid').length}
+                    </p>
+                  </div>
+               </div>
+            </div>
+          </div>
         )}
       </div>
     </div>

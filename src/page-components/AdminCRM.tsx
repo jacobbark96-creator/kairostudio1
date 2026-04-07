@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe, Send } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe, Send, Plus } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -106,6 +106,8 @@ export default function AdminCRM() {
   const [clientProjects, setClientProjects] = useState<any[]>([]);
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectUrl, setNewProjectUrl] = useState('');
+  const [newLiveLink, setNewLiveLink] = useState('');
+  const [newLatestUpdate, setNewLatestUpdate] = useState('');
   const [addingClientProject, setAddingClientProject] = useState(false);
 
   // Media State
@@ -116,7 +118,21 @@ export default function AdminCRM() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(false);
 
+  // RBAC State
+  const [userRole, setUserRole] = useState<'super_admin' | 'admin' | 'client'>('admin');
+  const [allowedTabs, setAllowedTabs] = useState<string[]>([]);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [bookingForm, setBookingForm] = useState({
+    client_name: '',
+    client_email: '',
+    phone: '',
+    booking_date: '',
+    time_slot: '',
+    rep_notes: ''
+  });
+
   useEffect(() => {
+    fetchUserRole();
     fetchUsers();
     fetchContent();
     fetchOffers();
@@ -127,6 +143,38 @@ export default function AdminCRM() {
     fetchMedia();
     fetchBookings();
   }, []);
+
+  const fetchUserRole = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+    
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .single() as { data: any, error: any };
+      
+    if (roleData) {
+      setUserRole(roleData.role as 'super_admin' | 'admin' | 'client');
+      
+      if (roleData.role === 'admin') {
+        const { data: permissions } = await supabase
+          .from('admin_permissions')
+          .select('allowed_tab')
+          .eq('user_id', session.user.id) as { data: any[], error: any };
+          
+        if (permissions) {
+          const tabs = permissions.map((p: any) => p.allowed_tab);
+          setAllowedTabs(tabs);
+          if (tabs.length > 0) {
+            setActiveTab(tabs[0]);
+          }
+        }
+      } else if (roleData.role === 'super_admin') {
+        setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings']);
+      }
+    }
+  };
 
   const fetchBookings = async () => {
     setLoadingBookings(true);
@@ -140,7 +188,7 @@ export default function AdminCRM() {
   };
 
   const updateBookingStatus = async (id: string, status: string) => {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('bookings')
       .update({ status })
       .eq('id', id);
@@ -651,20 +699,24 @@ export default function AdminCRM() {
 
   const handleAddClientProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!managingProjectsForUser || !newProjectName || !newProjectUrl) return;
+    if (!managingProjectsForUser || !newProjectName) return;
 
     setAddingClientProject(true);
     try {
       const { error } = await supabase.from('client_projects').insert([{
         user_id: managingProjectsForUser.id,
         project_name: newProjectName,
-        project_url: newProjectUrl
-      }]);
+        project_url: newProjectUrl || null,
+        live_link: newLiveLink || null,
+        latest_update: newLatestUpdate || null
+      }] as any);
 
       if (error) throw error;
       
       setNewProjectName('');
       setNewProjectUrl('');
+      setNewLiveLink('');
+      setNewLatestUpdate('');
       
       // Refresh list
       const { data } = await supabase.from('client_projects').select('*').eq('user_id', managingProjectsForUser.id).order('created_at', { ascending: false });
@@ -812,66 +864,134 @@ export default function AdminCRM() {
     setActiveTab('portfolio');
   };
 
+  const handleBookClient = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const startDateTime = `${bookingForm.booking_date}T${bookingForm.time_slot}:00`;
+      const startMs = new Date(startDateTime).getTime();
+      const endMs = startMs + 30 * 60000;
+      const endDateTime = new Date(endMs).toISOString();
+
+      // Call edge function to create event and insert to DB
+      const res = await fetch('/api/calendar/book-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: bookingForm.client_name,
+          email: bookingForm.client_email,
+          phone: bookingForm.phone,
+          date: bookingForm.booking_date,
+          timeSlot: bookingForm.time_slot,
+          rep_notes: bookingForm.rep_notes
+        })
+      });
+      
+      if (!res.ok) throw new Error('Failed to book client on Google Calendar');
+
+      // Insert to Supabase DB
+      const { error: dbError } = await supabase
+        .from('bookings')
+        .insert([{
+          client_name: bookingForm.client_name,
+          client_email: bookingForm.client_email,
+          phone: bookingForm.phone,
+          booking_date: bookingForm.booking_date,
+          time_slot: bookingForm.time_slot,
+          rep_notes: bookingForm.rep_notes,
+          status: 'confirmed'
+        }] as any);
+
+      if (dbError) throw new Error(`Database error: ${dbError.message}`);
+      
+      alert('Client booked successfully and Google Calendar updated!');
+      setShowBookingModal(false);
+      setBookingForm({
+        client_name: '', client_email: '', phone: '', booking_date: '', time_slot: '', rep_notes: ''
+      });
+      fetchBookings();
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="min-h-screen pt-48 pb-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Admin CRM</h1>
         
         <div className="flex space-x-4 mb-8 border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab('invoices')}
-            className={`pb-4 px-4 ${activeTab === 'invoices' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Send Invoices
-          </button>
-          <button
-            onClick={() => setActiveTab('users')}
-            className={`pb-4 px-4 ${activeTab === 'users' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Manage Users
-          </button>
-          <button
-            onClick={() => setActiveTab('content')}
-            className={`pb-4 px-4 ${activeTab === 'content' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Edit Content
-          </button>
-          <button
-            onClick={() => setActiveTab('portfolio')}
-            className={`pb-4 px-4 ${activeTab === 'portfolio' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Portfolio
-          </button>
-          <button
-            onClick={() => setActiveTab('offers')}
-            className={`pb-4 px-4 ${activeTab === 'offers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Manage Offers
-          </button>
-          <button
-            onClick={() => setActiveTab('pricing')}
-            className={`pb-4 px-4 ${activeTab === 'pricing' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Pricing Plans
-          </button>
-          <button
-            onClick={() => setActiveTab('careers')}
-            className={`pb-4 px-4 ${activeTab === 'careers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Careers
-          </button>
-          <button
-            onClick={() => setActiveTab('media')}
-            className={`pb-4 px-4 ${activeTab === 'media' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Media Library
-          </button>
-          <button
-            onClick={() => setActiveTab('bookings')}
-            className={`pb-4 px-4 ${activeTab === 'bookings' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
-          >
-            Bookings
-          </button>
+          {(userRole === 'super_admin' || allowedTabs.includes('invoices')) && (
+            <button
+              onClick={() => setActiveTab('invoices')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'invoices' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Send Invoices
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('users')) && (
+            <button
+              onClick={() => setActiveTab('users')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'users' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Manage Users
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('content')) && (
+            <button
+              onClick={() => setActiveTab('content')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'content' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Edit Content
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('portfolio')) && (
+            <button
+              onClick={() => setActiveTab('portfolio')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'portfolio' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Portfolio
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('offers')) && (
+            <button
+              onClick={() => setActiveTab('offers')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'offers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Manage Offers
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('pricing')) && (
+            <button
+              onClick={() => setActiveTab('pricing')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'pricing' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Pricing Plans
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('careers')) && (
+            <button
+              onClick={() => setActiveTab('careers')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'careers' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Careers
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('media')) && (
+            <button
+              onClick={() => setActiveTab('media')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'media' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Media Library
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('bookings')) && (
+            <button
+              onClick={() => setActiveTab('bookings')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'bookings' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Bookings
+            </button>
+          )}
         </div>
 
         {activeTab === 'invoices' && (
@@ -1158,55 +1278,84 @@ export default function AdminCRM() {
                   </div>
                   
                   <div className="p-6">
-                    <form onSubmit={handleAddClientProject} className="flex flex-col sm:flex-row gap-4 items-end mb-8">
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project Name</label>
-                        <input
-                          type="text"
-                          value={newProjectName}
-                          onChange={(e) => setNewProjectName(e.target.value)}
-                          placeholder="e.g. Kairo Website"
+                    <form onSubmit={handleAddClientProject} className="flex flex-col gap-4 mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project Name</label>
+                          <input
+                            type="text"
+                            value={newProjectName}
+                            onChange={(e) => setNewProjectName(e.target.value)}
+                            placeholder="e.g. Kairo Website"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                            required
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Live Link</label>
+                          <input
+                            type="url"
+                            value={newLiveLink}
+                            onChange={(e) => setNewLiveLink(e.target.value)}
+                            placeholder="https://..."
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Latest Update</label>
+                        <textarea
+                          rows={2}
+                          value={newLatestUpdate}
+                          onChange={(e) => setNewLatestUpdate(e.target.value)}
+                          placeholder="e.g. Completed homepage design"
                           className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                          required
                         />
                       </div>
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Project URL</label>
-                        <input
-                          type="url"
-                          value={newProjectUrl}
-                          onChange={(e) => setNewProjectUrl(e.target.value)}
-                          placeholder="https://..."
-                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                          required
-                        />
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          disabled={addingClientProject}
+                          className="py-2 px-6 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 flex items-center gap-2"
+                        >
+                          {addingClientProject ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                          Save Project Module
+                        </button>
                       </div>
-                      <button
-                        type="submit"
-                        disabled={addingClientProject}
-                        className="py-2 px-6 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 disabled:opacity-50 h-[42px] flex items-center gap-2"
-                      >
-                        {addingClientProject ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                        Add
-                      </button>
                     </form>
 
                     <div className="space-y-3">
                       {clientProjects.map(proj => (
-                        <div key={proj.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
-                          <div>
-                            <p className="font-medium text-gray-900 dark:text-white">{proj.project_name}</p>
-                            <a href={proj.project_url} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 hover:underline block truncate max-w-xs sm:max-w-md">
-                              {proj.project_url}
-                            </a>
+                        <div key={proj.id} className="p-4 bg-white dark:bg-gray-700/50 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm relative group">
+                          <div className="absolute top-4 right-4">
+                            <button
+                              onClick={() => handleDeleteClientProject(proj.id)}
+                              className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                              title="Delete Project Link"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </button>
                           </div>
-                          <button
-                            onClick={() => handleDeleteClientProject(proj.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                            title="Delete Project Link"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>
+                          <div className="mb-4">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Project Name</p>
+                            <p className="font-bold text-lg text-gray-900 dark:text-white">{proj.project_name}</p>
+                          </div>
+                          
+                          {proj.live_link && (
+                            <div className="mb-4">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Live Link</p>
+                              <a href={proj.live_link} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 hover:underline flex items-center gap-1">
+                                {proj.live_link} <ExternalLink className="w-3 h-3" />
+                              </a>
+                            </div>
+                          )}
+                          
+                          {proj.latest_update && (
+                            <div>
+                              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Latest Update</p>
+                              <p className="text-sm text-gray-700 dark:text-gray-300">{proj.latest_update}</p>
+                            </div>
+                          )}
                         </div>
                       ))}
                       {clientProjects.length === 0 && (
@@ -2049,17 +2198,26 @@ export default function AdminCRM() {
           </div>
         )}
 
-        {activeTab === 'bookings' && (
+        {activeTab === 'bookings' && (userRole === 'super_admin' || allowedTabs.includes('bookings')) && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Consultation Bookings</h2>
-              <button 
-                onClick={fetchBookings}
-                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                title="Refresh"
-              >
-                <Clock className="w-5 h-5" />
-              </button>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => setShowBookingModal(true)}
+                  className="py-2 px-4 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 flex items-center gap-2"
+                >
+                  <Plus className="w-5 h-5" />
+                  Book Client
+                </button>
+                <button 
+                  onClick={fetchBookings}
+                  className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  title="Refresh"
+                >
+                  <Clock className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {loadingBookings ? (
@@ -2141,6 +2299,91 @@ export default function AdminCRM() {
           </div>
         )}
       </div>
+
+      {showBookingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl">
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Book Client</h2>
+            <form onSubmit={handleBookClient} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client Name</label>
+                <input
+                  type="text"
+                  required
+                  value={bookingForm.client_name}
+                  onChange={(e) => setBookingForm({...bookingForm, client_name: e.target.value})}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Client Email</label>
+                <input
+                  type="email"
+                  required
+                  value={bookingForm.client_email}
+                  onChange={(e) => setBookingForm({...bookingForm, client_email: e.target.value})}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
+                <input
+                  type="tel"
+                  value={bookingForm.phone}
+                  onChange={(e) => setBookingForm({...bookingForm, phone: e.target.value})}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={bookingForm.booking_date}
+                    onChange={(e) => setBookingForm({...bookingForm, booking_date: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
+                  <input
+                    type="time"
+                    required
+                    value={bookingForm.time_slot}
+                    onChange={(e) => setBookingForm({...bookingForm, time_slot: e.target.value})}
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rep Notes</label>
+                <textarea
+                  rows={3}
+                  value={bookingForm.rep_notes}
+                  onChange={(e) => setBookingForm({...bookingForm, rep_notes: e.target.value})}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
+              </div>
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowBookingModal(false)}
+                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500"
+                >
+                  Book Client
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
