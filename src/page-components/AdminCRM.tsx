@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
-import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe, Send, Plus } from 'lucide-react';
+import { Upload, Trash2, Loader2, UserCheck, Save, UserPlus, FileText, CheckCircle, Clock, AlertCircle, DollarSign, Image as ImageIcon, Copy, ExternalLink, Building, Globe, Send, Plus, Shield } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -109,6 +109,13 @@ export default function AdminCRM() {
   const [newLiveLink, setNewLiveLink] = useState('');
   const [newLatestUpdate, setNewLatestUpdate] = useState('');
   const [addingClientProject, setAddingClientProject] = useState(false);
+
+  // Admin Permissions State
+  const [managingPermissionsForUser, setManagingPermissionsForUser] = useState<Profile | null>(null);
+  const [userPermissions, setUserPermissions] = useState<string[]>([]);
+  const [savingPermissions, setSavingPermissions] = useState(false);
+  const [userRoleToSet, setUserRoleToSet] = useState<'super_admin' | 'admin' | 'client'>('client');
+  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings'];
 
   // Media State
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
@@ -754,6 +761,68 @@ export default function AdminCRM() {
     }
   };
 
+  const openPermissionsModal = async (user: Profile) => {
+    setManagingPermissionsForUser(user);
+    
+    // Fetch role
+    const { data: roleData } = await (supabase as any).from('user_roles').select('role').eq('user_id', user.id).single();
+    if (roleData) {
+      setUserRoleToSet(roleData.role);
+    } else {
+      // Fallback to legacy profile
+      setUserRoleToSet(user.role === 'admin' ? 'admin' : 'client');
+    }
+    
+    // Fetch permissions
+    const { data } = await (supabase as any).from('admin_permissions').select('allowed_tab').eq('user_id', user.id);
+    if (data) {
+      setUserPermissions(data.map((p: any) => p.allowed_tab));
+    } else {
+      setUserPermissions([]);
+    }
+  };
+
+  const handleSavePermissions = async () => {
+    if (!managingPermissionsForUser) return;
+    setSavingPermissions(true);
+    try {
+      // Update role in user_roles table
+      const { error: roleError } = await (supabase as any).from('user_roles').upsert({ 
+        user_id: managingPermissionsForUser.id, 
+        role: userRoleToSet 
+      }, { onConflict: 'user_id' });
+      
+      if (roleError) throw roleError;
+      
+      // Update legacy profile role just in case
+      await supabase.from('profiles').update({ role: userRoleToSet === 'super_admin' || userRoleToSet === 'admin' ? 'admin' : 'user' } as any).eq('id', managingPermissionsForUser.id);
+      
+      // Clear old permissions
+      await (supabase as any).from('admin_permissions').delete().eq('user_id', managingPermissionsForUser.id);
+      
+      // Insert new permissions if admin
+      if (userRoleToSet === 'admin' && userPermissions.length > 0) {
+        const inserts = userPermissions.map(tab => ({ user_id: managingPermissionsForUser.id, allowed_tab: tab }));
+        await (supabase as any).from('admin_permissions').insert(inserts);
+      }
+      
+      alert('Permissions saved successfully!');
+      setManagingPermissionsForUser(null);
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setSavingPermissions(false);
+    }
+  };
+
+  const togglePermission = (tab: string) => {
+    if (userPermissions.includes(tab)) {
+      setUserPermissions(userPermissions.filter(t => t !== tab));
+    } else {
+      setUserPermissions([...userPermissions, tab]);
+    }
+  };
+
   const handleUpdateContent = async () => {
     setSavingContent(true);
     try {
@@ -1242,6 +1311,13 @@ export default function AdminCRM() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex flex-wrap gap-3">
+                        <button
+                          onClick={() => openPermissionsModal(user)}
+                          className="text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300 flex items-center gap-1"
+                        >
+                          <Shield className="w-4 h-4" /> Manage Permissions
+                        </button>
+                        
                         <button
                           onClick={() => openClientProjects(user)}
                           className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 flex items-center gap-1"
@@ -2397,6 +2473,66 @@ export default function AdminCRM() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {managingPermissionsForUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-lg shadow-2xl">
+            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
+              Manage Permissions for {managingPermissionsForUser.email}
+            </h2>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">User Role</label>
+              <select
+                value={userRoleToSet}
+                onChange={(e) => setUserRoleToSet(e.target.value as 'super_admin' | 'admin' | 'client')}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              >
+                <option value="client">Client (Dashboard Only)</option>
+                <option value="admin">Admin (Selected Tabs)</option>
+                <option value="super_admin">Super Admin (All Access)</option>
+              </select>
+            </div>
+
+            {userRoleToSet === 'admin' && (
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Allowed CRM Tabs</label>
+                <div className="grid grid-cols-2 gap-3 max-h-60 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                  {availablePermissionTabs.map(tab => (
+                    <label key={tab} className="flex items-center gap-3 cursor-pointer p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
+                      <input
+                        type="checkbox"
+                        checked={userPermissions.includes(tab)}
+                        onChange={() => togglePermission(tab)}
+                        className="w-4 h-4 text-cyan-600 rounded border-gray-300 focus:ring-cyan-500"
+                      />
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">
+                        {tab.replace('_', ' ')}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3 mt-8">
+              <button
+                onClick={() => setManagingPermissionsForUser(null)}
+                className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSavePermissions}
+                disabled={savingPermissions}
+                className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 font-medium flex items-center gap-2 disabled:opacity-50"
+              >
+                {savingPermissions ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Save Permissions
+              </button>
+            </div>
           </div>
         </div>
       )}
