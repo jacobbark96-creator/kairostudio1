@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import SEO from '../components/SEO';
 import { useUI } from '../context/UIContext';
+import Link from 'next/link';
 
 export interface PricingPlan {
   id: string;
@@ -248,17 +249,31 @@ export default function PricingPage() {
                                     )}
                                 </div>
                                 
-                                <button 
-                                    onClick={() => openContactModal(`Interested in ${plan.name} Plan`)}
-                                    className={`w-full py-4 rounded-xl font-bold text-lg mb-8 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2
-                                        ${plan.is_popular 
-                                            ? 'bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white shadow-xl shadow-brand-500/30 border border-brand-400/50' 
-                                            : 'bg-white/80 dark:bg-white/10 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/20 border border-gray-200 dark:border-white/5 shadow-sm'
-                                        }`}
-                                >
-                                    {plan.button_text}
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
+                                {plan.price.toLowerCase().includes('custom') || plan.name.toLowerCase().includes('custom') ? (
+                                    <Link 
+                                        href="/book"
+                                        className={`w-full py-4 rounded-xl font-bold text-lg mb-8 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 group
+                                            ${plan.is_popular 
+                                                ? 'bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white shadow-xl shadow-brand-500/30 border border-brand-400/50' 
+                                                : 'bg-white/80 dark:bg-white/10 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/20 border border-gray-200 dark:border-white/5 shadow-sm'
+                                            }`}
+                                    >
+                                        Talk to us
+                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    </Link>
+                                ) : (
+                                    <button 
+                                        onClick={() => openContactModal(`Interested in ${plan.name} Plan`)}
+                                        className={`w-full py-4 rounded-xl font-bold text-lg mb-8 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 group
+                                            ${plan.is_popular 
+                                                ? 'bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white shadow-xl shadow-brand-500/30 border border-brand-400/50' 
+                                                : 'bg-white/80 dark:bg-white/10 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-white/20 border border-gray-200 dark:border-white/5 shadow-sm'
+                                            }`}
+                                    >
+                                        {plan.button_text}
+                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    </button>
+                                )}
                                 
                                 <div className="space-y-4">
                                     <p className={`text-xs font-bold uppercase tracking-wider ${plan.is_popular ? 'text-gray-300 dark:text-gray-500' : 'text-gray-500 dark:text-gray-400'}`}>
