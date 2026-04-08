@@ -308,8 +308,8 @@ export default function HomePage() {
                                         className="flex flex-col gap-4"
                                     >
                                     <input 
-                                        type="url" 
-                                        placeholder="https://yourdomain.com" 
+                                        type="text" 
+                                        placeholder="yourdomain.com" 
                                         required
                                         value={auditUrl}
                                         onChange={(e) => setAuditUrl(e.target.value)}
@@ -398,8 +398,8 @@ export default function HomePage() {
                                           className="flex flex-col gap-3"
                                       >
                                       <input 
-                                          type="url" 
-                                          placeholder="https://yourdomain.com" 
+                                          type="text" 
+                                          placeholder="yourdomain.com" 
                                           required
                                           value={auditUrl}
                                           onChange={(e) => setAuditUrl(e.target.value)}
