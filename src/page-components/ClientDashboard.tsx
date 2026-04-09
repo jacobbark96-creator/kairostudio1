@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Download, Calendar, DollarSign, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink } from 'lucide-react';
+import { FileText, Download, Calendar, PoundSterling, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Invoice = Database['public']['Tables']['invoices']['Row'];
@@ -175,17 +175,17 @@ export default function ClientDashboard() {
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{invoice.client_name}</h3>
                       <div className="flex items-center text-2xl font-bold text-gray-900 dark:text-white">
-                        <DollarSign className="w-5 h-5 text-gray-400" />
+                        <PoundSterling className="w-5 h-5 text-gray-400" />
                         {invoice.amount.toFixed(2)}
                       </div>
                       {invoice.amount_paid > 0 && (
                         <div className="text-sm text-green-600 dark:text-green-400 mt-1">
-                          Paid: ${invoice.amount_paid.toFixed(2)}
+                          Paid: £{invoice.amount_paid.toFixed(2)}
                         </div>
                       )}
                       {(invoice.amount - (invoice.amount_paid || 0) > 0) && (
                         <div className="text-sm text-red-500 font-medium mt-1">
-                          Outstanding: ${(invoice.amount - (invoice.amount_paid || 0)).toFixed(2)}
+                          Outstanding: £{(invoice.amount - (invoice.amount_paid || 0)).toFixed(2)}
                         </div>
                       )}
                     </div>
@@ -201,7 +201,7 @@ export default function ClientDashboard() {
                               onClick={() => handlePayment(invoice)}
                               className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors text-sm font-medium shadow-sm"
                           >
-                              <DollarSign className="w-4 h-4" />
+                              <PoundSterling className="w-4 h-4" />
                               Pay Now
                           </button>
                       )}
@@ -224,7 +224,7 @@ export default function ClientDashboard() {
             </div>
           )
         ) : (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             {/* Active Project Module */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
               <div>
@@ -265,14 +265,59 @@ export default function ClientDashboard() {
               </div>
             </div>
             
+            {/* Latest Invoice Module */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl flex items-center justify-center mb-6">
+                  <FileText className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Latest Invoice</h3>
+                
+                {(() => {
+                  const latestUnpaidInvoice = invoices
+                    .filter(i => i.status !== 'paid')
+                    .sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime())[0];
+                    
+                  if (latestUnpaidInvoice) {
+                    const amountDue = latestUnpaidInvoice.amount - (latestUnpaidInvoice.amount_paid || 0);
+                    return (
+                      <>
+                        <div className="mb-6">
+                          <p className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+                            £{amountDue.toFixed(2)}
+                          </p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            Due: {latestUnpaidInvoice.due_date ? new Date(latestUnpaidInvoice.due_date).toLocaleDateString() : 'No due date'}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => handlePayment(latestUnpaidInvoice)}
+                          className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-cyan-600 text-white rounded-xl font-bold hover:bg-cyan-500 transition-colors shadow-sm"
+                        >
+                          <PoundSterling className="w-4 h-4" />
+                          Pay Now
+                        </button>
+                      </>
+                    );
+                  } else {
+                    return (
+                      <p className="text-gray-500 dark:text-gray-400 mb-6">
+                        You're all caught up! No unpaid invoices at this time.
+                      </p>
+                    );
+                  }
+                })()}
+              </div>
+            </div>
+            
             {/* Quick Stats / Billing Snapshot */}
-            <div className="md:col-span-2 bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-sm p-8 text-white">
+            <div className="md:col-span-3 bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-sm p-8 text-white">
                <h3 className="text-xl font-bold mb-6">Billing Snapshot</h3>
                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
                     <p className="text-gray-400 text-sm mb-1">Total Due</p>
                     <p className="text-3xl font-bold">
-                      ${invoices.filter(i => i.status !== 'paid').reduce((acc, curr) => acc + (curr.amount - (curr.amount_paid || 0)), 0).toFixed(2)}
+                      £{invoices.filter(i => i.status !== 'paid').reduce((acc, curr) => acc + (curr.amount - (curr.amount_paid || 0)), 0).toFixed(2)}
                     </p>
                   </div>
                   <div>
