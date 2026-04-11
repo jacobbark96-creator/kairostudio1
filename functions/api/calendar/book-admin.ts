@@ -42,8 +42,8 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   try {
     const { request, env } = context;
     const body: any = await request.json();
-    const { name, email, phone, date, timeSlot, rep_notes } = body;
-    
+    const { name, email, phone, date, timeSlot, rep_name, rep_notes } = body;
+
     if (!name || !email || !date || !timeSlot) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
@@ -78,7 +78,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 
     const event = {
       summary: `Consultation: ${name} / Kairo Studio`,
-      description: `New booking created by Admin.\n\nName: ${name}\nEmail: ${email}\n${phone ? `Phone: ${phone}\n` : ''}${rep_notes ? `Rep Notes: ${rep_notes}` : ''}`,
+      description: `New booking created by Admin.\n\nName: ${name}\nEmail: ${email}\n${phone ? `Phone: ${phone}\n` : ''}${rep_name ? `Rep Name: ${rep_name}\n` : ''}${rep_notes ? `Rep Notes: ${rep_notes}` : ''}`,
       start: {
         dateTime: startDateTimeLocal,
         timeZone: 'Europe/London',

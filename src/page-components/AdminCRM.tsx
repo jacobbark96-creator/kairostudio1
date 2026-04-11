@@ -135,8 +135,95 @@ export default function AdminCRM() {
     phone: '',
     booking_date: '',
     time_slot: '',
+    rep_name: '',
     rep_notes: ''
   });
+
+  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 8; hour < 18; hour++) {
+      slots.push(`${hour.toString().padStart(2, '0')}:00`);
+      slots.push(`${hour.toString().padStart(2, '0')}:30`);
+    }
+    return slots;
+  };
+
+  useEffect(() => {
+    if (!bookingForm.booking_date) {
+      setAvailableSlots([]);
+      return;
+    }
+
+    const fetchSlots = async () => {
+      setLoadingSlots(true);
+      try {
+        const formattedDate = bookingForm.booking_date; // YYYY-MM-DD
+        let googleSlots: string[] = [];
+        let isGoogleConfigured = false;
+
+        const res = await fetch(`/api/calendar/availability?date=${formattedDate}`);
+        if (res.ok) {
+          const result = await res.json();
+          if (result.debug !== 'Missing Env Vars') {
+            isGoogleConfigured = true;
+          }
+          if (result.busySlots) {
+            googleSlots = result.busySlots;
+          }
+        }
+
+        let dbSlots: string[] = [];
+        if (!isGoogleConfigured) {
+          const { data, error } = await supabase
+            .from('bookings')
+            .select('time_slot')
+            .eq('booking_date', formattedDate)
+            .in('status', ['confirmed']) as { data: any[], error: any };
+          if (!error && data) {
+            dbSlots = data.map((b: any) => b.time_slot);
+          }
+        }
+
+        const booked = isGoogleConfigured ? googleSlots : dbSlots;
+        const allSlots = generateTimeSlots();
+        
+        // Filter out past times if it's today
+        const today = new Date();
+        const isToday = formattedDate === today.toISOString().split('T')[0];
+        const currentHour = today.getHours();
+        const currentMinute = today.getMinutes();
+
+        const available = allSlots.filter(slot => {
+          if (booked.includes(slot)) return false;
+          
+          if (isToday) {
+            const [hourStr, minStr] = slot.split(':');
+            const slotHour = parseInt(hourStr, 10);
+            const slotMin = parseInt(minStr, 10);
+            if (slotHour < currentHour || (slotHour === currentHour && slotMin <= currentMinute)) {
+              return false;
+            }
+          }
+          return true;
+        });
+
+        setAvailableSlots(available);
+        
+        // Reset time_slot if it's no longer available
+        if (bookingForm.time_slot && !available.includes(bookingForm.time_slot)) {
+          setBookingForm(prev => ({ ...prev, time_slot: '' }));
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingSlots(false);
+      }
+    };
+    fetchSlots();
+  }, [bookingForm.booking_date]);
 
   useEffect(() => {
     fetchUserRole();
@@ -967,6 +1054,7 @@ export default function AdminCRM() {
           phone: bookingForm.phone,
           date: bookingForm.booking_date,
           timeSlot: bookingForm.time_slot,
+          rep_name: bookingForm.rep_name,
           rep_notes: bookingForm.rep_notes
         })
       });
@@ -991,7 +1079,7 @@ export default function AdminCRM() {
       alert('Client booked successfully and Google Calendar updated!');
       setShowBookingModal(false);
       setBookingForm({
-        client_name: '', client_email: '', phone: '', booking_date: '', time_slot: '', rep_notes: ''
+        client_name: '', client_email: '', phone: '', booking_date: '', time_slot: '', rep_name: '', rep_notes: ''
       });
       fetchBookings();
     } catch (error: any) {
@@ -2432,6 +2520,7 @@ export default function AdminCRM() {
                   <input
                     type="date"
                     required
+                    min={new Date().toISOString().split('T')[0]}
                     value={bookingForm.booking_date}
                     onChange={(e) => setBookingForm({...bookingForm, booking_date: e.target.value})}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -2439,14 +2528,42 @@ export default function AdminCRM() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
-                  <input
-                    type="time"
-                    required
-                    value={bookingForm.time_slot}
-                    onChange={(e) => setBookingForm({...bookingForm, time_slot: e.target.value})}
-                    className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
+                  {loadingSlots ? (
+                    <div className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-500 flex items-center justify-center">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    </div>
+                  ) : !bookingForm.booking_date ? (
+                    <div className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-500 text-sm">
+                      Select date first
+                    </div>
+                  ) : availableSlots.length === 0 ? (
+                    <div className="w-full px-4 py-2 rounded-lg border border-red-300 dark:border-red-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm">
+                      No slots available
+                    </div>
+                  ) : (
+                    <select
+                      required
+                      value={bookingForm.time_slot}
+                      onChange={(e) => setBookingForm({...bookingForm, time_slot: e.target.value})}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    >
+                      <option value="">Select time...</option>
+                      {availableSlots.map(slot => (
+                        <option key={slot} value={slot}>{slot}</option>
+                      ))}
+                    </select>
+                  )}
                 </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rep Name</label>
+                <input
+                  type="text"
+                  value={bookingForm.rep_name}
+                  onChange={(e) => setBookingForm({...bookingForm, rep_name: e.target.value})}
+                  placeholder="e.g. John Doe"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rep Notes</label>
