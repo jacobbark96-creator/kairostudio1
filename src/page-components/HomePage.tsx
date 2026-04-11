@@ -320,7 +320,7 @@ export default function HomePage() {
                                     Enter your URL below to get a comprehensive performance and SEO breakdown.
                                 </p>
                                 
-                                <div className="w-full relative overflow-hidden min-h-[300px]">
+                                <div className="w-full relative overflow-hidden min-h-[300px] flex items-start justify-center transition-all duration-500">
                                     <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
                                         <form 
                                             onSubmit={handleAuditSubmit}
@@ -363,8 +363,8 @@ export default function HomePage() {
                                         </div>
                                     </div>
                                     
-                                    <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'}`}>
-                                        <div className="-mt-8">
+                                    <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none hidden'}`}>
+                                        <div className="pt-2">
                                             <SiteAuditWizard 
                                             isOpen={showWizard} 
                                             onClose={() => setShowWizard(false)} 

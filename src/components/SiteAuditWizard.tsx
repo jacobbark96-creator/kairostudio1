@@ -74,7 +74,7 @@ export default function SiteAuditWizard({ isOpen, onClose, auditUrl, auditEmail,
   const content = (
     <>
         {/* Header */}
-        <div className={`px-6 py-4 flex justify-between items-center relative z-10 bg-transparent ${!embedded ? 'border-b border-gray-100 dark:border-gray-800' : ''}`}>
+        <div className={`px-6 py-4 flex justify-between items-center relative z-10 bg-transparent ${!embedded ? 'border-b border-gray-100 dark:border-gray-800' : 'pb-2'}`}>
           <div className="flex gap-2">
             {questions.map((q, idx) => (
               <div 
@@ -100,7 +100,7 @@ export default function SiteAuditWizard({ isOpen, onClose, auditUrl, auditEmail,
         </div>
 
         {/* Content Area */}
-        <div className={`relative min-h-[300px] sm:min-h-[400px] overflow-hidden flex flex-col justify-center ${embedded ? 'p-2' : 'p-8'}`}>
+        <div className={`relative overflow-hidden flex flex-col ${embedded ? 'p-2 pt-0' : 'p-8 min-h-[300px] sm:min-h-[400px]'}`}>
           
           {loading ? (
             <div className="flex flex-col items-center justify-center h-full gap-4">
@@ -118,19 +118,19 @@ export default function SiteAuditWizard({ isOpen, onClose, auditUrl, auditEmail,
               </p>
             </div>
           ) : (
-            <div className="relative w-full h-full">
+            <div className={`relative w-full ${embedded ? '' : 'h-full'}`}>
               {questions.map((q) => (
                 <div 
                   key={q.id}
-                  className={`absolute inset-0 w-full transition-all duration-500 transform ${
+                  className={`${embedded ? (currentStep === q.order_index ? 'block animate-in slide-in-from-right fade-in duration-500' : 'hidden') : `absolute inset-0 w-full transition-all duration-500 transform ${
                     currentStep === q.order_index 
                       ? 'translate-x-0 opacity-100 z-10' 
                       : currentStep > q.order_index 
                         ? '-translate-x-full opacity-0 z-0' 
                         : 'translate-x-full opacity-0 z-0'
-                  }`}
+                  }`}`}
                 >
-                  <h3 className={`${embedded ? 'text-xl sm:text-2xl mb-6' : 'text-2xl sm:text-3xl mb-8'} font-display font-bold text-gray-900 dark:text-white leading-tight`}>
+                  <h3 className={`${embedded ? 'text-xl sm:text-2xl mb-4' : 'text-2xl sm:text-3xl mb-8'} font-display font-bold text-gray-900 dark:text-white leading-tight`}>
                     {q.question_text}
                   </h3>
                   
@@ -139,7 +139,7 @@ export default function SiteAuditWizard({ isOpen, onClose, auditUrl, auditEmail,
                       <button
                         key={idx}
                         onClick={() => handleSelectOption(idx, opt)}
-                        className={`w-full text-left rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all duration-300 group flex justify-between items-center ${embedded ? 'p-4' : 'p-5'}`}
+                        className={`w-full text-left rounded-2xl border-2 border-gray-100 dark:border-gray-800 hover:border-brand-500 dark:hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all duration-300 group flex justify-between items-center ${embedded ? 'p-3 sm:p-4' : 'p-5'}`}
                       >
                         <span className={`${embedded ? 'text-base' : 'text-lg'} font-medium text-gray-700 dark:text-gray-300 group-hover:text-brand-700 dark:group-hover:text-brand-300`}>
                           {opt}
