@@ -87,6 +87,12 @@ export default function Layout({ children }: LayoutProps) {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-2">
               <Link
+                href="/about"
+                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
+              >
+                About
+              </Link>
+              <Link
                 href="/services"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
@@ -103,12 +109,6 @@ export default function Layout({ children }: LayoutProps) {
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
               >
                 Pricing
-              </Link>
-              <Link
-                href="/about"
-                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
-              >
-                About
               </Link>
               <Link
                 href="/dashboard"
@@ -169,6 +169,13 @@ export default function Layout({ children }: LayoutProps) {
         style={{ willChange: 'transform, opacity' }}
         >
           <Link
+            href="/about"
+            onClick={() => setMobileMenuOpen(false)}
+            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
+          >
+            About
+          </Link>
+          <Link
             href="/services"
             onClick={() => setMobileMenuOpen(false)}
             className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
@@ -188,13 +195,6 @@ export default function Layout({ children }: LayoutProps) {
             className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
           >
             Pricing
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-          >
-            About
           </Link>
           <Link
             href="/dashboard"
