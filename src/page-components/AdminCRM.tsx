@@ -9,7 +9,7 @@ type Profile = Database['public']['Tables']['profiles']['Row'];
 type Invoice = Database['public']['Tables']['invoices']['Row'];
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState<'invoices' | 'users' | 'content' | 'portfolio' | 'offers' | 'pricing' | 'careers' | 'media' | 'bookings'>('invoices');
+  const [activeTab, setActiveTab] = useState<string>('invoices');
   
   // Portfolio State
   const [projects, setProjects] = useState<any[]>([]);
@@ -115,7 +115,7 @@ export default function AdminCRM() {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [savingPermissions, setSavingPermissions] = useState(false);
   const [userRoleToSet, setUserRoleToSet] = useState<'super_admin' | 'admin' | 'client'>('client');
-  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings'];
+  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs'];
 
   // Media State
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
@@ -124,6 +124,10 @@ export default function AdminCRM() {
   // Bookings State
   const [bookings, setBookings] = useState<any[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(false);
+
+  // Audit Questions State
+  const [auditQs, setAuditQs] = useState<any[]>([]);
+  const [loadingAuditQs, setLoadingAuditQs] = useState(false);
 
   // RBAC State
   const [userRole, setUserRole] = useState<'super_admin' | 'admin' | 'client'>('admin');
@@ -236,7 +240,32 @@ export default function AdminCRM() {
     fetchCareers();
     fetchMedia();
     fetchBookings();
+    fetchAuditQs();
   }, []);
+
+  const fetchAuditQs = async () => {
+    setLoadingAuditQs(true);
+    const { data } = await supabase
+      .from('audit_questions')
+      .select('*')
+      .order('order_index', { ascending: true });
+    if (data) setAuditQs(data);
+    setLoadingAuditQs(false);
+  };
+
+  const handleUpdateAuditQ = async (id: string, field: string, value: string) => {
+    const { error } = await supabase
+      .from('audit_questions')
+      .update({ [field]: value } as any)
+      .eq('id', id);
+    
+    if (error) {
+      alert(error.message);
+    } else {
+      // Optimistic update
+      setAuditQs(auditQs.map(q => q.id === id ? { ...q, [field]: value } : q));
+    }
+  };
 
   const fetchUserRole = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -266,7 +295,7 @@ export default function AdminCRM() {
             }
           }
         } else if (roleData.role === 'super_admin') {
-          setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings']);
+          setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs']);
         }
       } else {
         // Fallback to legacy profiles table if user_roles doesn't exist yet
@@ -278,7 +307,7 @@ export default function AdminCRM() {
           
         if (profile?.role === 'admin') {
           setUserRole('super_admin');
-          setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings']);
+          setAllowedTabs(['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs']);
         }
       }
     } catch (err) {
@@ -1163,6 +1192,14 @@ export default function AdminCRM() {
               className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'bookings' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
             >
               Bookings
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('audit_qs')) && (
+            <button
+              onClick={() => setActiveTab('audit_qs')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'audit_qs' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Audit Q's
             </button>
           )}
         </div>
@@ -2474,6 +2511,81 @@ export default function AdminCRM() {
                     })}
                   </tbody>
                 </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'audit_qs' && (userRole === 'super_admin' || allowedTabs.includes('audit_qs')) && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Audit Questions Wizard</h2>
+              <button 
+                onClick={fetchAuditQs}
+                className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                title="Refresh"
+              >
+                <Clock className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <p className="text-gray-500 dark:text-gray-400 mb-8">
+              Configure the 5 sequential questions and their 3 multiple-choice answers for the website analyser wizard.
+            </p>
+
+            {loadingAuditQs ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader2 className="w-8 h-8 animate-spin text-cyan-600" />
+              </div>
+            ) : (
+              <div className="space-y-8">
+                {auditQs.map((q) => (
+                  <div key={q.id} className="bg-gray-50 dark:bg-gray-900/50 p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                    <h3 className="font-bold text-lg mb-4 text-gray-900 dark:text-white">Question {q.order_index}</h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Question Text</label>
+                        <input
+                          type="text"
+                          value={q.question_text}
+                          onChange={(e) => handleUpdateAuditQ(q.id, 'question_text', e.target.value)}
+                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Option 1</label>
+                          <input
+                            type="text"
+                            value={q.option_1}
+                            onChange={(e) => handleUpdateAuditQ(q.id, 'option_1', e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Option 2</label>
+                          <input
+                            type="text"
+                            value={q.option_2}
+                            onChange={(e) => handleUpdateAuditQ(q.id, 'option_2', e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Option 3</label>
+                          <input
+                            type="text"
+                            value={q.option_3}
+                            onChange={(e) => handleUpdateAuditQ(q.id, 'option_3', e.target.value)}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             )}
           </div>

@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone, TrendingUp } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone, TrendingUp, CheckCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
@@ -8,6 +8,7 @@ import TypewriterHero from '../components/TypewriterHero';
 import SEO from '../components/SEO';
 import FeaturedProjects from '../components/FeaturedProjects';
 import RandomOffer from '../components/RandomOffer';
+import SiteAuditWizard from '../components/SiteAuditWizard';
 
 import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
@@ -24,6 +25,7 @@ export default function HomePage() {
   const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
   const [auditSuccess, setAuditSuccess] = useState(false);
   const [showMobileAudit, setShowMobileAudit] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
 
   // Prevent scroll when mobile audit modal is open
   useEffect(() => {
@@ -37,6 +39,14 @@ export default function HomePage() {
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auditUrl || !auditEmail) return;
+    
+    // Open the wizard instead of submitting immediately
+    setShowMobileAudit(false);
+    setShowWizard(true);
+  };
+
+  const handleWizardComplete = async (answers: Record<number, string>) => {
     setIsSubmittingAudit(true);
 
     // Format URL logic
@@ -57,13 +67,21 @@ export default function HomePage() {
             },
             body: JSON.stringify({
                 url: formattedUrl,
-                email: auditEmail
+                email: auditEmail,
+                answers: answers // Include wizard answers
             }),
         });
         
         setAuditSuccess(true);
         setAuditUrl('');
         setAuditEmail('');
+        setShowWizard(false);
+        // Show success state on mobile if we were on mobile
+        // Actually we just set auditSuccess to true which updates the desktop box.
+        // Let's open mobile audit modal to show success if it was closed
+        if (window.innerWidth < 768) {
+            setShowMobileAudit(true);
+        }
     } catch (error) {
         console.error("Error submitting audit request", error);
         alert("There was an issue submitting your request. Please try again.");
@@ -289,14 +307,14 @@ export default function HomePage() {
                         </h3>
                         
                         {auditSuccess ? (
-                            <div className="py-4 text-center animate-fade-in-up">
-                                <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-2xl">Report generated.</h4>
-                                <p className="text-base text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
-                                <div className="transform scale-95 origin-top">
-                                    <RandomOffer />
-                                </div>
-                            </div>
-                        ) : (
+                              <div className="py-4 text-center animate-fade-in-up">
+                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-2xl">Report generated.</h4>
+                                  <p className="text-base text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
+                                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                                  </div>
+                              </div>
+                          ) : (
                             <>
                                 <p className="text-gray-500 dark:text-gray-400 text-base mb-8 max-w-sm mx-auto leading-relaxed">
                                     Enter your URL below to get a comprehensive performance and SEO breakdown.
@@ -382,8 +400,8 @@ export default function HomePage() {
                               <div className="py-4 text-center animate-fade-in-up">
                                   <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Report generated.</h4>
                                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
-                                  <div className="transform scale-95 origin-top">
-                                      <RandomOffer />
+                                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
                                   </div>
                               </div>
                           ) : (
@@ -508,6 +526,14 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <SiteAuditWizard 
+        isOpen={showWizard} 
+        onClose={() => setShowWizard(false)} 
+        auditUrl={auditUrl} 
+        auditEmail={auditEmail} 
+        onComplete={handleWizardComplete} 
+      />
     </>
   );
 }

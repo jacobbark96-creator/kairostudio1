@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X, Layout, TrendingUp } from 'lucide-react';
+import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X, Layout, TrendingUp, CheckCircle } from 'lucide-react';
 import RandomOffer from '../../components/RandomOffer';
+import SiteAuditWizard from '../../components/SiteAuditWizard';
 import { useUI } from '../../context/UIContext';
 import { supabase } from '../../lib/supabase';
 import logoNb from '../../Logo/kairologo-nbg.png';
@@ -29,6 +30,7 @@ export default function MobileHome() {
   const [auditSuccess, setAuditSuccess] = useState(false);
 
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
 
   useEffect(() => {
     fetchProjects();
@@ -50,6 +52,13 @@ export default function MobileHome() {
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!auditUrl || !auditEmail) return;
+
+    setIsAuditModalOpen(false);
+    setShowWizard(true);
+  };
+
+  const handleWizardComplete = async (answers: Record<number, string>) => {
     setIsSubmittingAudit(true);
 
     // Format URL logic
@@ -70,13 +79,16 @@ export default function MobileHome() {
             },
             body: JSON.stringify({
                 url: formattedUrl,
-                email: auditEmail
+                email: auditEmail,
+                answers: answers
             }),
         });
         
         setAuditSuccess(true);
         setAuditUrl('');
         setAuditEmail('');
+        setShowWizard(false);
+        setIsAuditModalOpen(true);
     } catch (error) {
         console.error("Error submitting audit request", error);
         alert("There was an issue submitting your request. Please try again.");
@@ -194,14 +206,14 @@ export default function MobileHome() {
                       </h3>
                       
                       {auditSuccess ? (
-                          <div className="py-4 text-center animate-fade-in-up">
-                              <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Report generated.</h4>
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
-                              <div className="transform scale-95 origin-top">
-                                  <RandomOffer />
+                              <div className="py-4 text-center animate-fade-in-up">
+                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Report generated.</h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
+                                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                                  </div>
                               </div>
-                          </div>
-                      ) : (
+                          ) : (
                           <>
                               <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-[16rem] mx-auto leading-relaxed">
                                   Enter your URL below to get a comprehensive performance and SEO breakdown.
@@ -325,6 +337,14 @@ export default function MobileHome() {
             </div>
         )}
       </section>
+
+      <SiteAuditWizard 
+        isOpen={showWizard} 
+        onClose={() => setShowWizard(false)} 
+        auditUrl={auditUrl} 
+        auditEmail={auditEmail} 
+        onComplete={handleWizardComplete} 
+      />
     </div>
   );
 }
