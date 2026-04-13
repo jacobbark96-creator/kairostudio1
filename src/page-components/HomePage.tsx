@@ -362,7 +362,7 @@ export default function HomePage() {
                                         </div>
                                     </div>
                                     
-                                    <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none hidden'}`}>
+                                    <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0'}`}>
                                         <div className="pt-2">
                                             <SiteAuditWizard 
                                             isOpen={showWizard} 
@@ -447,8 +447,9 @@ export default function HomePage() {
                                               className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
                                           />
                                           <button 
-                                              type="submit"
-                                              disabled={isSubmittingAudit}
+                                              type="button"
+                                              onClick={handleAuditSubmit}
+                                              disabled={isSubmittingAudit || !auditUrl || !auditEmail}
                                               className="w-full py-4 mt-2 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-bold text-base shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 disabled:active:scale-100"
                                           >
                                               {isSubmittingAudit ? 'Scanning your site...' : 'Get Free Analysis'}
@@ -466,7 +467,7 @@ export default function HomePage() {
                                           </div>
                                       </div>
                                       
-                                      <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none hidden'}`}>
+                                      <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0'}`}>
                                           <div className="pt-2">
                                               <SiteAuditWizard 
                                               isOpen={showWizard} 
