@@ -870,6 +870,22 @@ export default function AdminCRM() {
     }
   };
 
+  const handleUpdateClientProject = async (projectId: string, field: string, value: string) => {
+    try {
+      const { error } = await supabase
+        .from('client_projects')
+        .update({ [field]: value } as any)
+        .eq('id', projectId);
+
+      if (error) throw error;
+      
+      // Update local state instantly for snappy UI
+      setClientProjects(prev => prev.map(p => p.id === projectId ? { ...p, [field]: value } : p));
+    } catch (error: any) {
+      console.error('Error updating project:', error.message);
+    }
+  };
+
   const handleDeleteClientProject = async (projectId: string) => {
     if (!confirm('Delete this project link?')) return;
     const { error } = await supabase.from('client_projects').delete().eq('id', projectId);
@@ -1570,31 +1586,53 @@ export default function AdminCRM() {
                           </div>
                           <div className="mb-4">
                             <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Project Name</p>
-                            <p className="font-bold text-lg text-gray-900 dark:text-white">{proj.project_name}</p>
+                            <input
+                              type="text"
+                              value={proj.project_name}
+                              onChange={(e) => handleUpdateClientProject(proj.id, 'project_name', e.target.value)}
+                              className="font-bold text-lg text-gray-900 dark:text-white bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none transition-colors w-full px-1 -ml-1"
+                            />
                           </div>
                           
-                          {proj.live_link && (
-                            <div className="mb-4">
-                              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Live Link</p>
-                              <a href={proj.live_link} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 hover:underline flex items-center gap-1">
-                                {proj.live_link} <ExternalLink className="w-3 h-3" />
-                              </a>
+                          <div className="mb-4">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Live Link</p>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="url"
+                                value={proj.live_link || ''}
+                                onChange={(e) => handleUpdateClientProject(proj.id, 'live_link', e.target.value)}
+                                className="text-sm text-cyan-600 bg-transparent border-b border-transparent hover:border-cyan-200 focus:border-cyan-500 focus:outline-none transition-colors w-full px-1 -ml-1"
+                                placeholder="https://..."
+                              />
+                              {proj.live_link && (
+                                <a href={proj.live_link} target="_blank" rel="noopener noreferrer" className="text-cyan-600 hover:text-cyan-700">
+                                  <ExternalLink className="w-4 h-4" />
+                                </a>
+                              )}
                             </div>
-                          )}
+                          </div>
 
-                          {proj.ga_api_key && (
-                            <div className="mb-4">
-                              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">GA Property ID</p>
-                              <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{proj.ga_api_key}</p>
-                            </div>
-                          )}
+                          <div className="mb-4">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">GA Property ID</p>
+                            <input
+                              type="text"
+                              value={proj.ga_api_key || ''}
+                              onChange={(e) => handleUpdateClientProject(proj.id, 'ga_api_key', e.target.value)}
+                              className="text-sm text-gray-700 dark:text-gray-300 font-mono bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none transition-colors w-full px-1 -ml-1"
+                              placeholder="e.g. properties/123456"
+                            />
+                          </div>
                           
-                          {proj.latest_update && (
-                            <div>
-                              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Latest Update</p>
-                              <p className="text-sm text-gray-700 dark:text-gray-300">{proj.latest_update}</p>
-                            </div>
-                          )}
+                          <div>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Latest Update</p>
+                            <textarea
+                              rows={2}
+                              value={proj.latest_update || ''}
+                              onChange={(e) => handleUpdateClientProject(proj.id, 'latest_update', e.target.value)}
+                              className="text-sm text-gray-700 dark:text-gray-300 bg-transparent border border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none rounded-md transition-colors w-full p-1 -ml-1 resize-none"
+                              placeholder="Enter latest update..."
+                            />
+                          </div>
                         </div>
                       ))}
                       {clientProjects.length === 0 && (
