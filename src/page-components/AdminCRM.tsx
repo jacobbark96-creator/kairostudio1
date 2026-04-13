@@ -108,7 +108,7 @@ export default function AdminCRM() {
   const [newProjectUrl, setNewProjectUrl] = useState('');
   const [newLiveLink, setNewLiveLink] = useState('');
   const [newLatestUpdate, setNewLatestUpdate] = useState('');
-  const [newGaApiKey, setNewGaApiKey] = useState('');
+  const [newLookerStudioEmbed, setNewLookerStudioEmbed] = useState('');
   const [addingClientProject, setAddingClientProject] = useState(false);
 
   // Admin Permissions State
@@ -849,7 +849,7 @@ export default function AdminCRM() {
         project_url: newProjectUrl || null,
         live_link: newLiveLink || null,
         latest_update: newLatestUpdate || null,
-        ga_api_key: newGaApiKey || null
+        looker_studio_embed: newLookerStudioEmbed || null
       }] as any);
 
       if (error) throw error;
@@ -858,7 +858,7 @@ export default function AdminCRM() {
       setNewProjectUrl('');
       setNewLiveLink('');
       setNewLatestUpdate('');
-      setNewGaApiKey('');
+      setNewLookerStudioEmbed('');
       
       // Refresh list
       const { data } = await supabase.from('client_projects').select('*').eq('user_id', managingProjectsForUser.id).order('created_at', { ascending: false });
@@ -1550,13 +1550,13 @@ export default function AdminCRM() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GA Property ID / API Key</label>
-                          <input
-                            type="text"
-                            value={newGaApiKey}
-                            onChange={(e) => setNewGaApiKey(e.target.value)}
-                            placeholder="e.g. properties/123456789"
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Looker Studio Embed HTML</label>
+                          <textarea
+                            rows={3}
+                            value={newLookerStudioEmbed}
+                            onChange={(e) => setNewLookerStudioEmbed(e.target.value)}
+                            placeholder='<iframe width="600" height="450" src="https://lookerstudio.google.com/embed/..." frameborder="0" style="border:0" allowfullscreen></iframe>'
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-xs"
                           />
                         </div>
                       </div>
@@ -1613,13 +1613,13 @@ export default function AdminCRM() {
                           </div>
 
                           <div className="mb-4">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">GA Property ID</p>
-                            <input
-                              type="text"
-                              value={proj.ga_api_key || ''}
-                              onChange={(e) => handleUpdateClientProject(proj.id, 'ga_api_key', e.target.value)}
-                              className="text-sm text-gray-700 dark:text-gray-300 font-mono bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none transition-colors w-full px-1 -ml-1"
-                              placeholder="e.g. properties/123456"
+                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">Looker Studio Embed</p>
+                            <textarea
+                              rows={2}
+                              value={proj.looker_studio_embed || ''}
+                              onChange={(e) => handleUpdateClientProject(proj.id, 'looker_studio_embed', e.target.value)}
+                              className="text-xs text-gray-700 dark:text-gray-300 font-mono bg-transparent border border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none rounded-md transition-colors w-full p-1 -ml-1 resize-none"
+                              placeholder='<iframe src="..."></iframe>'
                             />
                           </div>
                           

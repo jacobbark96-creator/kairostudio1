@@ -311,22 +311,37 @@ export default function ClientDashboard() {
             </div>
             
             {/* Project Performance */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-1">
-              <div>
-                <div className="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center mb-6">
-                  <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col md:col-span-3 overflow-hidden">
+              <div className="p-8 border-b border-gray-100 dark:border-gray-700">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white">Project Performance</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Live analytics and site metrics via Google Looker Studio</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Project Performance</h3>
-                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl mt-4 flex items-center justify-center min-h-[120px]">
-                  <p className="text-gray-500 dark:text-gray-400 text-center font-medium">
-                    Not enough data
-                  </p>
-                </div>
+              </div>
+              
+              <div className="bg-gray-50 dark:bg-gray-900/50 w-full relative" style={{ minHeight: project?.looker_studio_embed ? '600px' : '200px' }}>
+                {project?.looker_studio_embed ? (
+                  <div 
+                    className="absolute inset-0 w-full h-full p-4"
+                    dangerouslySetInnerHTML={{ __html: project.looker_studio_embed }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-gray-500 dark:text-gray-400 text-center font-medium">
+                      Not enough data yet. Your analytics report will appear here soon.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* AI Summary */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-2">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-1">
               <div>
                 <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mb-6">
                   <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -341,7 +356,7 @@ export default function ClientDashboard() {
             </div>
 
             {/* Kairo Recommends */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-3">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-2">
               <div>
                 <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center mb-6">
                   <Target className="w-6 h-6 text-amber-600 dark:text-amber-400" />
