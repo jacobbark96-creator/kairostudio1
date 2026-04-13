@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Download, Calendar, PoundSterling, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink } from 'lucide-react';
+import { FileText, Download, Calendar, PoundSterling, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink, TrendingUp, Sparkles, Target } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Invoice = Database['public']['Tables']['invoices']['Row'];
@@ -310,6 +310,51 @@ export default function ClientDashboard() {
               </div>
             </div>
             
+            {/* Project Performance */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-1">
+              <div>
+                <div className="w-12 h-12 bg-green-50 dark:bg-green-900/20 rounded-xl flex items-center justify-center mb-6">
+                  <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Project Performance</h3>
+                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl mt-4 flex items-center justify-center min-h-[120px]">
+                  <p className="text-gray-500 dark:text-gray-400 text-center font-medium">
+                    Not enough data
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* AI Summary */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-2">
+              <div>
+                <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-center justify-center mb-6">
+                  <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">AI Performance Summary</h3>
+                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl mt-4 flex items-center justify-center min-h-[120px]">
+                  <p className="text-gray-500 dark:text-gray-400 text-center font-medium">
+                    Not enough data
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Kairo Recommends */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 border border-gray-100 dark:border-gray-700 flex flex-col justify-between md:col-span-3">
+              <div>
+                <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 rounded-xl flex items-center justify-center mb-6">
+                  <Target className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Kairo Recommends</h3>
+                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl mt-4 flex items-center justify-center min-h-[120px]">
+                  <p className="text-gray-500 dark:text-gray-400 text-center font-medium">
+                    Not enough data
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Quick Stats / Billing Snapshot */}
             <div className="md:col-span-3 bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 rounded-xl shadow-sm p-8 text-white">
                <h3 className="text-xl font-bold mb-6">Billing Snapshot</h3>

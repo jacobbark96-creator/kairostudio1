@@ -108,6 +108,7 @@ export default function AdminCRM() {
   const [newProjectUrl, setNewProjectUrl] = useState('');
   const [newLiveLink, setNewLiveLink] = useState('');
   const [newLatestUpdate, setNewLatestUpdate] = useState('');
+  const [newGaApiKey, setNewGaApiKey] = useState('');
   const [addingClientProject, setAddingClientProject] = useState(false);
 
   // Admin Permissions State
@@ -847,7 +848,8 @@ export default function AdminCRM() {
         project_name: newProjectName,
         project_url: newProjectUrl || null,
         live_link: newLiveLink || null,
-        latest_update: newLatestUpdate || null
+        latest_update: newLatestUpdate || null,
+        ga_api_key: newGaApiKey || null
       }] as any);
 
       if (error) throw error;
@@ -856,6 +858,7 @@ export default function AdminCRM() {
       setNewProjectUrl('');
       setNewLiveLink('');
       setNewLatestUpdate('');
+      setNewGaApiKey('');
       
       // Refresh list
       const { data } = await supabase.from('client_projects').select('*').eq('user_id', managingProjectsForUser.id).order('created_at', { ascending: false });
@@ -1519,15 +1522,27 @@ export default function AdminCRM() {
                           />
                         </div>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Latest Update</label>
-                        <textarea
-                          rows={2}
-                          value={newLatestUpdate}
-                          onChange={(e) => setNewLatestUpdate(e.target.value)}
-                          placeholder="e.g. Completed homepage design"
-                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Latest Update</label>
+                          <textarea
+                            rows={2}
+                            value={newLatestUpdate}
+                            onChange={(e) => setNewLatestUpdate(e.target.value)}
+                            placeholder="e.g. Completed homepage design"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">GA Property ID / API Key</label>
+                          <input
+                            type="text"
+                            value={newGaApiKey}
+                            onChange={(e) => setNewGaApiKey(e.target.value)}
+                            placeholder="e.g. properties/123456789"
+                            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          />
+                        </div>
                       </div>
                       <div className="flex justify-end">
                         <button
@@ -1564,6 +1579,13 @@ export default function AdminCRM() {
                               <a href={proj.live_link} target="_blank" rel="noopener noreferrer" className="text-sm text-cyan-600 hover:underline flex items-center gap-1">
                                 {proj.live_link} <ExternalLink className="w-3 h-3" />
                               </a>
+                            </div>
+                          )}
+
+                          {proj.ga_api_key && (
+                            <div className="mb-4">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1 font-bold">GA Property ID</p>
+                              <p className="text-sm text-gray-700 dark:text-gray-300 font-mono">{proj.ga_api_key}</p>
                             </div>
                           )}
                           
