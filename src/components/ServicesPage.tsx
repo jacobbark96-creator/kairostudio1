@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Sparkles, Palette, Code, Zap, Mail, CheckCircle, TrendingUp, DollarSign, Users, Rocket, Award, ArrowLeft, ArrowDown, Layout, Smartphone } from 'lucide-react';
+import { ArrowRight, Mail, CheckCircle, TrendingUp, DollarSign, ArrowLeft, Layout, Smartphone, Palette, ArrowDownRight, Globe, Zap, Search } from 'lucide-react';
 import Link from 'next/link';
 
 import { useUI } from '../context/UIContext';
@@ -11,42 +11,31 @@ export default function ServicesPage() {
   const services = [
     {
       icon: Layout,
-      title: 'Done-For-You Web Presence',
-      description: 'We build, host, and manage your entire website for a flat monthly fee. No huge upfront costs, just a high-performing site that works.',
+      title: 'Digital Presence',
+      description: 'We build, host, and manage your entire website. No huge upfront costs, just a high-performing site that works.',
       features: ['Custom Design & Build', 'Premium Hosting Included', 'Unlimited Edits', '24/7 Technical Support'],
+      colSpan: 'md:col-span-2 lg:col-span-2',
     },
     {
-      icon: Smartphone,
-      title: 'Continuous SEO & Growth',
+      icon: Search,
+      title: 'Search Optimization',
       description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimize your presence so customers can actually find you on Google.',
-      features: ['Local SEO Optimization', 'Keyword Strategy', 'Performance Monitoring', 'Monthly Analytics'],
+      features: ['Local SEO', 'Keyword Strategy', 'Performance Monitoring'],
+      colSpan: 'md:col-span-1 lg:col-span-1',
     },
     {
       icon: Palette,
-      title: 'Modern Brand Identity',
+      title: 'Brand Identity',
       description: 'Look like the premium business you are. We craft logos and visual systems that build immediate trust with your future customers.',
-      features: ['Logo Design', 'Brand Guidelines', 'Visual Identity', 'Brand Strategy'],
-    },
-  ];
-
-  const benefits = [
-    {
-      icon: DollarSign,
-      title: 'Flexible Budgets',
-      description: 'From 3-figure monthly retainers to 6-figure project budgets, we work with businesses of all sizes.',
-      highlight: 'All budgets welcome',
+      features: ['Logo Design', 'Brand Guidelines', 'Visual Identity'],
+      colSpan: 'md:col-span-1 lg:col-span-1',
     },
     {
-      icon: TrendingUp,
-      title: 'Proven Results',
-      description: 'We\'ve delivered successful projects across industries, from startups to established enterprises.',
-      highlight: 'Track record of success',
-    },
-    {
-      icon: Users,
-      title: 'Dedicated Support',
-      description: 'Every client gets personalized attention and ongoing support tailored to their needs.',
-      highlight: 'Personalized service',
+      icon: Zap,
+      title: 'Performance & Scale',
+      description: 'Lightning-fast load times and scalable architecture designed to grow seamlessly as your business expands.',
+      features: ['Speed Optimization', 'Scalable Architecture', 'Security Audits', 'Conversion Tracking'],
+      colSpan: 'md:col-span-2 lg:col-span-2',
     },
   ];
 
@@ -54,209 +43,80 @@ export default function ServicesPage() {
     <>
       <SEO 
         title="Services" 
-        description="From brand identity to web development and digital strategy, Kairo Studio offers comprehensive services for every budget." 
+        description="From brand identity to web development and digital strategy, Kairo Studio offers comprehensive services tailored to your goals." 
       />
-      <section className="relative pt-40 sm:pt-56 md:pt-64 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
-        {/* Background Blobs */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
-           <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
-        </div>
-
-        <div className="max-w-7xl mx-auto w-full relative z-10 mt-16 sm:mt-0">
+      
+      {/* Hero Section */}
+      <section className="relative pt-40 sm:pt-56 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors duration-300 mb-8 group"
+            className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-300 mb-12 sm:mb-16 group text-sm font-medium tracking-wide uppercase"
           >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-medium">Back to Home</span>
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Back to Home
           </Link>
           
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/20 sm:bg-brand-50/50 sm:dark:bg-brand-900/10 border border-brand-100 dark:border-brand-800 sm:backdrop-blur-sm mb-8 animate-fade-in">
-              <Sparkles className="w-4 h-4 text-brand-600 dark:text-brand-400 animate-pulse" />
-              <span className="text-sm font-medium text-brand-900 dark:text-brand-100 tracking-wide uppercase">
-                Our Services
-              </span>
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-8 tracking-tight text-gray-900 dark:text-white">
-              Services for
-              <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-blue-600 to-purple-600 dark:from-brand-400 dark:via-blue-400 dark:to-purple-400">
-                Every Budget
-              </span>
+          <div className="max-w-5xl">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-bold leading-[1.05] tracking-tighter text-gray-900 dark:text-white mb-8">
+              Digital excellence.<br />
+              <span className="text-gray-400 dark:text-gray-500">Engineered for growth.</span>
             </h1>
             
-            <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
-              Whether you're a startup with a 3-figure monthly budget or launching a 6-figure project, 
-              we have the expertise and flexibility to bring your vision to life.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button 
-                onClick={() => openContactModal()}
-                className="group w-full sm:w-auto px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-black rounded-full hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition-all duration-300 flex items-center justify-center gap-3 text-lg font-bold shadow-xl shadow-brand-500/20 hover:shadow-brand-500/40 hover:-translate-y-1"
-              >
-                <Mail className="w-5 h-5" />
-                Free Consultation
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <a 
-                href="#services" 
-                className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-gray-800 sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-full hover:border-brand-500 dark:hover:border-brand-400 transition-all duration-300 flex items-center justify-center gap-3 text-lg font-medium hover:text-brand-600 dark:hover:text-brand-400"
-              >
-                Explore Services
-                <ArrowDown className="w-5 h-5" />
-              </a>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 mt-12 sm:mt-16">
+              <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                We don't just build websites. We engineer digital ecosystems designed to elevate your brand, capture your audience, and drive measurable results.
+              </p>
+              <div className="flex flex-col justify-center items-start">
+                <button 
+                  onClick={() => openContactModal()}
+                  className="group inline-flex items-center gap-4 text-lg font-medium text-gray-900 dark:text-white pb-2 border-b-2 border-gray-900 dark:border-white hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-600 dark:hover:border-brand-400 transition-all duration-300"
+                >
+                  Start your project
+                  <ArrowDownRight className="w-5 h-5 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Budget Flexibility Section */}
-      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark-bg relative">
+      {/* Services Bento Grid */}
+      <section id="services" className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-6 text-gray-900 dark:text-white">
-              We Work With <span className="text-brand-600 dark:text-brand-400">All Budgets</span>
+          <div className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <h2 className="text-4xl sm:text-5xl font-display font-bold text-gray-900 dark:text-white tracking-tight">
+              Our Capabilities
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto font-light">
-              From startups to enterprises, we tailor our services to fit your needs and budget.
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md font-light leading-relaxed">
+              A holistic approach to your digital presence, combining aesthetics with uncompromising performance.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-16 sm:mb-24">
-            {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="group p-8 glass-card rounded-[2rem] hover:-translate-y-2 relative overflow-hidden"
-              >
-                <div className="w-16 h-16 bg-brand-50 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-brand-100 dark:border-white/10">
-                  <benefit.icon className="w-8 h-8 text-brand-600 dark:text-brand-400" />
-                </div>
-                
-                <div className="inline-block px-4 py-1.5 bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 text-sm font-semibold rounded-full mb-6">
-                  {benefit.highlight}
-                </div>
-                
-                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white">
-                  {benefit.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {benefit.description}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Budget Examples */}
-          <div className="grid sm:grid-cols-2 gap-8">
-            <div className="p-8 sm:p-10 rounded-[2.5rem] bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 border border-purple-100 dark:border-purple-900/20 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-bl-[150px] transition-transform duration-500 group-hover:scale-110" />
-              
-              <div className="flex items-center gap-4 mb-6 relative z-10">
-                <div className="w-14 h-14 bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center shadow-sm">
-                  <TrendingUp className="w-7 h-7 text-purple-600 dark:text-purple-400" />
-                </div>
-                <h3 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
-                  6-Figure Projects
-                </h3>
-              </div>
-              
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed relative z-10">
-                We've successfully delivered comprehensive digital transformations, custom platforms, 
-                and enterprise solutions for clients investing six figures in their digital presence.
-              </p>
-              
-              <ul className="space-y-4 relative z-10">
-                {['Custom Platform Development', 'Enterprise Solutions', 'Complete Digital Overhauls', 'Multi-Year Partnerships'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                    <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                    </div>
-                    <span className="font-medium">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="p-8 sm:p-10 rounded-[2.5rem] bg-gradient-to-br from-brand-50 to-blue-50 dark:from-brand-900/10 dark:to-blue-900/10 border border-brand-100 dark:border-brand-900/20 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-500/5 rounded-bl-[150px] transition-transform duration-500 group-hover:scale-110" />
-              
-              <div className="flex items-center gap-4 mb-6 relative z-10">
-                <div className="w-14 h-14 bg-white dark:bg-white/5 rounded-2xl flex items-center justify-center shadow-sm">
-                  <DollarSign className="w-7 h-7 text-brand-600 dark:text-brand-400" />
-                </div>
-                <h3 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
-                  3-Figure Monthly
-                </h3>
-              </div>
-              
-              <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed relative z-10">
-                Perfect for growing businesses, we offer flexible monthly retainers starting in the 
-                three-figure range, providing ongoing support and continuous improvement.
-              </p>
-              
-              <ul className="space-y-4 relative z-10">
-                {['Monthly Retainers', 'Ongoing Maintenance', 'Regular Updates', 'Dedicated Support'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                    <div className="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-900/30 flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="w-4 h-4 text-brand-600 dark:text-brand-400" />
-                    </div>
-                    <span className="font-medium">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section id="services" className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gray-50/50 dark:bg-gray-800/20 relative overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl overflow-hidden pointer-events-none">
-           <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-brand-500/5 rounded-full blur-[120px]" />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-6 text-gray-900 dark:text-white">
-              What We Offer
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto font-light">
-              Comprehensive services tailored to your business needs and goals.
-            </p>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="group p-8 bg-white dark:bg-black/40 backdrop-blur-xl rounded-[2.5rem] border border-white/20 dark:border-white/10 hover:border-brand-500/30 dark:hover:border-brand-500/30 shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 relative overflow-hidden"
+                className={`group p-8 sm:p-10 bg-white dark:bg-[#111] rounded-[2rem] border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-colors duration-500 flex flex-col justify-between ${service.colSpan}`}
               >
-                {/* Elegant Gradient Background on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-brand-500/10 to-transparent rounded-bl-[100px] transition-all duration-500 group-hover:scale-125" />
-                
-                <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-white dark:from-white/10 dark:to-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg border border-white/50 dark:border-white/10 relative z-10">
-                  <service.icon className="w-8 h-8 text-gray-900 dark:text-white" />
+                <div>
+                  <div className="w-14 h-14 bg-gray-50 dark:bg-white/5 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-brand-50 dark:group-hover:bg-brand-500/10 transition-all duration-500">
+                    <service.icon className="w-6 h-6 text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors" />
+                  </div>
+                  
+                  <h3 className="text-2xl sm:text-3xl font-display font-bold mb-4 text-gray-900 dark:text-white tracking-tight">
+                    {service.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 dark:text-gray-400 mb-10 leading-relaxed font-light text-lg">
+                    {service.description}
+                  </p>
                 </div>
                 
-                <h3 className="text-2xl font-display font-bold mb-4 text-gray-900 dark:text-white relative z-10">
-                  {service.title}
-                </h3>
-                
-                <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed relative z-10 font-light">
-                  {service.description}
-                </p>
-                
-                <ul className="space-y-4 relative z-10 border-t border-gray-100 dark:border-white/5 pt-6">
+                <ul className="space-y-3">
                   {service.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-300 group/item">
-                      <div className="w-1.5 h-1.5 rounded-full bg-brand-400 group-hover/item:scale-150 transition-transform duration-300" />
+                    <li key={i} className="flex items-center gap-3 text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300">
+                      <div className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-gray-700 group-hover:bg-brand-500 transition-colors duration-500" />
                       {feature}
                     </li>
                   ))}
@@ -267,35 +127,111 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-black via-gray-900 to-black dark:from-gray-900 dark:via-black dark:to-gray-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <Sparkles className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 text-cyan-400 mx-auto mb-4 sm:mb-6 md:mb-8 animate-pulse" />
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-3 sm:mb-4 md:mb-6 leading-tight px-4">
-            Ready to Get Started?
+      {/* Investment Approach Section (Editorial Style) */}
+      <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#050505]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+            <div className="lg:col-span-5 lg:sticky lg:top-32">
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-gray-900 dark:text-white tracking-tight leading-[1.1] mb-8">
+                Tailored for<br />
+                <span className="text-gray-400 dark:text-gray-500">every ambition.</span>
+              </h2>
+              <p className="text-xl text-gray-600 dark:text-gray-400 font-light leading-relaxed mb-10">
+                Whether you're scaling a startup or reinventing an enterprise, we structure our partnerships to align with your trajectory and budget.
+              </p>
+              <div className="hidden lg:block w-full h-[1px] bg-gray-200 dark:bg-gray-800" />
+            </div>
+
+            <div className="lg:col-span-7 space-y-8">
+              {/* Option 1 */}
+              <div className="p-8 sm:p-12 bg-gray-50 dark:bg-[#111] rounded-[2.5rem] border border-gray-200 dark:border-gray-800 group hover:bg-white dark:hover:bg-[#151515] transition-colors duration-500 shadow-sm hover:shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-white dark:bg-[#222] rounded-full flex items-center justify-center shadow-sm border border-gray-100 dark:border-gray-700">
+                      <Globe className="w-5 h-5 text-gray-900 dark:text-white" />
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 dark:text-white">
+                      The Studio Retainer
+                    </h3>
+                  </div>
+                  <span className="inline-flex px-4 py-1.5 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-300 text-sm font-medium whitespace-nowrap">
+                    From £899 / mo
+                  </span>
+                </div>
+                
+                <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed font-light mb-8">
+                  Our most popular model. You get an elite design and development team on standby, treating your digital presence as a continuously evolving product.
+                </p>
+                
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {['Unlimited Design Requests', 'Ongoing Development', 'Premium Hosting & Security', 'Priority Support'].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                      <CheckCircle className="w-5 h-5 text-gray-400 dark:text-gray-600" />
+                      <span className="font-medium text-sm sm:text-base">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Option 2 */}
+              <div className="p-8 sm:p-12 bg-gray-900 dark:bg-[#111] rounded-[2.5rem] border border-gray-800 dark:border-gray-800 group hover:bg-black dark:hover:bg-[#151515] transition-colors duration-500 shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gray-800 dark:bg-[#222] rounded-full flex items-center justify-center border border-gray-700 dark:border-gray-700">
+                      <Layout className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-display font-bold text-white">
+                      Custom Projects
+                    </h3>
+                  </div>
+                  <span className="inline-flex px-4 py-1.5 rounded-full bg-gray-800 dark:bg-gray-800 text-gray-300 text-sm font-medium whitespace-nowrap border border-gray-700">
+                    Bespoke Quoting
+                  </span>
+                </div>
+                
+                <p className="text-lg text-gray-400 leading-relaxed font-light mb-8">
+                  For comprehensive digital transformations, complex web applications, and complete brand overhauls. We build it exactly to your specifications.
+                </p>
+                
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {['Dedicated Project Manager', 'Bespoke Architecture', 'Full Brand Guidelines', 'Complete Ownership'].map((item, i) => (
+                    <div key={i} className="flex items-center gap-3 text-gray-300">
+                      <CheckCircle className="w-5 h-5 text-gray-600" />
+                      <span className="font-medium text-sm sm:text-base">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Premium CTA Section */}
+      <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#050505] text-white border-t border-white/5">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold mb-8 leading-tight tracking-tight">
+            Let's build something<br />
+            <span className="text-gray-500">extraordinary.</span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-gray-300 dark:text-gray-400 mb-6 sm:mb-8 md:mb-10 leading-relaxed max-w-2xl mx-auto px-4">
-            Book a free consultation to discuss your project, budget, and how we can help bring your vision to life.
+          <p className="text-xl sm:text-2xl text-gray-400 mb-12 font-light max-w-2xl mx-auto">
+            Book a complimentary consultation to discuss your vision, timeline, and how we can elevate your brand.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-stretch sm:items-center px-4">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <button 
               onClick={() => openContactModal()}
-              className="group px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-gradient-to-r from-cyan-600 to-blue-600 text-white rounded-full hover:from-cyan-500 hover:to-blue-500 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
+              className="w-full sm:w-auto px-10 py-5 bg-white text-black rounded-full hover:bg-gray-200 transition-colors duration-300 flex items-center justify-center gap-3 text-lg font-bold"
             >
-              <Mail className="w-5 h-5 sm:w-6 sm:h-6" />
-              Book Free Consultation
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
+              Start the conversation
+              <ArrowRight className="w-5 h-5" />
             </button>
             <a 
               href="mailto:hello@kairostudio.co.uk"
-              className="px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 bg-white/5 dark:bg-white/5 sm:bg-white/10 sm:backdrop-blur-sm text-white rounded-full border-2 border-white/20 hover:border-white/40 transition-all duration-300 flex items-center justify-center gap-3 text-base sm:text-lg font-semibold hover:scale-105 active:scale-95 min-h-[48px] sm:min-h-[52px] md:min-h-[56px]"
+              className="w-full sm:w-auto px-10 py-5 bg-transparent text-white rounded-full border border-white/20 hover:border-white/50 transition-colors duration-300 flex items-center justify-center gap-3 text-lg font-medium"
             >
-              Email Us Directly
+              Email us directly
             </a>
           </div>
-          <p className="mt-4 sm:mt-6 md:mt-8 text-xs sm:text-sm md:text-base text-gray-400 px-4">
-            No commitment required • 100% Free • Quick response guaranteed
-          </p>
         </div>
       </section>
     </>
