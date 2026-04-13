@@ -18,8 +18,8 @@ export default function ServicesPage() {
     },
     {
       icon: Search,
-      title: 'Search Optimization',
-      description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimize your presence so customers can actually find you on Google.',
+      title: 'Search Optimisation',
+      description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimise your presence so customers can actually find you on Google.',
       features: ['Local SEO', 'Keyword Strategy', 'Performance Monitoring'],
       colSpan: 'md:col-span-1 lg:col-span-1',
     },
@@ -34,7 +34,7 @@ export default function ServicesPage() {
       icon: Zap,
       title: 'Performance & Scale',
       description: 'Lightning-fast load times and scalable architecture designed to grow seamlessly as your business expands.',
-      features: ['Speed Optimization', 'Scalable Architecture', 'Security Audits', 'Conversion Tracking'],
+      features: ['Speed Optimisation', 'Scalable Architecture', 'Security Audits', 'Conversion Tracking'],
       colSpan: 'md:col-span-2 lg:col-span-2',
     },
   ];
@@ -47,8 +47,25 @@ export default function ServicesPage() {
       />
       
       {/* Hero Section */}
-      <section className="relative pt-40 sm:pt-56 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
+      <section className="relative pt-40 sm:pt-56 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
+        {/* Night Sky Background */}
+        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
+        {/* Background Blobs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+           <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
+           <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
+        </div>
+
+        <div className="max-w-7xl mx-auto w-full relative z-10">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors duration-300 mb-12 sm:mb-16 group text-sm font-medium tracking-wide uppercase"
@@ -155,7 +172,7 @@ export default function ServicesPage() {
                     </h3>
                   </div>
                   <span className="inline-flex px-4 py-1.5 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-300 text-sm font-medium whitespace-nowrap">
-                    From £899 / mo
+                    From £79 / mo
                   </span>
                 </div>
                 

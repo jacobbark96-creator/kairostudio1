@@ -16,8 +16,8 @@ export default function MobileServices() {
     },
     {
       icon: Search,
-      title: 'Search Optimization',
-      desc: 'Your site isn’t a digital brochure—it’s an engine. We continually optimize your presence so customers can actually find you on Google.',
+      title: 'Search Optimisation',
+      desc: 'Your site isn’t a digital brochure—it’s an engine. We continually optimise your presence so customers can actually find you on Google.',
       features: ['Local SEO', 'Keyword Strategy', 'Performance Monitoring'],
     },
     {
@@ -30,7 +30,7 @@ export default function MobileServices() {
       icon: Zap,
       title: 'Performance & Scale',
       desc: 'Lightning-fast load times and scalable architecture designed to grow seamlessly as your business expands.',
-      features: ['Speed Optimization', 'Scalable Architecture', 'Security Audits'],
+      features: ['Speed Optimisation', 'Scalable Architecture', 'Security Audits'],
     },
   ];
 
@@ -38,7 +38,25 @@ export default function MobileServices() {
     <div className="pb-24 relative overflow-hidden z-0 bg-white dark:bg-[#0a0a0a]">
       
       {/* Hero Section */}
-      <div className="pt-20 px-6 relative z-10 text-left mb-16">
+      {/* Night Sky Background */}
+      <div className="absolute top-0 left-0 w-full h-[60vh] -z-20 overflow-hidden">
+          <img 
+              src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+              alt="Night Sky" 
+              className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent pointer-events-none" />
+      </div>
+
+      {/* Background Blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+         <div className="absolute top-[-5%] left-[-10%] w-[300px] h-[300px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[80px] animate-blob" />
+         <div className="absolute top-[15%] right-[-10%] w-[300px] h-[300px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[80px] animate-blob animation-delay-2000" />
+      </div>
+
+      <div className="pt-28 px-6 relative z-10 text-left mb-16">
         <h1 className="text-[2.75rem] font-display font-bold text-gray-900 dark:text-white tracking-tighter leading-[1.05] mb-6">
             Digital excellence.<br/>
             <span className="text-gray-400 dark:text-gray-500">Engineered for growth.</span>
@@ -90,7 +108,7 @@ export default function MobileServices() {
                     <Globe className="w-4 h-4 text-gray-900 dark:text-white" />
                 </div>
                 <h3 className="text-xl font-display font-bold text-gray-900 dark:text-white mb-2">The Studio Retainer</h3>
-                <span className="inline-block px-3 py-1 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-300 text-xs font-medium rounded-full mb-4">From £899 / mo</span>
+                <span className="inline-block px-3 py-1 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-300 text-xs font-medium rounded-full mb-4">From £79 / mo</span>
                 <p className="text-sm text-gray-600 dark:text-gray-400 font-light leading-relaxed mb-6">
                     Our most popular model. An elite design and development team on standby, treating your digital presence as an evolving product.
                 </p>
