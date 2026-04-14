@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
-import { FileText, Download, Calendar, PoundSterling, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink, TrendingUp, Sparkles, Target } from 'lucide-react';
+import { FileText, Download, Calendar, PoundSterling, Clock, CheckCircle, AlertCircle, Layout as LayoutIcon, ExternalLink, TrendingUp, Sparkles, Target, X } from 'lucide-react';
 import { Database } from '../types/supabase';
 
 type Invoice = Database['public']['Tables']['invoices']['Row'];
@@ -14,12 +14,29 @@ export default function ClientDashboard() {
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsContent, setTermsContent] = useState('');
+  const [pendingInvoiceToPay, setPendingInvoiceToPay] = useState<Invoice | null>(null);
+
   useEffect(() => {
     if (user) {
       fetchInvoices();
       fetchProject();
+      fetchTermsContent();
     }
   }, [user]);
+
+  const fetchTermsContent = async () => {
+    try {
+      const { data } = await supabase.from('site_content').select('*').eq('key', 'global_terms').single();
+      if (data) {
+        setTermsContent((data as any).value);
+      }
+    } catch (error) {
+      console.error('Error fetching terms:', error);
+    }
+  };
 
   const fetchProject = async () => {
     try {
@@ -57,6 +74,13 @@ export default function ClientDashboard() {
   };
 
   const handlePayment = async (invoice: Invoice) => {
+    // If there's terms content and they haven't accepted, show modal first
+    if (termsContent && !termsAccepted) {
+      setPendingInvoiceToPay(invoice);
+      setShowTermsModal(true);
+      return;
+    }
+
     try {
       // Use the remaining outstanding amount for the payment
       const amountToPay = invoice.amount - (invoice.amount_paid || 0);
@@ -98,6 +122,13 @@ export default function ClientDashboard() {
       case 'partial': return <Clock className="w-4 h-4" />;
       case 'overdue': return <AlertCircle className="w-4 h-4" />;
       default: return <Clock className="w-4 h-4" />;
+    }
+  };
+
+  const handleAcceptTermsAndPay = () => {
+    if (termsAccepted && pendingInvoiceToPay) {
+      setShowTermsModal(false);
+      handlePayment(pendingInvoiceToPay);
     }
   };
 
@@ -271,7 +302,7 @@ export default function ClientDashboard() {
                 <div className="w-12 h-12 bg-cyan-50 dark:bg-cyan-900/20 rounded-xl flex items-center justify-center mb-6">
                   <FileText className="w-6 h-6 text-cyan-600 dark:text-cyan-400" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Latest Invoice</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Initial Payment</h3>
                 
                 {(() => {
                   const latestUnpaidInvoice = invoices
@@ -391,6 +422,60 @@ export default function ClientDashboard() {
           </div>
         )}
       </div>
+      {showTermsModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Terms and Conditions</h2>
+              <button 
+                onClick={() => setShowTermsModal(false)}
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto flex-1 prose dark:prose-invert max-w-none text-sm">
+              <div className="whitespace-pre-wrap font-sans text-gray-700 dark:text-gray-300">
+                {termsContent}
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <label className="flex items-start gap-3 cursor-pointer mb-4">
+                <div className="mt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="w-5 h-5 text-cyan-600 rounded border-gray-300 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700"
+                  />
+                </div>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  I accept these terms and conditions and agree to proceed to payment.
+                </span>
+              </label>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={() => setShowTermsModal(false)}
+                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAcceptTermsAndPay}
+                  disabled={!termsAccepted}
+                  className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+                >
+                  <PoundSterling className="w-4 h-4" />
+                  Proceed to Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

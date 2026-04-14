@@ -116,7 +116,7 @@ export default function AdminCRM() {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [savingPermissions, setSavingPermissions] = useState(false);
   const [userRoleToSet, setUserRoleToSet] = useState<'super_admin' | 'admin' | 'client'>('client');
-  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs'];
+  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs', 'terms'];
 
   // Media State
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
@@ -129,6 +129,10 @@ export default function AdminCRM() {
   // Audit Questions State
   const [auditQs, setAuditQs] = useState<any[]>([]);
   const [loadingAuditQs, setLoadingAuditQs] = useState(false);
+
+  // Terms State
+  const [termsContent, setTermsContent] = useState('');
+  const [savingTerms, setSavingTerms] = useState(false);
 
   // RBAC State
   const [userRole, setUserRole] = useState<'super_admin' | 'admin' | 'client'>('admin');
@@ -596,6 +600,11 @@ export default function AdminCRM() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const subtitle = (data as any[]).find(item => item.key === 'hero_subtitle')?.value || '';
         
+        // Fetch Terms
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const terms = (data as any[]).find(item => item.key === 'global_terms')?.value || '';
+        setTermsContent(terms);
+        
         // Fetch probabilities
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const probData = (data as any[]).find(item => item.key === 'offer_probabilities')?.value;
@@ -958,6 +967,20 @@ export default function AdminCRM() {
     }
   };
 
+  const handleSaveTerms = async () => {
+    setSavingTerms(true);
+    try {
+      await (supabase.from('site_content') as any).upsert([
+        { key: 'global_terms', value: termsContent }
+      ]);
+      alert('Terms and Conditions updated!');
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setSavingTerms(false);
+    }
+  };
+
   const handleUpdateContent = async () => {
     setSavingContent(true);
     try {
@@ -1219,6 +1242,14 @@ export default function AdminCRM() {
               className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'audit_qs' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
             >
               Audit Q's
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('terms')) && (
+            <button
+              onClick={() => setActiveTab('terms')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'terms' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              T&Cs
             </button>
           )}
         </div>
@@ -2825,6 +2856,41 @@ export default function AdminCRM() {
           </div>
         </div>
       )}
+      
+      {activeTab === 'terms' && (userRole === 'super_admin' || allowedTabs.includes('terms')) && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Global Terms & Conditions</h2>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Terms and Conditions Content
+                </label>
+                <p className="text-xs text-gray-500 mb-4">
+                  This text will be displayed in a lightbox when clients click 'Pay Now' on their initial invoice.
+                  They must accept these terms before proceeding to the Stripe checkout.
+                </p>
+                <textarea
+                  rows={15}
+                  value={termsContent}
+                  onChange={(e) => setTermsContent(e.target.value)}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  placeholder="Enter your terms and conditions here..."
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleSaveTerms}
+                  disabled={savingTerms}
+                  className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 font-medium flex items-center gap-2 disabled:opacity-50"
+                >
+                  {savingTerms ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  Save Terms & Conditions
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
