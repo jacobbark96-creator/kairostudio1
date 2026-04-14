@@ -225,7 +225,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </div>
 
-      <main>
+      <main style={{ zoom: 0.7 }}>
         {children}
       </main>
 
