@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp } from 'lucide-react';
+import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, Search } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from "react-simple-maps";
 
@@ -31,6 +31,11 @@ export default function FranchisePage() {
   const [formMessage, setFormMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchLocations();
@@ -68,6 +73,76 @@ export default function FranchisePage() {
       alert(error.message);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  // Helper to calculate distance between two coordinates (Haversine formula approximation)
+  const getDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    return R * c; // Distance in km
+  };
+
+  const handleSearchLocation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    setSearchError('');
+    
+    try {
+      // Use OpenStreetMap Nominatim API for geocoding (free, no key required for low volume)
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`);
+      const data = await res.json();
+      
+      if (!data || data.length === 0) {
+        setSearchError("Location not found. Try a different city.");
+        setIsSearching(false);
+        return;
+      }
+      
+      const searchLat = parseFloat(data[0].lat);
+      const searchLon = parseFloat(data[0].lon);
+      
+      // Find nearest franchise location
+      if (locations.length > 0) {
+        let nearestLoc = locations[0];
+        let minDistance = getDistance(searchLat, searchLon, locations[0].y_coordinate, locations[0].x_coordinate);
+        
+        for (let i = 1; i < locations.length; i++) {
+          const dist = getDistance(searchLat, searchLon, locations[i].y_coordinate, locations[i].x_coordinate);
+          if (dist < minDistance) {
+            minDistance = dist;
+            nearestLoc = locations[i];
+          }
+        }
+        
+        // Pan and zoom to the nearest location
+        setMapPosition({ coordinates: [nearestLoc.x_coordinate, nearestLoc.y_coordinate], zoom: 12 });
+        setHoveredLocation(nearestLoc);
+        
+        // Keep tooltip visible in center temporarily
+        const mapEl = document.getElementById('map-container');
+        if (mapEl) {
+          const rect = mapEl.getBoundingClientRect();
+          setTooltipPos({ x: rect.width / 2, y: rect.height / 2 });
+        }
+      } else {
+        // Just pan to searched location if no franchise locations exist yet
+        setMapPosition({ coordinates: [searchLon, searchLat], zoom: 8 });
+      }
+      
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      setSearchError("Error finding location. Please try again.");
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -143,16 +218,48 @@ export default function FranchisePage() {
 
       {/* Map Section */}
       <section className="py-24 relative overflow-hidden bg-gray-50 dark:bg-[#0f0f0f] border-y border-gray-200 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-          <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Available Territories</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              We are expanding globally. Explore our available, pending, and filled locations worldwide. Use your mouse to zoom and pan.
-            </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 relative z-10">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">Available Territories</h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-xl">
+                We are expanding globally. Explore our available, pending, and filled locations worldwide.
+              </p>
+            </div>
+            
+            {/* Search Box */}
+            <div className="w-full md:w-auto min-w-[300px]">
+              <form onSubmit={handleSearchLocation} className="relative">
+                <div className="relative flex items-center">
+                  <Search className="absolute left-4 w-5 h-5 text-gray-400" />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Find nearest location to..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-12 py-3 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent shadow-sm"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSearching || !searchQuery.trim()}
+                    className="absolute right-2 p-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-xl transition-colors disabled:opacity-50"
+                  >
+                    {isSearching ? <Loader2 className="w-4 h-4 animate-spin text-brand-500" /> : <ArrowRight className="w-4 h-4 text-gray-600 dark:text-gray-400" />}
+                  </button>
+                </div>
+                {searchError && (
+                  <p className="absolute top-full mt-2 left-0 text-sm text-red-500 font-medium">
+                    {searchError}
+                  </p>
+                )}
+              </form>
+            </div>
           </div>
         </div>
 
         <div 
+          id="map-container"
           className="relative w-full h-[600px] cursor-move bg-[#e6f2f8] dark:bg-[#0a1118]"
           onMouseMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
