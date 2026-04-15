@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp } from 'lucide-react';
-import Layout from '../components/Layout';
 
 interface Location {
   id: string;
@@ -67,8 +66,8 @@ export default function FranchisePage() {
   };
 
   return (
-    <Layout>
-    <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
+    <>
+      <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 overflow-hidden min-h-[70vh] flex flex-col items-center justify-center text-center">
@@ -296,6 +295,6 @@ export default function FranchisePage() {
         </div>
       </section>
     </div>
-    </Layout>
+    </>
   );
 }
