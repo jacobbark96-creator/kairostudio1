@@ -1270,6 +1270,14 @@ export default function AdminCRM() {
               T&Cs
             </button>
           )}
+          {(userRole === 'super_admin' || allowedTabs.includes('franchise')) && (
+            <button
+              onClick={() => setActiveTab('franchise')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'franchise' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Franchise
+            </button>
+          )}
         </div>
 
         {activeTab === 'invoices' && (
@@ -2905,6 +2913,82 @@ export default function AdminCRM() {
                 Save Terms & Conditions
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'franchise' && (userRole === 'super_admin' || allowedTabs.includes('franchise')) && (
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Add Franchise Location</h2>
+            <form onSubmit={handleAddFranchiseLocation} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">City Name</label>
+                  <input type="text" required value={newFranchiseCity} onChange={e => setNewFranchiseCity(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+                  <select value={newFranchiseStatus} onChange={e => setNewFranchiseStatus(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                    <option value="available">Available</option>
+                    <option value="pending">Pending</option>
+                    <option value="filled">Filled</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">X Coordinate (%)</label>
+                  <input type="number" step="0.1" required value={newFranchiseX} onChange={e => setNewFranchiseX(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Y Coordinate (%)</label>
+                  <input type="number" step="0.1" required value={newFranchiseY} onChange={e => setNewFranchiseY(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+                <textarea rows={3} required value={newFranchiseDesc} onChange={e => setNewFranchiseDesc(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+              </div>
+              <div className="flex justify-end">
+                <button type="submit" disabled={addingFranchise} className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 flex items-center gap-2">
+                  {addingFranchise ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                  Add Location
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Existing Locations</h2>
+            {loadingFranchise ? (
+              <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 text-cyan-600 animate-spin" /></div>
+            ) : franchiseLocations.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">No franchise locations found.</p>
+            ) : (
+              <div className="space-y-4">
+                {franchiseLocations.map(loc => (
+                  <div key={loc.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-gray-50 dark:bg-gray-900/50">
+                    <div className="flex-1 space-y-2 w-full">
+                      <div className="flex items-center justify-between">
+                        <input type="text" value={loc.city_name} onChange={e => handleUpdateFranchiseLocation(loc.id, 'city_name', e.target.value)} className="font-bold text-lg bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" />
+                        <select value={loc.status} onChange={e => handleUpdateFranchiseLocation(loc.id, 'status', e.target.value)} className="text-sm bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1">
+                          <option value="available">Available</option>
+                          <option value="pending">Pending</option>
+                          <option value="filled">Filled</option>
+                        </select>
+                      </div>
+                      <div className="flex gap-4 text-sm text-gray-500">
+                        <label>X: <input type="number" step="0.1" value={loc.x_coordinate} onChange={e => handleUpdateFranchiseLocation(loc.id, 'x_coordinate', parseFloat(e.target.value))} className="w-16 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" /></label>
+                        <label>Y: <input type="number" step="0.1" value={loc.y_coordinate} onChange={e => handleUpdateFranchiseLocation(loc.id, 'y_coordinate', parseFloat(e.target.value))} className="w-16 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" /></label>
+                      </div>
+                      <textarea value={loc.description} onChange={e => handleUpdateFranchiseLocation(loc.id, 'description', e.target.value)} className="w-full text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none rounded p-1 resize-none" rows={2} />
+                    </div>
+                    <button onClick={() => handleDeleteFranchiseLocation(loc.id)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors shrink-0">
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
