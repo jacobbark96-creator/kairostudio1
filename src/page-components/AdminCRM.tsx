@@ -135,6 +135,7 @@ export default function AdminCRM() {
   const [savingTerms, setSavingTerms] = useState(false);
 
   // Franchise State
+  const [franchiseSubTab, setFranchiseSubTab] = useState<'locations' | 'faqs'>('locations');
   const [franchiseLocations, setFranchiseLocations] = useState<any[]>([]);
   const [loadingFranchise, setLoadingFranchise] = useState(false);
   const [newFranchiseCity, setNewFranchiseCity] = useState('');
@@ -143,6 +144,12 @@ export default function AdminCRM() {
   const [newFranchiseDesc, setNewFranchiseDesc] = useState('');
   const [newFranchiseStatus, setNewFranchiseStatus] = useState('available');
   const [addingFranchise, setAddingFranchise] = useState(false);
+  
+  const [franchiseFaqs, setFranchiseFaqs] = useState<any[]>([]);
+  const [loadingFaqs, setLoadingFaqs] = useState(false);
+  const [newFaqQuestion, setNewFaqQuestion] = useState('');
+  const [newFaqAnswer, setNewFaqAnswer] = useState('');
+  const [addingFaq, setAddingFaq] = useState(false);
 
   // RBAC State
   const [userRole, setUserRole] = useState<'super_admin' | 'admin' | 'client'>('admin');
@@ -257,6 +264,7 @@ export default function AdminCRM() {
     fetchBookings();
     fetchAuditQs();
     fetchFranchiseLocations();
+    fetchFranchiseFaqs();
   }, []);
 
   const fetchFranchiseLocations = async () => {
@@ -264,6 +272,60 @@ export default function AdminCRM() {
     const { data } = await supabase.from('franchise_locations').select('*').order('created_at', { ascending: false });
     if (data) setFranchiseLocations(data);
     setLoadingFranchise(false);
+  };
+
+  const fetchFranchiseFaqs = async () => {
+    setLoadingFaqs(true);
+    const { data } = await supabase.from('franchise_faqs').select('*').order('created_at', { ascending: true });
+    if (data) setFranchiseFaqs(data);
+    setLoadingFaqs(false);
+  };
+
+  const handleAddFaq = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddingFaq(true);
+    try {
+      const { error } = await supabase.from('franchise_faqs').insert([{
+        question: newFaqQuestion,
+        answer: newFaqAnswer
+      }] as any);
+
+      if (error) throw error;
+      
+      setNewFaqQuestion('');
+      setNewFaqAnswer('');
+      fetchFranchiseFaqs();
+      alert('FAQ added!');
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setAddingFaq(false);
+    }
+  };
+
+  const handleUpdateFaq = async (id: string, field: string, value: string) => {
+    try {
+      const { error } = await supabase
+        .from('franchise_faqs')
+        .update({ [field]: value } as any)
+        .eq('id', id);
+
+      if (error) throw error;
+      setFranchiseFaqs(prev => prev.map(faq => faq.id === id ? { ...faq, [field]: value } : faq));
+    } catch (error: any) {
+      console.error('Error updating FAQ:', error.message);
+    }
+  };
+
+  const handleDeleteFaq = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this FAQ?')) return;
+    try {
+      const { error } = await supabase.from('franchise_faqs').delete().eq('id', id);
+      if (error) throw error;
+      setFranchiseFaqs(prev => prev.filter(faq => faq.id !== id));
+    } catch (error: any) {
+      console.error('Error deleting FAQ:', error.message);
+    }
   };
 
   const handleAddFranchiseLocation = async (e: React.FormEvent) => {
@@ -2972,8 +3034,25 @@ export default function AdminCRM() {
 
       {activeTab === 'franchise' && (userRole === 'super_admin' || allowedTabs.includes('franchise')) && (
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Add Franchise Location</h2>
+          <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6">
+            <button
+              onClick={() => setFranchiseSubTab('locations')}
+              className={`pb-4 px-4 whitespace-nowrap ${franchiseSubTab === 'locations' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+            >
+              Locations
+            </button>
+            <button
+              onClick={() => setFranchiseSubTab('faqs')}
+              className={`pb-4 px-4 whitespace-nowrap ${franchiseSubTab === 'faqs' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+            >
+              FAQs
+            </button>
+          </div>
+
+          {franchiseSubTab === 'locations' && (
+            <>
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Add Franchise Location</h2>
             <form onSubmit={handleAddFranchiseLocation} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -3036,13 +3115,62 @@ export default function AdminCRM() {
                       <textarea value={loc.description} onChange={e => handleUpdateFranchiseLocation(loc.id, 'description', e.target.value)} className="w-full text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none rounded p-1 resize-none" rows={2} />
                     </div>
                     <button onClick={() => handleDeleteFranchiseLocation(loc.id)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors shrink-0">
-                      <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            </>
+          )}
+
+          {franchiseSubTab === 'faqs' && (
+            <>
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Add Franchise FAQ</h2>
+                <form onSubmit={handleAddFaq} className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Question</label>
+                    <input type="text" required value={newFaqQuestion} onChange={e => setNewFaqQuestion(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Answer</label>
+                    <textarea rows={3} required value={newFaqAnswer} onChange={e => setNewFaqAnswer(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                  </div>
+                  <div className="flex justify-end">
+                    <button type="submit" disabled={addingFaq} className="px-6 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 flex items-center gap-2">
+                      {addingFaq ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                      Add FAQ
                     </button>
                   </div>
-                ))}
+                </form>
               </div>
-            )}
-          </div>
+
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+                <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Existing FAQs</h2>
+                {loadingFaqs ? (
+                  <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 text-cyan-600 animate-spin" /></div>
+                ) : franchiseFaqs.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">No FAQs found.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {franchiseFaqs.map(faq => (
+                      <div key={faq.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 flex gap-4 items-start bg-gray-50 dark:bg-gray-900/50">
+                        <div className="flex-1 space-y-2">
+                          <input type="text" value={faq.question} onChange={e => handleUpdateFaq(faq.id, 'question', e.target.value)} className="w-full font-bold text-lg bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" />
+                          <textarea value={faq.answer} onChange={e => handleUpdateFaq(faq.id, 'answer', e.target.value)} className="w-full text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none rounded p-1 resize-none" rows={3} />
+                        </div>
+                        <button onClick={() => handleDeleteFaq(faq.id)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors shrink-0">
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

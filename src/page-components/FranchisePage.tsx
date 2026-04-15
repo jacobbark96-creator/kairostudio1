@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, Search } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, Search, Plus, Minus } from 'lucide-react';
+import Layout from '../components/Layout';
 import Map, { Marker, NavigationControl, ViewStateChangeEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -42,9 +42,26 @@ export default function FranchisePage() {
   const [searchError, setSearchError] = useState('');
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const [faqs, setFaqs] = useState<any[]>([]);
+  const [loadingFaqs, setLoadingFaqs] = useState(true);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
   useEffect(() => {
     fetchLocations();
+    fetchFaqs();
   }, []);
+
+  const fetchFaqs = async () => {
+    try {
+      const { data, error } = await supabase.from('franchise_faqs').select('*').order('created_at', { ascending: true });
+      if (error) throw error;
+      setFaqs(data || []);
+    } catch (error) {
+      console.error('Error fetching franchise faqs:', error);
+    } finally {
+      setLoadingFaqs(false);
+    }
+  };
 
   const fetchLocations = async () => {
     try {
@@ -161,7 +178,7 @@ export default function FranchisePage() {
       <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 overflow-hidden min-h-[70vh] flex flex-col items-center justify-center text-center">
+      <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[70vh] flex flex-col items-center justify-center text-center">
         {/* Background elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
           <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
@@ -297,16 +314,22 @@ export default function FranchisePage() {
                   style={{zIndex: hoveredLocation?.id === loc.id ? 50 : 1}}
                 >
                   <div 
-                    className="cursor-pointer group relative flex items-center justify-center p-4"
+                    className="cursor-pointer group relative flex items-center justify-center"
                     onMouseEnter={() => setHoveredLocation(loc)}
                     onMouseLeave={() => setHoveredLocation(null)}
                   >
+                    {/* The actual dot */}
                     <div className={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg group-hover:scale-125 z-10 ${loc.status === 'pending' ? 'bg-amber-400 hover:bg-amber-300' : loc.status === 'filled' ? 'bg-purple-500 hover:bg-purple-400' : 'bg-brand-500 hover:bg-brand-400'}`} />
+                    
+                    {/* Pulsing ring */}
                     <div className={`absolute w-8 h-8 rounded-full opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'bg-amber-400' : loc.status === 'filled' ? 'bg-purple-500' : 'bg-brand-500'}`} />
+                    
+                    {/* Invisible larger hover area */}
+                    <div className="absolute w-12 h-12 rounded-full z-20" />
                     
                     {/* Tooltip rendered directly on the hovered marker */}
                     {hoveredLocation?.id === loc.id && (
-                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-1 bottom-1/2 left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
+                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full bottom-full mb-2 left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45" />
                         <div className="relative z-10">
                           <div className="flex items-center justify-between mb-2">
@@ -328,6 +351,53 @@ export default function FranchisePage() {
                 </Marker>
               ))}
             </Map>
+          )}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-white dark:bg-[#0a0a0a]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
+              Everything you need to know about partnering with Kairo Studio.
+            </p>
+          </div>
+
+          {loadingFaqs ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-brand-500" />
+            </div>
+          ) : faqs.length === 0 ? (
+            <p className="text-center text-gray-500 py-12">No FAQs available at the moment.</p>
+          ) : (
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <div 
+                  key={faq.id}
+                  className={`border ${openFaqIndex === index ? 'border-brand-500 dark:border-brand-500' : 'border-gray-200 dark:border-gray-800'} rounded-2xl overflow-hidden transition-colors duration-200`}
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(openFaqIndex === index ? null : index)}
+                    className="w-full flex items-center justify-between p-6 text-left bg-white dark:bg-[#0a0a0a] hover:bg-gray-50 dark:hover:bg-[#111] transition-colors"
+                  >
+                    <span className="font-bold text-lg pr-8">{faq.question}</span>
+                    <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${openFaqIndex === index ? 'bg-brand-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'}`}>
+                      {openFaqIndex === index ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
+                    </span>
+                  </button>
+                  
+                  <div 
+                    className={`overflow-hidden transition-all duration-300 ease-in-out ${openFaqIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                  >
+                    <div className="p-6 pt-0 text-gray-600 dark:text-gray-400 leading-relaxed border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-[#111]">
+                      {faq.answer}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </section>
