@@ -436,11 +436,11 @@ export default function FranchisePage() {
                     <div className={`absolute w-8 h-8 rounded-full opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'bg-amber-400' : loc.status === 'filled' ? 'bg-purple-500' : 'bg-brand-500'}`} />
                     
                     {/* Invisible larger hover area */}
-                    <div className="absolute w-12 h-12 rounded-full z-20" />
+                    <div className="absolute w-6 h-6 rounded-full z-20" />
                     
                     {/* Tooltip rendered directly on the hovered marker */}
                     {hoveredLocation?.id === loc.id && (
-                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full bottom-full mb-2 left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
+                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 bottom-[calc(50%+14px)] left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45" />
                         <div className="relative z-10">
                           <div className="flex items-center justify-between mb-2">
