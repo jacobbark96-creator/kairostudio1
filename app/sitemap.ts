@@ -13,7 +13,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/pricing',
     '/blog',
     '/careers',
-    '/contact'
+    '/book',
+    '/franchise',
+    '/privacy-policy',
+    '/terms-of-service'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -44,13 +47,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
 
   // Fallback to static routes if DB fails
-  return [
-    ...routes,
-    {
-      url: `${baseUrl}/blog/custom-web-design-vs-templates`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }
-  ];
+  return routes;
 }
