@@ -59,6 +59,11 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                     Contact
                   </button>
                 </li>
+                <li>
+                  <Link href="/franchise" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                    Franchise
+                  </Link>
+                </li>
               </ul>
             </div>
 
@@ -183,6 +188,14 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
                 >
                   Contact
                 </button>
+              </li>
+              <li>
+                <Link 
+                  href="/franchise"
+                  className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
+                >
+                  Franchise
+                </Link>
               </li>
               <li>
                 <Link 

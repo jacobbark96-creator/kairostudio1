@@ -116,7 +116,7 @@ export default function AdminCRM() {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [savingPermissions, setSavingPermissions] = useState(false);
   const [userRoleToSet, setUserRoleToSet] = useState<'super_admin' | 'admin' | 'client'>('client');
-  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs', 'terms'];
+  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs', 'terms', 'franchise'];
 
   // Media State
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
@@ -133,6 +133,16 @@ export default function AdminCRM() {
   // Terms State
   const [termsContent, setTermsContent] = useState('');
   const [savingTerms, setSavingTerms] = useState(false);
+
+  // Franchise State
+  const [franchiseLocations, setFranchiseLocations] = useState<any[]>([]);
+  const [loadingFranchise, setLoadingFranchise] = useState(false);
+  const [newFranchiseCity, setNewFranchiseCity] = useState('');
+  const [newFranchiseX, setNewFranchiseX] = useState('');
+  const [newFranchiseY, setNewFranchiseY] = useState('');
+  const [newFranchiseDesc, setNewFranchiseDesc] = useState('');
+  const [newFranchiseStatus, setNewFranchiseStatus] = useState('available');
+  const [addingFranchise, setAddingFranchise] = useState(false);
 
   // RBAC State
   const [userRole, setUserRole] = useState<'super_admin' | 'admin' | 'client'>('admin');
@@ -246,7 +256,15 @@ export default function AdminCRM() {
     fetchMedia();
     fetchBookings();
     fetchAuditQs();
+    fetchFranchiseLocations();
   }, []);
+
+  const fetchFranchiseLocations = async () => {
+    setLoadingFranchise(true);
+    const { data } = await supabase.from('franchise_locations').select('*').order('created_at', { ascending: false });
+    if (data) setFranchiseLocations(data);
+    setLoadingFranchise(false);
+  };
 
   const fetchAuditQs = async () => {
     setLoadingAuditQs(true);
