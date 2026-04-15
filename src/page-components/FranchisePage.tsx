@@ -22,6 +22,7 @@ export default function FranchisePage() {
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [hoveredLocation, setHoveredLocation] = useState<Location | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [mapPosition, setMapPosition] = useState({ coordinates: [0, 30] as [number, number], zoom: 2.5 });
 
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
@@ -168,7 +169,13 @@ export default function FranchisePage() {
                 projectionConfig={{ scale: 140 }}
                 className="w-full h-full outline-none"
               >
-                <ZoomableGroup center={[0, 20]} zoom={1} minZoom={1} maxZoom={8}>
+                <ZoomableGroup 
+                  center={mapPosition.coordinates} 
+                  zoom={mapPosition.zoom} 
+                  minZoom={1} 
+                  maxZoom={40}
+                  onMoveEnd={(position) => setMapPosition(position)}
+                >
                   <Geographies geography={geoUrl}>
                     {({ geographies }) =>
                       geographies.map((geo) => (
@@ -177,7 +184,7 @@ export default function FranchisePage() {
                           geography={geo}
                           fill="#d1d5db"
                           stroke="#ffffff"
-                          strokeWidth={0.5}
+                          strokeWidth={0.5 / mapPosition.zoom}
                           className="dark:fill-[#1f2937] dark:stroke-[#111827] outline-none hover:outline-none focus:outline-none"
                           style={{
                             default: { outline: "none" },
@@ -198,11 +205,11 @@ export default function FranchisePage() {
                     >
                       <g className="cursor-pointer group">
                         <circle 
-                          r={4} 
+                          r={4 / mapPosition.zoom} 
                           className={`transition-all duration-300 ${loc.status === 'pending' ? 'fill-amber-400 hover:fill-amber-300' : loc.status === 'filled' ? 'fill-gray-500 hover:fill-gray-400' : 'fill-brand-500 hover:fill-brand-400'}`}
                         />
                         <circle 
-                          r={10} 
+                          r={10 / mapPosition.zoom} 
                           className={`opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'fill-amber-400' : loc.status === 'filled' ? 'fill-gray-500' : 'fill-brand-500'}`}
                         />
                       </g>
