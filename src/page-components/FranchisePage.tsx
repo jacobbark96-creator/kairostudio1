@@ -46,7 +46,7 @@ export default function FranchisePage() {
       const { data, error } = await supabase
         .from('franchise_locations')
         .select('*')
-        .in('status', ['available', 'pending']);
+        .in('status', ['available', 'pending', 'filled']);
       if (error) throw error;
       setLocations(data || []);
     } catch (error) {
@@ -313,11 +313,11 @@ export default function FranchisePage() {
                       <g className="cursor-pointer group">
                         <circle 
                           r={4 / mapPosition.zoom} 
-                          className={`transition-all duration-300 ${loc.status === 'pending' ? 'fill-amber-400 hover:fill-amber-300' : loc.status === 'filled' ? 'fill-gray-500 hover:fill-gray-400' : 'fill-brand-500 hover:fill-brand-400'}`}
+                          className={`transition-all duration-300 ${loc.status === 'pending' ? 'fill-amber-400 hover:fill-amber-300' : loc.status === 'filled' ? 'fill-purple-500 hover:fill-purple-400' : 'fill-brand-500 hover:fill-brand-400'}`}
                         />
                         <circle 
                           r={10 / mapPosition.zoom} 
-                          className={`opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'fill-amber-400' : loc.status === 'filled' ? 'fill-gray-500' : 'fill-brand-500'}`}
+                          className={`opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'fill-amber-400' : loc.status === 'filled' ? 'fill-purple-500' : 'fill-brand-500'}`}
                         />
                       </g>
                     </Marker>
@@ -338,7 +338,7 @@ export default function FranchisePage() {
                         <MapPin className="w-4 h-4 text-brand-500" />
                         {hoveredLocation.city_name}
                       </h4>
-                      <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${hoveredLocation.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : hoveredLocation.status === 'filled' ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
+                      <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${hoveredLocation.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : hoveredLocation.status === 'filled' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
                         {hoveredLocation.status}
                       </span>
                     </div>
