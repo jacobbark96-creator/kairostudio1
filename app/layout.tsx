@@ -97,6 +97,17 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4QHDY6WV7H"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-4QHDY6WV7H');
+            `,
+          }}
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
