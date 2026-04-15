@@ -294,9 +294,10 @@ export default function FranchisePage() {
                   longitude={loc.x_coordinate}
                   latitude={loc.y_coordinate}
                   anchor="center"
+                  style={{zIndex: hoveredLocation?.id === loc.id ? 50 : 1}}
                 >
                   <div 
-                    className="cursor-pointer group relative flex items-center justify-center"
+                    className="cursor-pointer group relative flex items-center justify-center p-4"
                     onMouseEnter={() => setHoveredLocation(loc)}
                     onMouseLeave={() => setHoveredLocation(null)}
                   >
@@ -305,7 +306,7 @@ export default function FranchisePage() {
                     
                     {/* Tooltip rendered directly on the hovered marker */}
                     {hoveredLocation?.id === loc.id && (
-                      <div className="absolute z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-3 bottom-full left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
+                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-1 bottom-1/2 left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
                         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45" />
                         <div className="relative z-10">
                           <div className="flex items-center justify-between mb-2">
