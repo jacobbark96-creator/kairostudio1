@@ -22,7 +22,7 @@ export default function FranchisePage() {
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [hoveredLocation, setHoveredLocation] = useState<Location | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [mapPosition, setMapPosition] = useState({ coordinates: [0, 30] as [number, number], zoom: 2.5 });
+  const [mapPosition, setMapPosition] = useState({ coordinates: [0, 20] as [number, number], zoom: 1.8 });
 
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
