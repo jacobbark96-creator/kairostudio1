@@ -4,9 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, Search } from 'lucide-react';
 import Navbar from '../components/Navbar';
-import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from "react-simple-maps";
-
-const geoUrl = "https://unpkg.com/world-atlas@2.0.2/countries-110m.json";
+import Map, { Marker, NavigationControl, ViewStateChangeEvent } from 'react-map-gl/maplibre';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 interface Location {
   id: string;
@@ -21,8 +20,14 @@ export default function FranchisePage() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [hoveredLocation, setHoveredLocation] = useState<Location | null>(null);
-  const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [mapPosition, setMapPosition] = useState({ coordinates: [0, 20] as [number, number], zoom: 1.8 });
+  
+  const [viewState, setViewState] = useState({
+    longitude: 0,
+    latitude: 20,
+    zoom: 2,
+    pitch: 0,
+    bearing: 0
+  });
 
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
@@ -124,18 +129,23 @@ export default function FranchisePage() {
         }
         
         // Pan and zoom to the nearest location
-        setMapPosition({ coordinates: [nearestLoc.x_coordinate, nearestLoc.y_coordinate], zoom: 12 });
+        setViewState({ 
+          longitude: nearestLoc.x_coordinate, 
+          latitude: nearestLoc.y_coordinate, 
+          zoom: 8,
+          pitch: 0,
+          bearing: 0
+        });
         setHoveredLocation(nearestLoc);
-        
-        // Keep tooltip visible in center temporarily
-        const mapEl = document.getElementById('map-container');
-        if (mapEl) {
-          const rect = mapEl.getBoundingClientRect();
-          setTooltipPos({ x: rect.width / 2, y: rect.height / 2 });
-        }
       } else {
         // Just pan to searched location if no franchise locations exist yet
-        setMapPosition({ coordinates: [searchLon, searchLat], zoom: 8 });
+        setViewState({ 
+          longitude: searchLon, 
+          latitude: searchLat, 
+          zoom: 8,
+          pitch: 0,
+          bearing: 0
+        });
       }
       
     } catch (error) {
@@ -260,95 +270,63 @@ export default function FranchisePage() {
 
         <div 
           id="map-container"
-          className="relative w-full h-[600px] cursor-move bg-[#e6f2f8] dark:bg-[#0a1118]"
-          onMouseMove={(e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-          }}
+          className="relative w-full h-[600px] md:h-[700px] bg-gray-900"
         >
           {loadingLocations ? (
             <div className="flex justify-center items-center h-full">
               <Loader2 className="w-10 h-10 animate-spin text-brand-500" />
             </div>
           ) : (
-            <>
-              <ComposableMap
-                projectionConfig={{ scale: 140 }}
-                className="w-full h-full outline-none"
-              >
-                <ZoomableGroup 
-                  center={mapPosition.coordinates} 
-                  zoom={mapPosition.zoom} 
-                  minZoom={1} 
-                  maxZoom={40}
-                  onMoveEnd={(position) => setMapPosition(position)}
+            <Map
+              {...viewState}
+              onMove={evt => setViewState(evt.viewState)}
+              mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+              style={{ width: '100%', height: '100%' }}
+              minZoom={1}
+              maxZoom={20}
+              dragRotate={false}
+            >
+              <NavigationControl position="bottom-right" />
+              
+              {locations.map((loc) => (
+                <Marker 
+                  key={loc.id} 
+                  longitude={loc.x_coordinate}
+                  latitude={loc.y_coordinate}
+                  anchor="center"
                 >
-                  <Geographies geography={geoUrl}>
-                    {({ geographies }) =>
-                      geographies.map((geo) => (
-                        <Geography
-                          key={geo.rsmKey}
-                          geography={geo}
-                          fill="#d1d5db"
-                          stroke="#ffffff"
-                          strokeWidth={0.5 / mapPosition.zoom}
-                          className="dark:fill-[#1f2937] dark:stroke-[#111827] outline-none hover:outline-none focus:outline-none"
-                          style={{
-                            default: { outline: "none" },
-                            hover: { fill: "#9ca3af", outline: "none" },
-                            pressed: { outline: "none" },
-                          }}
-                        />
-                      ))
-                    }
-                  </Geographies>
-
-                  {locations.map((loc) => (
-                    <Marker 
-                      key={loc.id} 
-                      coordinates={[loc.x_coordinate, loc.y_coordinate]}
-                      onMouseEnter={() => setHoveredLocation(loc)}
-                      onMouseLeave={() => setHoveredLocation(null)}
-                    >
-                      <g className="cursor-pointer group">
-                        <circle 
-                          r={4 / mapPosition.zoom} 
-                          className={`transition-all duration-300 ${loc.status === 'pending' ? 'fill-amber-400 hover:fill-amber-300' : loc.status === 'filled' ? 'fill-purple-500 hover:fill-purple-400' : 'fill-brand-500 hover:fill-brand-400'}`}
-                        />
-                        <circle 
-                          r={10 / mapPosition.zoom} 
-                          className={`opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'fill-amber-400' : loc.status === 'filled' ? 'fill-purple-500' : 'fill-brand-500'}`}
-                        />
-                      </g>
-                    </Marker>
-                  ))}
-                </ZoomableGroup>
-              </ComposableMap>
-
-              {/* Lightbox for hovered location */}
-              {hoveredLocation && (
-                <div 
-                  className="absolute z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-4 transition-all duration-200 animate-in fade-in zoom-in-95"
-                  style={{ left: tooltipPos.x, top: tooltipPos.y - 10 }}
-                >
-                  <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45" />
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 text-brand-500" />
-                        {hoveredLocation.city_name}
-                      </h4>
-                      <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${hoveredLocation.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : hoveredLocation.status === 'filled' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
-                        {hoveredLocation.status}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                      {hoveredLocation.description}
-                    </p>
+                  <div 
+                    className="cursor-pointer group relative flex items-center justify-center"
+                    onMouseEnter={() => setHoveredLocation(loc)}
+                    onMouseLeave={() => setHoveredLocation(null)}
+                  >
+                    <div className={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg group-hover:scale-125 z-10 ${loc.status === 'pending' ? 'bg-amber-400 hover:bg-amber-300' : loc.status === 'filled' ? 'bg-purple-500 hover:bg-purple-400' : 'bg-brand-500 hover:bg-brand-400'}`} />
+                    <div className={`absolute w-8 h-8 rounded-full opacity-30 group-hover:animate-ping ${loc.status === 'pending' ? 'bg-amber-400' : loc.status === 'filled' ? 'bg-purple-500' : 'bg-brand-500'}`} />
+                    
+                    {/* Tooltip rendered directly on the hovered marker */}
+                    {hoveredLocation?.id === loc.id && (
+                      <div className="absolute z-50 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-3 bottom-full left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45" />
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-1.5">
+                              <MapPin className="w-4 h-4 text-brand-500" />
+                              {loc.city_name}
+                            </h4>
+                            <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${loc.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : loc.status === 'filled' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'}`}>
+                              {loc.status}
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-left whitespace-normal">
+                            {loc.description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
-            </>
+                </Marker>
+              ))}
+            </Map>
           )}
         </div>
       </section>
