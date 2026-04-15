@@ -266,6 +266,59 @@ export default function AdminCRM() {
     setLoadingFranchise(false);
   };
 
+  const handleAddFranchiseLocation = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAddingFranchise(true);
+    try {
+      const { error } = await supabase.from('franchise_locations').insert([{
+        city_name: newFranchiseCity,
+        x_coordinate: parseFloat(newFranchiseX),
+        y_coordinate: parseFloat(newFranchiseY),
+        description: newFranchiseDesc,
+        status: newFranchiseStatus
+      }] as any);
+
+      if (error) throw error;
+      
+      setNewFranchiseCity('');
+      setNewFranchiseX('');
+      setNewFranchiseY('');
+      setNewFranchiseDesc('');
+      setNewFranchiseStatus('available');
+      fetchFranchiseLocations();
+      alert('Franchise location added!');
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setAddingFranchise(false);
+    }
+  };
+
+  const handleUpdateFranchiseLocation = async (id: string, field: string, value: any) => {
+    try {
+      const { error } = await supabase
+        .from('franchise_locations')
+        .update({ [field]: value } as any)
+        .eq('id', id);
+
+      if (error) throw error;
+      setFranchiseLocations(prev => prev.map(loc => loc.id === id ? { ...loc, [field]: value } : loc));
+    } catch (error: any) {
+      console.error('Error updating franchise location:', error.message);
+    }
+  };
+
+  const handleDeleteFranchiseLocation = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this location?')) return;
+    try {
+      const { error } = await supabase.from('franchise_locations').delete().eq('id', id);
+      if (error) throw error;
+      setFranchiseLocations(prev => prev.filter(loc => loc.id !== id));
+    } catch (error: any) {
+      console.error('Error deleting franchise location:', error.message);
+    }
+  };
+
   const fetchAuditQs = async () => {
     setLoadingAuditQs(true);
     const { data } = await supabase
