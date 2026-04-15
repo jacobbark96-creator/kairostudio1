@@ -2989,12 +2989,12 @@ export default function AdminCRM() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">X Coordinate (%)</label>
-                  <input type="number" step="0.1" required value={newFranchiseX} onChange={e => setNewFranchiseX(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Longitude</label>
+                  <input type="number" step="any" required value={newFranchiseX} onChange={e => setNewFranchiseX(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="-0.1276" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Y Coordinate (%)</label>
-                  <input type="number" step="0.1" required value={newFranchiseY} onChange={e => setNewFranchiseY(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Latitude</label>
+                  <input type="number" step="any" required value={newFranchiseY} onChange={e => setNewFranchiseY(e.target.value)} className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white" placeholder="51.5072" />
                 </div>
               </div>
               <div>
@@ -3030,9 +3030,9 @@ export default function AdminCRM() {
                         </select>
                       </div>
                       <div className="flex gap-4 text-sm text-gray-500">
-                        <label>X: <input type="number" step="0.1" value={loc.x_coordinate} onChange={e => handleUpdateFranchiseLocation(loc.id, 'x_coordinate', parseFloat(e.target.value))} className="w-16 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" /></label>
-                        <label>Y: <input type="number" step="0.1" value={loc.y_coordinate} onChange={e => handleUpdateFranchiseLocation(loc.id, 'y_coordinate', parseFloat(e.target.value))} className="w-16 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" /></label>
-                      </div>
+                          <label>Lng: <input type="number" step="any" value={loc.x_coordinate} onChange={e => handleUpdateFranchiseLocation(loc.id, 'x_coordinate', parseFloat(e.target.value))} className="w-20 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" /></label>
+                          <label>Lat: <input type="number" step="any" value={loc.y_coordinate} onChange={e => handleUpdateFranchiseLocation(loc.id, 'y_coordinate', parseFloat(e.target.value))} className="w-20 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none px-1" /></label>
+                        </div>
                       <textarea value={loc.description} onChange={e => handleUpdateFranchiseLocation(loc.id, 'description', e.target.value)} className="w-full text-sm bg-transparent border border-transparent hover:border-gray-300 focus:border-brand-500 focus:outline-none rounded p-1 resize-none" rows={2} />
                     </div>
                     <button onClick={() => handleDeleteFranchiseLocation(loc.id)} className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors shrink-0">
