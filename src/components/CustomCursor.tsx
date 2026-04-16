@@ -9,13 +9,8 @@ export default function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   
-  // Ultra-smooth spring physics
-  const springConfig = { damping: 25, stiffness: 400, mass: 0.2 };
-  const cursorXSpring = useSpring(cursorX, springConfig);
-  const cursorYSpring = useSpring(cursorY, springConfig);
-  
-  // Slightly looser spring for the trailing ring
-  const ringSpringConfig = { damping: 30, stiffness: 200, mass: 0.4 };
+  // Extremely responsive spring for the trailing ring
+  const ringSpringConfig = { damping: 25, stiffness: 700, mass: 0.1 };
   const ringXSpring = useSpring(cursorX, ringSpringConfig);
   const ringYSpring = useSpring(cursorY, ringSpringConfig);
 
@@ -54,12 +49,12 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Small dot that perfectly tracks the mouse */}
+      {/* Small dot that perfectly tracks the mouse without any lag */}
       <motion.div
         className="fixed top-0 left-0 w-2 h-2 bg-brand-500 rounded-full pointer-events-none z-[10000] mix-blend-difference hidden sm:block"
         style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
+          x: cursorX,
+          y: cursorY,
           translateX: '-50%',
           translateY: '-50%',
           opacity: isVisible ? 1 : 0
