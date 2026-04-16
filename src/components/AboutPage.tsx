@@ -185,13 +185,21 @@ export default function AboutPage() {
             
             {/* Sticky Visual Side */}
             <div className="hidden lg:block sticky top-32 h-[calc(100vh-16rem)] flex flex-col justify-center">
-              <div className="relative w-full aspect-square max-w-md mx-auto">
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-[3rem] blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-                <div className="absolute inset-0 bg-white/5 dark:bg-white/[0.02] border border-gray-200 dark:border-white/10 rounded-[3rem] backdrop-blur-3xl shadow-2xl flex items-center justify-center overflow-hidden">
-                  <div className="absolute w-[200%] h-[200%] bg-gradient-to-br from-brand-400/20 via-transparent to-purple-500/20 animate-[spin_10s_linear_infinite]" />
-                  <div className="relative z-10 w-32 h-32 rounded-full border border-white/20 flex items-center justify-center">
-                    <Sparkles className="w-12 h-12 text-brand-500 animate-pulse" />
-                  </div>
+              <div className="relative w-full aspect-[4/5] max-w-md mx-auto group">
+                <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/30 to-purple-500/30 rounded-[2.5rem] blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+                <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-gray-200 dark:border-white/10 shadow-2xl">
+                  {/* Overlay for premium dark aesthetic */}
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10 mix-blend-overlay" />
+                  
+                  {/* Premium Abstract Tech Image */}
+                  <img 
+                    src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop" 
+                    alt="Digital Excellence" 
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-1000 ease-out"
+                  />
+                  
+                  {/* Subtle inner shadow for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20 opacity-60" />
                 </div>
               </div>
             </div>
