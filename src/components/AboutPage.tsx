@@ -103,11 +103,27 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black leading-[0.95] tracking-tighter mb-8 text-gray-900 dark:text-white"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-display font-black leading-[0.9] tracking-tighter mb-8 text-gray-900 dark:text-white"
           >
             We Engineer Digital <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-br from-brand-500 via-blue-500 to-purple-600">
-              Unfair Advantages.
+            <span className="relative inline-block">
+              {/* Fallback gradient for browsers that don't support text-fill */}
+              <span className="absolute inset-0 text-transparent bg-clip-text bg-gradient-to-br from-brand-500 via-blue-500 to-purple-600 opacity-20 pointer-events-none" />
+              
+              {/* Video mask typography */}
+              <span 
+                className="text-transparent bg-clip-text inline-block relative"
+                style={{
+                  backgroundImage: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")',
+                  backgroundSize: '200% auto',
+                  backgroundPosition: 'center',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  animation: 'gradient-shift 10s ease infinite',
+                }}
+              >
+                Unfair Advantages.
+              </span>
             </span>
           </motion.h1>
           
