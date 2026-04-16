@@ -8,7 +8,6 @@ import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
 import SEO from '../components/SEO';
 import FeaturedProjects from '../components/FeaturedProjects';
-import RandomOffer from '../components/RandomOffer';
 import SiteAuditWizard from '../components/SiteAuditWizard';
 
 import { useUI } from '../context/UIContext';
@@ -30,25 +29,6 @@ export default function HomePage() {
   
   const [isScanning, setIsScanning] = useState(false);
   const [scanLines, setScanLines] = useState<string[]>([]);
-
-  // 3D Card Hover Effect state
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [10, -10]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-10, 10]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   // Prevent scroll when mobile audit modal is open
   useEffect(() => {
@@ -227,7 +207,6 @@ export default function HomePage() {
         title="Digital Experiences That Inspire" 
         description="Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert." 
       />
-      <RandomOffer />
       <section className="relative z-0 pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center">
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
@@ -347,35 +326,17 @@ export default function HomePage() {
             
             <div className="flex justify-center lg:justify-end relative">
               {/* DESKTOP BOX - Hidden on mobile */}
-              <motion.div 
+              <div 
                 className="hidden md:block w-full max-w-lg relative z-10 transition-all duration-500 group"
-                style={{
-                  perspective: 1000,
-                  transformStyle: 'preserve-3d'
-                }}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
               >
-                <motion.div 
+                <div 
                   className="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-white/50 dark:border-white/10"
-                  style={{
-                    rotateX: rotateX,
-                    rotateY: rotateY,
-                    boxShadow: '0px 20px 40px -15px rgba(0,0,0,0.4)'
-                  }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                 >
                   {/* Sonar Radar Background Effect */}
                   <div className="absolute inset-0 z-0 overflow-hidden opacity-20 pointer-events-none mix-blend-overlay">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/30 scale-[0.2]" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/20 scale-[0.5]" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/10 scale-[0.8]" />
-                    <motion.div 
-                      className="absolute top-1/2 left-1/2 w-[100%] h-[100%] origin-top-left bg-gradient-to-br from-transparent via-brand-500/40 to-transparent"
-                      animate={{ rotate: [0, 360] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                      style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%)' }}
-                    />
                   </div>
 
                   <div className="relative z-10 p-10 text-center bg-white/40 dark:bg-black/40 backdrop-blur-sm">
@@ -404,28 +365,22 @@ export default function HomePage() {
                                         <div className="absolute top-0 left-0 w-full h-[2px] bg-brand-500/50 shadow-[0_0_20px_rgba(14,165,233,0.8)] animate-[scanline_2s_linear_infinite]" />
                                         <div className="space-y-3">
                                           {scanLines.map((line, idx) => (
-                                            <motion.div 
+                                            <div 
                                               key={idx}
-                                              initial={{ opacity: 0, x: -10 }}
-                                              animate={{ opacity: 1, x: 0 }}
                                               className={`${idx === scanLines.length - 1 ? 'text-brand-400 font-bold' : 'text-gray-500'}`}
                                             >
                                               {line}
-                                            </motion.div>
+                                            </div>
                                           ))}
-                                          <motion.div 
-                                            animate={{ opacity: [1, 0] }} 
-                                            transition={{ repeat: Infinity, duration: 0.8 }}
-                                            className="w-2 h-4 bg-brand-400 inline-block mt-2"
-                                          />
+                                          <div className="w-2 h-4 bg-brand-400 inline-block mt-2 animate-pulse" />
                                         </div>
                                       </div>
                                     ) : (
                                       <>
-                                        <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
+                                        <div className={`w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0' : 'translate-x-0 opacity-100 relative z-20 pointer-events-auto'}`}>
                                         <form 
                                             onSubmit={handleAuditSubmit}
-                                            className="flex flex-col gap-4"
+                                            className="flex flex-col gap-4 relative z-50 pointer-events-auto"
                                         >
                                         <input 
                                             type="text" 
@@ -464,8 +419,8 @@ export default function HomePage() {
                                         </div>
                                     </div>
                                     
-                                    <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0'}`}>
-                                        <div className="pt-2">
+                                    <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative z-20 pointer-events-auto' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0'}`}>
+                                            <div className="pt-2 relative z-50 pointer-events-auto">
                                             <SiteAuditWizard 
                                             isOpen={showWizard} 
                                             onClose={() => setShowWizard(false)} 
@@ -480,11 +435,11 @@ export default function HomePage() {
                                 )}
                             </div>
                         </>
-                    )}
+                      )}
                     </div>
-                  </motion.div>
-                </motion.div>
-              
+                  </div>
+                </div>
+
               {/* MOBILE MODAL - Smooth Lightbox Transition */}
               <div 
                 className={`md:hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transform-gpu transition-[opacity,visibility] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -514,12 +469,6 @@ export default function HomePage() {
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/30 scale-[0.2]" />
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/20 scale-[0.5]" />
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/10 scale-[0.8]" />
-                      <motion.div 
-                        className="absolute top-1/2 left-1/2 w-[100%] h-[100%] origin-top-left bg-gradient-to-br from-transparent via-brand-500/40 to-transparent"
-                        animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                        style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%)' }}
-                      />
                     </div>
 
                     <div className="relative z-10 p-8 text-center max-h-[85vh] overflow-y-auto bg-white/40 dark:bg-black/40 backdrop-blur-sm">
@@ -548,28 +497,22 @@ export default function HomePage() {
                                           <div className="absolute top-0 left-0 w-full h-[2px] bg-brand-500/50 shadow-[0_0_20px_rgba(14,165,233,0.8)] animate-[scanline_2s_linear_infinite]" />
                                           <div className="space-y-3">
                                             {scanLines.map((line, idx) => (
-                                              <motion.div 
+                                              <div 
                                                 key={idx}
-                                                initial={{ opacity: 0, x: -10 }}
-                                                animate={{ opacity: 1, x: 0 }}
                                                 className={`${idx === scanLines.length - 1 ? 'text-brand-400 font-bold' : 'text-gray-500'}`}
                                               >
                                                 {line}
-                                              </motion.div>
+                                              </div>
                                             ))}
-                                            <motion.div 
-                                              animate={{ opacity: [1, 0] }} 
-                                              transition={{ repeat: Infinity, duration: 0.8 }}
-                                              className="w-2 h-4 bg-brand-400 inline-block mt-2"
-                                            />
+                                            <div className="w-2 h-4 bg-brand-400 inline-block mt-2 animate-pulse" />
                                           </div>
                                         </div>
                                       ) : (
                                         <>
-                                          <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
+                                          <div className={`w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0' : 'translate-x-0 opacity-100 relative z-20 pointer-events-auto'}`}>
                                           <form 
                                               onSubmit={handleAuditSubmit}
-                                              className="flex flex-col gap-3"
+                                              className="flex flex-col gap-3 relative z-50 pointer-events-auto"
                                           >
                                           <input 
                                               type="text" 
@@ -608,8 +551,8 @@ export default function HomePage() {
                                           </div>
                                       </div>
                                       
-                                      <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0'}`}>
-                                          <div className="pt-2">
+                                      <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative z-20 pointer-events-auto' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0'}`}>
+                                          <div className="pt-2 relative z-50 pointer-events-auto">
                                               <SiteAuditWizard 
                                               isOpen={showWizard} 
                                               onClose={() => setShowWizard(false)} 
