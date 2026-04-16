@@ -165,7 +165,7 @@ export default function AboutPage() {
       </section>
 
       {/* 2.5 DEVELOPER TERMINAL */}
-      <section className="pt-20 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-20">
+      <section className="pt-20 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative z-20 min-h-[150px]">
         <DeveloperTerminal onModeChange={setIsTerminalMode} />
       </section>
 

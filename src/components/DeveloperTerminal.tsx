@@ -29,10 +29,11 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
     return () => clearInterval(intervalId);
   }, [isTerminalMode]);
 
-  // Auto scroll to bottom
+  // Auto scroll to bottom, but we want to prevent the browser from scrolling the whole page
+  // when the terminal output updates.
   useEffect(() => {
     if (outputEndRef.current) {
-      outputEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      outputEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [outputLines]);
 
@@ -108,12 +109,12 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
   return (
     <motion.div 
       layout
-      className={`w-full max-w-4xl mx-auto ${isTerminalMode ? 'h-[60vh] my-12' : 'h-16 my-8'}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      className={`w-full max-w-4xl mx-auto origin-top ${isTerminalMode ? 'h-[60vh] my-12' : 'h-16 my-8'}`}
+      initial={{ opacity: 0, scaleY: 0.95 }}
+      animate={{ opacity: 1, scaleY: 1 }}
       transition={{ 
         opacity: { duration: 0.5 },
-        layout: { type: "spring", stiffness: 200, damping: 25 }
+        layout: { type: "spring", stiffness: 300, damping: 30 }
       }}
     >
       <div className="w-full h-full rounded-2xl bg-[#0d1117] border border-gray-800 shadow-2xl overflow-hidden flex flex-col font-mono text-sm sm:text-base text-green-400">
