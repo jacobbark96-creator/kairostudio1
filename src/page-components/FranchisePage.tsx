@@ -206,176 +206,115 @@ export default function FranchisePage() {
       <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center">
-        {/* Cyberpunk Grid Background */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none bg-[#0a0a0a]">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]" />
-          <div className="absolute top-[20%] left-[20%] w-[300px] h-[300px] bg-brand-500/20 rounded-full blur-[100px] animate-pulse" />
-          <div className="absolute bottom-[20%] right-[20%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-          
-          {/* Moving scanline */}
-          <motion.div 
-            className="absolute top-0 left-0 w-full h-[2px] bg-brand-500/50 shadow-[0_0_20px_rgba(14,165,233,0.8)]"
-            animate={{ top: ['0%', '100%', '0%'] }}
-            transition={{ duration: 10, ease: "linear", repeat: Infinity }}
-          />
-        </div>
-
+      <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center bg-white dark:bg-black">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="mb-8 inline-block"
-          >
-            <div className="relative inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-mono uppercase tracking-[0.2em] backdrop-blur-sm">
-              <span className="flex h-2 w-2 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
-              </span>
-              SYSTEM.INIT() // GLOBAL_EXPANSION_PROTOCOL
-              
-              {/* Corner tech accents */}
-              <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-brand-500/50" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 border-t border-r border-brand-500/50" />
-              <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b border-l border-brand-500/50" />
-              <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-brand-500/50" />
-            </div>
-          </motion.div>
-          
           <motion.h1 
-            className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight mb-8 text-white uppercase font-sans"
-            initial={{ opacity: 0, y: 20 }}
+            className="text-7xl sm:text-8xl lg:text-[140px] font-black tracking-tighter mb-8 text-gray-900 dark:text-white leading-[0.9]"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            COMMAND YOUR <br className="hidden sm:block" />
-            <span className="relative inline-block">
-              <span className="absolute -inset-2 bg-brand-500/20 blur-xl rounded-full"></span>
-              <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-brand-500 to-purple-500 animate-pulse">EMPIRE.</span>
-            </span>
+            Become Your Own Boss.
           </motion.h1>
           
           <motion.p 
-            className="text-xl sm:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto font-light"
+            className="text-2xl sm:text-3xl text-gray-500 dark:text-gray-400 mb-12 max-w-3xl mx-auto font-medium tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           >
-            Deploy a Kairo Studio node in your territory. Leverage our enterprise infrastructure to scale a high-yield digital agency from anywhere on Earth.
+            Work remotely, scale your income, and open your very own Kairo Studio office. We provide the blueprint, you reap the rewards.
           </motion.p>
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-6"
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a href="#apply" className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent text-brand-400 border border-brand-500/50 uppercase font-mono tracking-widest text-sm overflow-hidden transition-all hover:bg-brand-500/10 hover:border-brand-400 hover:shadow-[0_0_30px_rgba(14,165,233,0.4)]">
-              {/* Glitch hover effect block */}
-              <span className="absolute inset-0 w-full h-full bg-brand-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></span>
-              <span className="relative z-10 flex items-center gap-2 group-hover:text-gray-900 font-bold transition-colors">
-                [ INIT_APPLICATION ] <ArrowRight className="w-4 h-4" />
-              </span>
-              
-              {/* Corner accents */}
-              <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-brand-400" />
-              <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-brand-400" />
+            <a href="#apply" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform duration-300">
+              Apply to Partner <ArrowRight className="w-5 h-5" />
             </a>
-            <a href="#map-container" className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-gray-400 hover:text-white uppercase font-mono tracking-widest text-sm transition-colors relative">
-              <Globe className="w-4 h-4 group-hover:animate-spin-slow" /> VIEW_RADAR
-              <span className="absolute bottom-2 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-brand-500 group-hover:w-1/2 transition-all duration-300"></span>
+            <a href="#map-container" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-gray-100 dark:bg-gray-900 text-black dark:text-white rounded-full font-bold text-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300">
+              <Globe className="w-5 h-5" /> View Territories
             </a>
           </motion.div>
         </div>
       </section>
 
       {/* Why Franchise Section - Bento Grid */}
-      <section className="py-32 bg-gray-50 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-800 relative">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.03)_0,transparent_100%)] dark:bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.05)_0,transparent_100%)]"></div>
+      <section className="py-32 bg-gray-50 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-20"
+            className="text-center mb-24"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 tracking-tight">No Experience? <span className="text-gray-400">No Problem.</span></h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <h2 className="text-5xl sm:text-7xl font-black mb-6 tracking-tighter">No Experience? <span className="text-gray-400 dark:text-gray-600">No Problem.</span></h2>
+            <p className="text-2xl text-gray-500 max-w-3xl mx-auto tracking-tight">
               You don't need to be a developer. If you have exceptional client service skills and relentless attention to detail, we will train you on the rest.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[minmax(280px,auto)]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[minmax(320px,auto)]">
             {/* Card 1 - Large */}
             <motion.div 
-              className="md:col-span-8 bg-white dark:bg-gray-900 rounded-3xl p-10 border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden group"
+              className="md:col-span-8 bg-white dark:bg-[#111] rounded-[2rem] p-10 sm:p-14 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-end"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-blue-500/20 transition-colors duration-500"></div>
-              <div className="w-14 h-14 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-blue-100 dark:border-blue-500/20 relative z-10">
-                <Target className="w-7 h-7" />
-              </div>
-              <h3 className="text-3xl font-bold mb-4 relative z-10">Full Blueprint & Training</h3>
-              <p className="text-lg text-gray-600 dark:text-gray-400 relative z-10 max-w-xl">
+              <Target className="w-12 h-12 text-black dark:text-white mb-8" strokeWidth={1.5} />
+              <h3 className="text-4xl font-black mb-4 tracking-tight">Full Blueprint & Training</h3>
+              <p className="text-xl text-gray-500 dark:text-gray-400 max-w-xl tracking-tight leading-relaxed">
                 We equip you with a proven playbook, advanced sales strategies, and deep product knowledge. You'll hit the ground running with everything needed to scale a 6-figure agency.
               </p>
             </motion.div>
 
             {/* Card 2 - Small */}
             <motion.div 
-              className="md:col-span-4 bg-white dark:bg-gray-900 rounded-3xl p-10 border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden group"
+              className="md:col-span-4 bg-white dark:bg-[#111] rounded-[2rem] p-10 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-end"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-purple-500/20 transition-colors duration-500"></div>
-              <div className="w-14 h-14 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-purple-100 dark:border-purple-500/20 relative z-10">
-                <TrendingUp className="w-7 h-7" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 relative z-10">Remote Freedom</h3>
-              <p className="text-gray-600 dark:text-gray-400 relative z-10">
+              <TrendingUp className="w-12 h-12 text-black dark:text-white mb-8" strokeWidth={1.5} />
+              <h3 className="text-3xl font-black mb-4 tracking-tight">Remote Freedom</h3>
+              <p className="text-lg text-gray-500 dark:text-gray-400 tracking-tight leading-relaxed">
                 Work from anywhere. Whether you're at a local coffee shop or traveling the world, your Kairo Studio office travels with you.
               </p>
             </motion.div>
 
             {/* Card 3 - Small */}
             <motion.div 
-              className="md:col-span-4 bg-gradient-to-br from-brand-500 to-blue-600 rounded-3xl p-10 shadow-lg relative overflow-hidden text-white group"
+              className="md:col-span-4 bg-black dark:bg-white rounded-[2rem] p-10 shadow-sm text-white dark:text-black flex flex-col justify-end"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-              <div className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-white/20 relative z-10">
-                <Rocket className="w-7 h-7 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold mb-4 relative z-10">High Margins</h3>
-              <p className="text-white/80 relative z-10">
+              <Rocket className="w-12 h-12 text-white dark:text-black mb-8" strokeWidth={1.5} />
+              <h3 className="text-3xl font-black mb-4 tracking-tight">High Margins</h3>
+              <p className="text-lg text-gray-300 dark:text-gray-600 tracking-tight leading-relaxed">
                 With zero inventory and low overhead, our franchise model is built for profitability and fast ROI.
               </p>
             </motion.div>
 
             {/* Card 4 - Large */}
             <motion.div 
-              className="md:col-span-8 bg-white dark:bg-gray-900 rounded-3xl p-10 border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden group"
+              className="md:col-span-8 bg-white dark:bg-[#111] rounded-[2rem] p-10 sm:p-14 shadow-sm border border-gray-100 dark:border-gray-800 flex flex-col justify-end"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: 0.6, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 group-hover:bg-green-500/10 transition-colors duration-500"></div>
-              <div className="w-14 h-14 bg-green-50 dark:bg-green-500/10 text-green-600 dark:text-green-400 rounded-2xl flex items-center justify-center mb-8 shadow-sm border border-green-100 dark:border-green-500/20 relative z-10">
-                <Shield className="w-7 h-7" />
-              </div>
-              <h3 className="text-3xl font-bold mb-4 relative z-10">Unlimited Technical Support</h3>
-              <p className="text-lg text-gray-600 dark:text-gray-400 relative z-10 max-w-xl">
+              <Shield className="w-12 h-12 text-black dark:text-white mb-8" strokeWidth={1.5} />
+              <h3 className="text-4xl font-black mb-4 tracking-tight">Unlimited Technical Support</h3>
+              <p className="text-xl text-gray-500 dark:text-gray-400 max-w-xl tracking-tight leading-relaxed">
                 Our central team handles the heavy lifting of development, design, and complex technical SEO. You focus entirely on building relationships, closing deals, and managing accounts.
               </p>
             </motion.div>
@@ -384,52 +323,51 @@ export default function FranchisePage() {
       </section>
 
       {/* Data Counters Section */}
-      <section className="py-12 bg-gray-950 border-t border-b border-gray-900 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-800">
+      <section className="py-24 bg-white dark:bg-black border-t border-gray-100 dark:border-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
             
             <motion.div 
-              className="flex flex-col items-center justify-center p-6"
+              className="flex flex-col"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="text-sm font-mono text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></div> Nodes Available
+              <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">
+                Available Territories
               </div>
-              <div className="text-5xl font-black text-white tracking-tighter">
+              <div className="text-8xl font-black text-black dark:text-white tracking-tighter">
                 {displayCounts.available}
               </div>
             </motion.div>
 
             <motion.div 
-              className="flex flex-col items-center justify-center p-6"
+              className="flex flex-col"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="text-sm font-mono text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div> Booting Up
+              <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">
+                Pending Operations
               </div>
-              <div className="text-5xl font-black text-white tracking-tighter">
+              <div className="text-8xl font-black text-black dark:text-white tracking-tighter">
                 {displayCounts.pending}
               </div>
             </motion.div>
 
             <motion.div 
-              className="flex flex-col items-center justify-center p-6"
+              className="flex flex-col"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="text-sm font-mono text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div> Active Sectors
+              <div className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">
+                Active Locations
               </div>
-              <div className="text-5xl font-black text-white tracking-tighter">
+              <div className="text-8xl font-black text-black dark:text-white tracking-tighter">
                 {displayCounts.filled}
               </div>
             </motion.div>
@@ -439,52 +377,51 @@ export default function FranchisePage() {
       </section>
 
       {/* Map Section */}
-      <section className="py-32 relative overflow-hidden bg-white dark:bg-[#0f0f0f] border-y border-gray-200 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+      <section className="py-32 bg-gray-50 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+          <div className="flex flex-col md:flex-row justify-between items-end gap-8">
             <motion.div 
-              className="text-center md:text-left"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              className="text-left"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <h2 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">Available <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-purple-500">Territories</span></h2>
-              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-xl">
-                We are expanding globally. Explore our available, pending, and filled locations worldwide.
+              <h2 className="text-5xl sm:text-6xl font-black mb-4 tracking-tighter">Explore the Map.</h2>
+              <p className="text-2xl text-gray-500 max-w-xl tracking-tight">
+                Search to find your nearest available territory.
               </p>
             </motion.div>
             
             {/* Search Box */}
             <motion.div 
               className="w-full md:w-auto min-w-[350px]"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              <form onSubmit={handleSearchLocation} className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-brand-500 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-500"></div>
-                <div className="relative flex items-center bg-white dark:bg-gray-900 rounded-2xl p-1">
-                  <Search className="absolute left-4 w-5 h-5 text-gray-400" />
+              <form onSubmit={handleSearchLocation} className="relative">
+                <div className="relative flex items-center bg-white dark:bg-[#111] rounded-full p-2 border border-gray-200 dark:border-gray-800 shadow-sm">
+                  <Search className="absolute left-6 w-5 h-5 text-gray-400" />
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Find nearest location to..."
+                    placeholder="Search locations..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-14 py-3 bg-transparent border-none focus:ring-0 focus:outline-none text-gray-900 dark:text-white"
+                    className="w-full pl-14 pr-16 py-4 bg-transparent border-none focus:ring-0 focus:outline-none text-lg font-medium text-gray-900 dark:text-white placeholder-gray-400"
                   />
                   <button
                     type="submit"
                     disabled={isSearching || !searchQuery.trim()}
-                    className="absolute right-2 p-2.5 bg-brand-50 dark:bg-brand-500/10 hover:bg-brand-100 dark:hover:bg-brand-500/20 text-brand-600 dark:text-brand-400 rounded-xl transition-colors disabled:opacity-50"
+                    className="absolute right-3 p-3 bg-black dark:bg-white text-white dark:text-black rounded-full transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                   >
                     {isSearching ? <Loader2 className="w-5 h-5 animate-spin" /> : <ArrowRight className="w-5 h-5" />}
                   </button>
                 </div>
                 {searchError && (
-                  <p className="absolute top-full mt-2 left-0 text-sm text-red-500 font-medium">
+                  <p className="absolute top-full mt-3 left-6 text-sm text-red-500 font-bold">
                     {searchError}
                   </p>
                 )}
@@ -495,12 +432,13 @@ export default function FranchisePage() {
 
         <motion.div 
           id="map-container"
-          className="relative w-full h-[600px] md:h-[700px] bg-gray-900 shadow-2xl overflow-hidden border-y border-gray-200 dark:border-gray-800"
+          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
+          <div className="w-full h-[600px] md:h-[700px] bg-gray-200 dark:bg-gray-900 rounded-[2rem] overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800 relative">
           {loadingLocations ? (
             <div className="flex justify-center items-center h-full">
               <Loader2 className="w-10 h-10 animate-spin text-brand-500" />
@@ -565,6 +503,7 @@ export default function FranchisePage() {
               ))}
             </Map>
           )}
+          </div>
         </motion.div>
       </section>
 
