@@ -484,7 +484,6 @@ export default function HomePage() {
                     </div>
                   </motion.div>
                 </motion.div>
-              </div>
               
               {/* MOBILE MODAL - Smooth Lightbox Transition */}
               <div 
