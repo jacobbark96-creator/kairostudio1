@@ -6,7 +6,7 @@ import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, S
 import Layout from '../components/Layout';
 import Map, { Marker, NavigationControl, ViewStateChangeEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 
 interface Location {
   id: string;
@@ -18,6 +18,10 @@ interface Location {
 }
 
 export default function FranchisePage() {
+  // Use Framer Motion hooks for numbers
+  const countAnimation = useAnimation();
+  const [displayCounts, setDisplayCounts] = useState({ available: 0, pending: 0, filled: 0 });
+
   const [locations, setLocations] = useState<Location[]>([]);
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [hoveredLocation, setHoveredLocation] = useState<Location | null>(null);
@@ -71,7 +75,30 @@ export default function FranchisePage() {
         .select('*')
         .in('status', ['available', 'pending', 'filled']);
       if (error) throw error;
-      setLocations(data || []);
+      const dataSafe = data || [];
+      setLocations(dataSafe);
+      
+      // Animate counters
+      let av = 0, pe = 0, fi = 0;
+      dataSafe.forEach((l: any) => {
+        if (l.status === 'available') av++;
+        if (l.status === 'pending') pe++;
+        if (l.status === 'filled') fi++;
+      });
+      
+      // Simple interval animation for numbers
+      let currentAv = 0, currentPe = 0, currentFi = 0;
+      const interval = setInterval(() => {
+        let changed = false;
+        if (currentAv < av) { currentAv++; changed = true; }
+        if (currentPe < pe) { currentPe++; changed = true; }
+        if (currentFi < fi) { currentFi++; changed = true; }
+        
+        setDisplayCounts({ available: currentAv, pending: currentPe, filled: currentFi });
+        
+        if (!changed) clearInterval(interval);
+      }, 50);
+
     } catch (error) {
       console.error('Error fetching franchise locations:', error);
     } finally {
@@ -180,65 +207,84 @@ export default function FranchisePage() {
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center">
-        {/* Animated Background elements */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-50 via-white to-white dark:from-gray-900 dark:via-[#0a0a0a] dark:to-[#0a0a0a]">
-          <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-400/30 dark:bg-brand-500/20 rounded-full blur-[120px] animate-blob mix-blend-multiply dark:mix-blend-lighten" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-400/30 dark:bg-purple-500/20 rounded-full blur-[120px] animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-lighten" />
-          <div className="absolute top-[20%] right-[20%] w-[400px] h-[400px] bg-blue-400/20 dark:bg-blue-500/10 rounded-full blur-[120px] animate-blob animation-delay-4000 mix-blend-multiply dark:mix-blend-lighten" />
+        {/* Cyberpunk Grid Background */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none bg-[#0a0a0a]">
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(14,165,233,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(14,165,233,0.05)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)]" />
+          <div className="absolute top-[20%] left-[20%] w-[300px] h-[300px] bg-brand-500/20 rounded-full blur-[100px] animate-pulse" />
+          <div className="absolute bottom-[20%] right-[20%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
           
-          {/* Subtle Grid */}
-          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+          {/* Moving scanline */}
+          <motion.div 
+            className="absolute top-0 left-0 w-full h-[2px] bg-brand-500/50 shadow-[0_0_20px_rgba(14,165,233,0.8)]"
+            animate={{ top: ['0%', '100%', '0%'] }}
+            transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+          />
         </div>
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
+            className="mb-8 inline-block"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white text-sm font-medium mb-8 backdrop-blur-md shadow-sm">
+            <div className="relative inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-brand-500/10 border border-brand-500/30 text-brand-400 text-xs font-mono uppercase tracking-[0.2em] backdrop-blur-sm">
               <span className="flex h-2 w-2 relative">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
               </span>
-              Exclusive Franchise Opportunity
-            </span>
+              SYSTEM.INIT() // GLOBAL_EXPANSION_PROTOCOL
+              
+              {/* Corner tech accents */}
+              <div className="absolute -top-1 -left-1 w-2 h-2 border-t border-l border-brand-500/50" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 border-t border-r border-brand-500/50" />
+              <div className="absolute -bottom-1 -left-1 w-2 h-2 border-b border-l border-brand-500/50" />
+              <div className="absolute -bottom-1 -right-1 w-2 h-2 border-b border-r border-brand-500/50" />
+            </div>
           </motion.div>
           
           <motion.h1 
-            className="text-6xl sm:text-7xl lg:text-8xl font-extrabold tracking-tight mb-8"
+            className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tight mb-8 text-white uppercase font-sans"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
           >
-            Become Your Own <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 via-blue-500 to-purple-600">Boss.</span>
+            COMMAND YOUR <br className="hidden sm:block" />
+            <span className="relative inline-block">
+              <span className="absolute -inset-2 bg-brand-500/20 blur-xl rounded-full"></span>
+              <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-brand-500 to-purple-500 animate-pulse">EMPIRE.</span>
+            </span>
           </motion.h1>
           
           <motion.p 
-            className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-10 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl sm:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto font-light"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
           >
-            Work remotely, scale your income, and open your very own Kairo Studio office. We provide the blueprint, you reap the rewards.
+            Deploy a Kairo Studio node in your territory. Leverage our enterprise infrastructure to scale a high-yield digital agency from anywhere on Earth.
           </motion.p>
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6"
           >
-            <a href="#apply" className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full font-bold text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(14,165,233,0.3)] dark:hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-brand-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-              <span className="relative flex items-center gap-2 text-white dark:text-gray-900 group-hover:text-white transition-colors">
-                Apply to Partner <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <a href="#apply" className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 bg-transparent text-brand-400 border border-brand-500/50 uppercase font-mono tracking-widest text-sm overflow-hidden transition-all hover:bg-brand-500/10 hover:border-brand-400 hover:shadow-[0_0_30px_rgba(14,165,233,0.4)]">
+              {/* Glitch hover effect block */}
+              <span className="absolute inset-0 w-full h-full bg-brand-500 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out z-0"></span>
+              <span className="relative z-10 flex items-center gap-2 group-hover:text-gray-900 font-bold transition-colors">
+                [ INIT_APPLICATION ] <ArrowRight className="w-4 h-4" />
               </span>
+              
+              {/* Corner accents */}
+              <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-brand-400" />
+              <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-brand-400" />
             </a>
-            <a href="#map-container" className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-full font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-              <Globe className="w-5 h-5" /> View Territories
+            <a href="#map-container" className="group inline-flex items-center justify-center gap-2 px-8 py-4 text-gray-400 hover:text-white uppercase font-mono tracking-widest text-sm transition-colors relative">
+              <Globe className="w-4 h-4 group-hover:animate-spin-slow" /> VIEW_RADAR
+              <span className="absolute bottom-2 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-brand-500 group-hover:w-1/2 transition-all duration-300"></span>
             </a>
           </motion.div>
         </div>
@@ -333,6 +379,61 @@ export default function FranchisePage() {
                 Our central team handles the heavy lifting of development, design, and complex technical SEO. You focus entirely on building relationships, closing deals, and managing accounts.
               </p>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Data Counters Section */}
+      <section className="py-12 bg-gray-950 border-t border-b border-gray-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-overlay"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-gray-800">
+            
+            <motion.div 
+              className="flex flex-col items-center justify-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <div className="text-sm font-mono text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></div> Nodes Available
+              </div>
+              <div className="text-5xl font-black text-white tracking-tighter">
+                {displayCounts.available}
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="flex flex-col items-center justify-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="text-sm font-mono text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div> Booting Up
+              </div>
+              <div className="text-5xl font-black text-white tracking-tighter">
+                {displayCounts.pending}
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="flex flex-col items-center justify-center p-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <div className="text-sm font-mono text-gray-500 mb-2 uppercase tracking-widest flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></div> Active Sectors
+              </div>
+              <div className="text-5xl font-black text-white tracking-tighter">
+                {displayCounts.filled}
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </section>
