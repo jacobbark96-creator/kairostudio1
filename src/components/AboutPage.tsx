@@ -1,10 +1,7 @@
 "use client";
-
-import { ArrowRight, Code, Heart, Zap, Award, Target, Users, Rocket, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowRight, Code, Heart, Zap, Award, Target, Users, Rocket, Sparkles } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import SEO from './SEO';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
 
 const stats = [
   { label: 'Years Experience', value: '5+' },
@@ -38,233 +35,157 @@ const values = [
 
 export default function AboutPage() {
   const { openContactModal } = useUI();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
-    <main className="bg-white dark:bg-[#050505] selection:bg-brand-500/30">
+    <>
       <SEO 
-        title="About Us | Kairo Studio" 
+        title="About Us" 
         description="We are Kairo Studio, a team of passionate creators, strategists, and developers dedicated to transforming your digital presence." 
       />
       
-      {/* HERO SECTION */}
-      <section 
-        ref={containerRef}
-        className="relative pt-40 sm:pt-56 md:pt-64 pb-20 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] flex flex-col items-center justify-center text-center"
-      >
-        {/* Animated Background Gradients */}
-        <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
-            <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-brand-500/10 dark:bg-brand-500/20 rounded-full blur-[120px] animate-blob mix-blend-multiply dark:mix-blend-screen" />
-            <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-purple-500/10 dark:bg-purple-500/20 rounded-full blur-[120px] animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-screen" />
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] dark:opacity-[0.05] mix-blend-overlay" />
+      {/* Hero Section */}
+      <section className="relative pt-40 sm:pt-56 md:pt-64 pb-20 sm:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[60vh] flex items-center">
+        {/* Night Sky Background */}
+        <div className="absolute inset-0 w-full h-full -z-20 overflow-hidden">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
         </div>
 
-        <motion.div 
-          style={{ y, opacity }}
-          className="max-w-5xl mx-auto relative z-10 flex flex-col items-center"
-        >
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 mb-8 backdrop-blur-md"
-          >
-            <Sparkles className="w-4 h-4 text-brand-500" />
-            <span className="text-sm font-semibold tracking-wide text-gray-900 dark:text-white uppercase">Our Mission</span>
-          </motion.div>
+        {/* Background Blobs */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+           <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-400/20 dark:bg-brand-500/10 rounded-full blur-[100px] animate-blob" />
+           <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
+        </div>
 
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black leading-[0.95] tracking-tighter mb-8 text-gray-900 dark:text-white"
-          >
-            We Engineer Digital <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-br from-brand-500 via-blue-500 to-purple-600">
-              Excellence.
+        <div className="max-w-7xl mx-auto w-full relative z-10 text-center mt-16 sm:mt-0">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-8 tracking-tight text-gray-900 dark:text-white">
+            We Build Digital
+            <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-blue-600 to-purple-600 dark:from-brand-400 dark:via-blue-400 dark:to-purple-400">
+              Experiences
             </span>
-          </motion.h1>
+          </h1>
           
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl mx-auto font-light tracking-tight"
-          >
-            Kairo Studio is a collective of passionate creators, strategists, and developers dedicated to transforming your digital presence into an unfair advantage.
-          </motion.p>
-        </motion.div>
+          <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
+            Kairo Studio is a team of passionate creators, strategists, and developers dedicated to transforming your digital presence into a powerful asset.
+          </p>
+        </div>
       </section>
 
-      {/* STATS BENTO */}
-      <section className="relative z-20 -mt-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          {stats.map((stat, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="group relative overflow-hidden rounded-3xl bg-white/60 dark:bg-[#111]/60 backdrop-blur-2xl border border-gray-200/50 dark:border-white/10 p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative z-10 flex flex-col items-center text-center">
-                <div className="text-5xl sm:text-6xl font-display font-black text-gray-900 dark:text-white mb-3 tracking-tighter group-hover:scale-105 transition-transform duration-500 ease-out">
+      {/* Stats Section */}
+      <section className="py-12 sm:py-16 border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-dark-bg sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center group">
+                <div className="text-4xl sm:text-5xl font-display font-bold text-gray-900 dark:text-white mb-2 group-hover:scale-110 transition-transform duration-300">
                   {stat.value}
                 </div>
-                <div className="text-sm sm:text-base text-gray-500 dark:text-gray-400 font-medium tracking-tight">
+                <div className="text-sm sm:text-base text-brand-600 dark:text-brand-400 font-medium uppercase tracking-wider">
                   {stat.label}
                 </div>
               </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* THE MANIFESTO (ORIGIN STORY) */}
-      <section className="py-32 sm:py-48 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            className="space-y-12 sm:space-y-16"
-          >
-            <div>
-              <h2 className="text-sm font-bold tracking-widest text-brand-500 uppercase mb-6">The Origin Story</h2>
-              <h3 className="text-3xl sm:text-5xl md:text-6xl font-display font-black leading-[1.1] tracking-tighter text-gray-900 dark:text-white">
-                Driven by Passion. <br />
-                Defined by Quality.
-              </h3>
-            </div>
-
-            <div className="prose prose-lg sm:prose-xl dark:prose-invert max-w-none text-gray-600 dark:text-gray-300 font-light leading-relaxed tracking-tight">
-              <p className="text-2xl sm:text-3xl text-gray-900 dark:text-white font-medium italic mb-10 border-l-4 border-brand-500 pl-6">
-                  "We're honest. So here's the story..."
-              </p>
-              <div className="space-y-8">
-                  <p>
-                      We wanted to build a website. A business. We contacted a company that was highly rated. 
-                      We were told they were "the best" — and we were quoted over <strong className="text-gray-900 dark:text-white font-semibold">£70,000</strong> for just the first "stages".
-                  </p>
-                  <p>
-                      That wasn't the end. We decided we couldn't afford that, so we went elsewhere. 
-                      The next quote? <strong className="text-gray-900 dark:text-white font-semibold">£600,000</strong>.
-                  </p>
-                  <p>
-                      So the search continued. Stress mounted. Until the famous words arrived:
-                  </p>
-                  
-                  <div className="my-12 p-8 sm:p-12 rounded-3xl bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/10 relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-brand-500" />
-                    <p className="text-xl sm:text-2xl font-medium text-gray-900 dark:text-white m-0 italic">
-                      "F@!K IT! Let's do it ourselves. I'll take online courses at the university. It'll take longer, but let's try."
-                    </p>
-                  </div>
-
-                  <p>
-                      And that's exactly what we did. Our business is going steady, but we're still disappointed to see that our negative experience is still alive and well in the industry today.
-                  </p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                      We're gonna kill that attitude.
-                  </p>
-                  <p>
-                      No more jargon. No more confusion. No more hidden fees. No more pressure. No more stress.
-                  </p>
-                  <p>
-                      We do everything we can, including funding our time from our other ventures, to make sure that we destroy our competition in price, service, and quality.
-                  </p>
-                  <p>
-                      We work remotely, not only because we want to work on the beach, but because it allows at least one of our team to be available 24 hours a day. Meaning no more stress calling and emailing your web manager with no response.
-                  </p>
-                  
-                  <div className="pt-12 mt-12 border-t border-gray-200 dark:border-white/10">
-                    <p className="text-2xl sm:text-3xl font-display font-bold text-brand-500 dark:text-brand-400">
-                        Kairo is here for you, because it was created for us.
-                    </p>
-                  </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* BENTO CORE VALUES */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-sm font-bold tracking-widest text-brand-500 uppercase mb-4">Core Principles</h2>
-            <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-black tracking-tighter text-gray-900 dark:text-white">
-              What drives us forward.
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {values.map((value, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-[2rem] bg-white dark:bg-[#111] border border-gray-200 dark:border-white/10 p-10 sm:p-12 hover:shadow-2xl transition-all duration-500"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                    <value.icon className="w-6 h-6 text-brand-500" />
-                  </div>
-                  <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">{value.title}</h4>
-                  <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                    {value.description}
-                  </p>
-                </div>
-              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PREMIUM CTA */}
-      <section className="py-32 sm:py-40 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="max-w-5xl mx-auto relative z-10">
-          <div className="relative overflow-hidden rounded-[3rem] bg-gray-900 dark:bg-[#0a0a0a] border border-gray-800 dark:border-white/10 p-12 sm:p-20 text-center shadow-2xl">
-            {/* Glowing background inside CTA */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-500/20 rounded-full blur-[120px] pointer-events-none" />
+      {/* Story Section */}
+      <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark-bg relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+            <div className="relative sticky top-32">
+              <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-[2rem] blur-2xl -z-10" />
+              <img 
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800&h=600" 
+                alt="Our Team" 
+                className="rounded-[2rem] shadow-2xl w-full transform hover:scale-[1.02] transition-transform duration-500 mb-8"
+              />
+              <div className="bg-brand-50 dark:bg-brand-900/10 p-8 rounded-3xl border border-brand-100 dark:border-brand-800/30">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Why Kairo?</h3>
+                  <p className="text-gray-600 dark:text-gray-400">
+                      Because we've been in your shoes. We know the frustration of overpriced, under-delivered services. We built Kairo to be the antidote.
+                  </p>
+              </div>
+            </div>
             
-            <div className="relative z-10">
-              <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-black mb-8 text-white tracking-tighter leading-[1.1]">
-                Ready to build something <br className="hidden sm:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-purple-400">
-                  extraordinary?
-                </span>
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold mb-8 text-gray-900 dark:text-white">
+                Driven by Passion, <br/>
+                <span className="text-brand-600 dark:text-brand-400">Defined by Quality</span>
               </h2>
-              <p className="text-xl sm:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto font-light tracking-tight">
-                Stop settling for average. Let's engineer a digital experience that puts you years ahead of your competition.
-              </p>
-              <button
-                onClick={() => openContactModal()}
-                className="group relative inline-flex items-center justify-center gap-3 px-8 py-5 bg-white text-black rounded-full text-lg font-bold overflow-hidden transition-transform hover:scale-105 active:scale-95"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  Start Your Project
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </button>
+              
+              <div className="prose dark:prose-invert max-w-none text-left bg-gray-50 dark:bg-white/5 p-8 rounded-3xl border border-gray-100 dark:border-gray-800">
+                 <p className="text-lg text-gray-700 dark:text-gray-300 font-medium italic mb-6">
+                     "We're honest. So here's the story..."
+                 </p>
+                 <div className="text-base text-gray-600 dark:text-gray-400 space-y-5 leading-relaxed font-light">
+                     <p>
+                         We wanted to build a website. A business. We contacted a company that was highly rated. 
+                         We were told they were "the best" - and we were quoted over <strong className="text-brand-600 dark:text-brand-400">£70,000</strong> for just the first "stages".
+                     </p>
+                     <p>
+                         That wasn't the end. We decided we couldn't afford that, so we went elsewhere. 
+                         The next quote? <strong className="text-brand-600 dark:text-brand-400">£600,000</strong>.
+                     </p>
+                     <p>
+                         So the search continued. Stress mounted. Until the famous words arrived:
+                         <br />
+                         <span className="font-bold text-gray-900 dark:text-white block mt-4 pl-4 border-l-4 border-brand-500 bg-white dark:bg-black/20 p-4 rounded-r-xl italic">
+                             "F@!K IT! Let's do it ourselves. I'll take online courses at the university. It'll take longer, but let's try."
+                         </span>
+                     </p>
+                     <p>
+                         And that's exactly what we did. Our business is going steady, but we're still disappointed to see that our negative experience is still alive and well in the industry today.
+                     </p>
+                     <p className="font-bold text-gray-900 dark:text-white text-lg">
+                         We're gonna kill that attitude.
+                     </p>
+                     <p>
+                         No more jargon. No more confusion. No more hidden fees. No more pressure. No more stress.
+                     </p>
+                     <p>
+                         We do everything we can, including funding our time from our other ventures, to make sure that we destroy our competition in price, service, and quality.
+                     </p>
+                     <p>
+                         We work remotely, not only because we want to work on the beach, but because it allows at least one of our team to be available 24 hours a day. Meaning no more stress calling and emailing your web manager with no response.
+                     </p>
+                     <p className="font-display font-bold text-xl text-brand-600 dark:text-brand-400 pt-4 border-t border-gray-200 dark:border-gray-700 mt-4">
+                         Kairo is here for you, because it was created for us.
+                     </p>
+                 </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
-    </main>
+
+      {/* CTA Section */}
+      <section className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-gray-900 dark:bg-black text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/20 rounded-full blur-[100px]" />
+        
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-6 leading-tight">
+            Ready to Work With Us?
+          </h2>
+          <p className="text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
+            Let's discuss how we can bring your vision to life with a custom solution tailored to your needs.
+          </p>
+          <button
+            onClick={() => openContactModal()}
+            className="group px-8 py-4 bg-white text-black rounded-full hover:bg-brand-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-3 text-lg font-bold shadow-2xl hover:scale-105 active:scale-95 mx-auto"
+          >
+            Get Started Today
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </section>
+    </>
   );
 }
