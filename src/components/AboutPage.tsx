@@ -5,6 +5,7 @@ import { useUI } from '../context/UIContext';
 import SEO from './SEO';
 import DeveloperTerminal from './DeveloperTerminal';
 import HolographicCard from './HolographicCard';
+import CorePrinciplesDeck from './CorePrinciplesDeck';
 import { motion, useScroll, useTransform, useMotionValue, animate } from 'framer-motion';
 import { useRef, useEffect, useState } from 'react';
 
@@ -15,28 +16,6 @@ const stats = [
   { label: 'Team Members', value: 8, suffix: '' },
 ];
 
-const values = [
-  {
-    icon: Target,
-    title: 'Mission Driven',
-    description: 'We focus on creating digital solutions that drive real business results and growth.',
-  },
-  {
-    icon: Heart,
-    title: 'Client First',
-    description: 'Your success is our success. We build lasting partnerships based on trust and transparency.',
-  },
-  {
-    icon: Zap,
-    title: 'Innovation',
-    description: 'We stay ahead of the curve, utilizing the latest technologies to build future-proof solutions.',
-  },
-  {
-    icon: Award,
-    title: 'Excellence',
-    description: 'We take pride in our craft, delivering pixel-perfect designs and robust, scalable code.',
-  },
-];
 
 // Animated Number Component
 function AnimatedNumber({ value, suffix }: { value: number, suffix: string }) {
@@ -268,54 +247,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 4. X-RAY BENTO CORE VALUES */}
-      <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-white/5 relative">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16 sm:mb-24">
-            <h2 className="text-sm font-bold tracking-widest text-brand-500 uppercase mb-4">Core Principles</h2>
-            <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-black tracking-tighter text-gray-900 dark:text-white">
-              What drives us forward.
-            </h3>
-          </div>
-
-          <div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 group/grid"
-            onMouseMove={handleMouseMove}
-          >
-            {values.map((value, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative overflow-hidden rounded-[2rem] bg-white dark:bg-[#111] border border-gray-200 dark:border-white/10 p-10 sm:p-12 hover:shadow-2xl transition-all duration-500"
-              >
-                {/* X-Ray Hover Glow */}
-                <motion.div
-                  className="pointer-events-none absolute -inset-px rounded-[2rem] opacity-0 transition duration-300 group-hover/grid:opacity-100 hidden sm:block"
-                  style={{
-                    background: useTransform(
-                      [mouseX, mouseY],
-                      ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(14, 165, 233, 0.1), transparent 40%)`
-                    )
-                  }}
-                />
-
-                <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                    <value.icon className="w-6 h-6 text-brand-500" />
-                  </div>
-                  <h4 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">{value.title}</h4>
-                  <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed font-light">
-                    {value.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 4. CORE PRINCIPLES (STICKY CARD DECK) */}
+      <CorePrinciplesDeck />
 
             {/* 4.5 TEAM ROSTER (HOLOGRAPHIC CARDS) */}
       <section className="hidden py-24 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-white dark:bg-[#050505]">
