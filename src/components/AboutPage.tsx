@@ -160,10 +160,10 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start relative">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-start relative h-full">
             
             {/* Sticky Visual Side */}
-            <div className="hidden lg:block sticky top-32 h-[calc(100vh-16rem)] flex flex-col justify-center">
+            <div className="hidden lg:block sticky top-32 flex flex-col justify-start pt-16" style={{ height: 'calc(100vh - 8rem)' }}>
               <div className="relative w-full aspect-[4/5] max-w-md mx-auto group">
                 <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/30 to-purple-500/30 rounded-[2.5rem] blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
                 <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-gray-200 dark:border-white/10 shadow-2xl">
