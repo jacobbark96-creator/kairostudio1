@@ -210,9 +210,9 @@ export default function FranchisePage() {
         {/* Background Image */}
         <div className="absolute inset-0 w-full h-full z-0">
           <img 
-            src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=A%20high%20end%20modern%20corporate%20office%20workspace%20with%20sleek%20glass%20windows%20overlooking%20a%20global%20metropolis%20at%20twilight%2C%20minimalist%2C%20premium%2C%20cinematic%20lighting%2C%20architectural%20photography&image_size=landscape_16_9" 
-            alt="Corporate Office" 
-            className="w-full h-full object-cover opacity-60 mix-blend-luminosity"
+            src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2938&auto=format&fit=crop" 
+            alt="Premium Corporate Architecture" 
+            className="w-full h-full object-cover opacity-50 mix-blend-luminosity"
           />
           {/* Gradient Overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black"></div>
