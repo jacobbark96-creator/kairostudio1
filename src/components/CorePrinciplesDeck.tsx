@@ -80,16 +80,9 @@ export default function CorePrinciplesDeck() {
   });
 
   return (
-    <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-white/5" style={{ height: `${principles.length * 100}vh` }}>
-      {/* Title that stays sticky behind the cards */}
-      <div className="sticky top-0 h-screen flex flex-col items-center pt-24 md:pt-32 pointer-events-none z-0">
-         <h2 className="text-sm font-bold tracking-widest text-brand-500 uppercase mb-4 drop-shadow-md">Core Principles</h2>
-         <h3 className="text-4xl sm:text-5xl md:text-7xl font-display font-black tracking-tighter text-gray-900 dark:text-white drop-shadow-xl text-center">
-           What drives us forward.
-         </h3>
-      </div>
-      
-      <div className="relative -mt-[100vh]">
+    <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-white/5 pt-20" style={{ height: `calc(${principles.length * 100}vh + 5rem)` }}>
+      {/* Cards container */}
+      <div className="relative">
         {principles.map((p, i) => (
           <Card key={i} principle={p} index={i} progress={scrollYProgress} totalCards={principles.length} />
         ))}

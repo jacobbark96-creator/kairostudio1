@@ -268,7 +268,9 @@ export default function AboutPage() {
       </section>
 
       {/* 4. CORE PRINCIPLES (STICKY CARD DECK) */}
-      <CorePrinciplesDeck />
+      <div className="pt-24 sm:pt-32">
+        <CorePrinciplesDeck />
+      </div>
 
             {/* 4.5 TEAM ROSTER (HOLOGRAPHIC CARDS) */}
       <section className="hidden py-24 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-white dark:bg-[#050505]">
