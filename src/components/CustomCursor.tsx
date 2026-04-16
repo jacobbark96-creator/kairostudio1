@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function CustomCursor() {
-  const [isHovered, setIsHovered] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   
@@ -26,35 +25,17 @@ export default function CustomCursor() {
       if (!isVisible) setIsVisible(true);
     };
 
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName.toLowerCase() === 'a' ||
-        target.tagName.toLowerCase() === 'button' ||
-        target.closest('a') ||
-        target.closest('button') ||
-        target.closest('.cursor-pointer') ||
-        window.getComputedStyle(target).cursor === 'pointer'
-      ) {
-        setIsHovered(true);
-      } else {
-        setIsHovered(false);
-      }
-    };
-
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
     const handleMouseLeave = () => setIsVisible(false);
 
     window.addEventListener('mousemove', moveCursor);
-    window.addEventListener('mouseover', handleMouseOver);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
-      window.removeEventListener('mouseover', handleMouseOver);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mouseleave', handleMouseLeave);
@@ -94,9 +75,9 @@ export default function CustomCursor() {
           opacity: isVisible ? 1 : 0
         }}
         animate={{
-          scale: isHovered ? 1.8 : isClicking ? 0.8 : 1,
-          backgroundColor: isHovered ? 'rgba(14, 165, 233, 0.1)' : 'rgba(14, 165, 233, 0)',
-          borderColor: isHovered ? 'rgba(14, 165, 233, 0.8)' : 'rgba(14, 165, 233, 0.5)',
+          scale: isClicking ? 0.8 : 1,
+          backgroundColor: 'rgba(14, 165, 233, 0)',
+          borderColor: 'rgba(14, 165, 233, 0.5)',
         }}
         transition={{ duration: 0.15 }}
       />
