@@ -206,7 +206,7 @@ export default function FranchisePage() {
       <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center bg-black">
+      <section className="relative pt-40 pb-20 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center bg-black">
         {/* Background Image */}
         <div className="absolute inset-0 w-full h-full z-0">
           <img 
