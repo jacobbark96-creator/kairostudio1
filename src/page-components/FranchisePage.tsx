@@ -514,6 +514,7 @@ export default function FranchisePage() {
               minZoom={1}
               maxZoom={20}
               dragRotate={false}
+              scrollZoom={false}
             >
               <NavigationControl position="bottom-right" />
               
