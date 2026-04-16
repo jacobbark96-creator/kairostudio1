@@ -297,8 +297,9 @@ export default function HomePage() {
             
             <div className="flex justify-center lg:justify-end relative">
               {/* DESKTOP BOX - Hidden on mobile */}
-              <div className="hidden md:block w-full max-w-lg relative z-10 transform hover:scale-[1.01] transition-all duration-500">
-                <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-gray-200 dark:border-gray-800">
+              <div className="hidden md:block w-full max-w-lg relative z-10 transform hover:scale-[1.01] transition-all duration-500 group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-brand-500 via-purple-500 to-blue-500 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-white/50 dark:border-white/10">
                     <div className="relative z-10 p-10 text-center">
                         
                         <h3 className="text-4xl font-display font-black text-gray-900 dark:text-white mb-3 tracking-tight">
@@ -319,7 +320,7 @@ export default function HomePage() {
                                     Enter your URL below to get a comprehensive performance and SEO breakdown.
                                 </p>
                                 
-                                <div className="w-full relative overflow-hidden min-h-[300px] flex items-start justify-center transition-all duration-500">
+                                <div className="w-full relative overflow-hidden min-h-[380px] flex items-start justify-center transition-all duration-500">
                                     <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
                                         <form 
                                             onSubmit={handleAuditSubmit}
@@ -403,7 +404,7 @@ export default function HomePage() {
                   </button>
                   
                   {/* Site Assessment Feature */}
-                  <div className="relative w-full overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-gray-200 dark:border-gray-800">
+                  <div className="relative w-full overflow-hidden rounded-3xl bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-white/50 dark:border-white/10">
                       <div className="relative z-10 p-8 text-center max-h-[85vh] overflow-y-auto">
                           
                           <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-2 tracking-tight">
@@ -424,7 +425,7 @@ export default function HomePage() {
                                       Enter your URL below to get a comprehensive performance and SEO breakdown.
                                   </p>
                                   
-                                  <div className="w-full relative overflow-hidden min-h-[250px] flex items-start justify-center transition-all duration-500">
+                                  <div className="w-full relative overflow-hidden min-h-[320px] flex items-start justify-center transition-all duration-500">
                                       <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
                                           <form 
                                               onSubmit={handleAuditSubmit}
