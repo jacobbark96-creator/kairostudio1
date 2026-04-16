@@ -77,7 +77,7 @@ export default function AboutPage() {
   }
 
     return (
-      <div className="bg-white dark:bg-[#050505] selection:bg-brand-500/30 overflow-hidden">
+      <div className="bg-white dark:bg-[#050505] selection:bg-brand-500/30">
         <SEO 
           title="About Us | Kairo Studio" 
           description="We are Kairo Studio, a team of passionate creators, strategists, and developers dedicated to transforming your digital presence." 
