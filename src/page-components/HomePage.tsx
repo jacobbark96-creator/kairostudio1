@@ -14,6 +14,26 @@ import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
 
 export default function HomePage() {
+  
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleServicesMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  const [marqueeProjects, setMarqueeProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchMarquee = async () => {
+      const { data } = await supabase.from('projects').select('id, client_name, logo_url, image_url').eq('show_in_marquee', true);
+      if (data) setMarqueeProjects(data);
+    };
+    fetchMarquee();
+  }, []);
+
   const { isJackpot, triggerJackpot } = useUI();
   const [heroTitle, setHeroTitle] = useState('We craft digital experiences that inspire');
   const [heroTitleAlt1, setHeroTitleAlt1] = useState('We build brands that convert');
@@ -444,8 +464,119 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      {/* Infinite Tech-Stack & Partner Marquee */}
+      <section className="py-12 border-b border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-[#050505]/50 overflow-hidden relative">
+        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-gray-50 dark:from-[#050505] to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-gray-50 dark:from-[#050505] to-transparent z-10 pointer-events-none" />
+        
+        <div className="flex flex-col gap-10">
+          {/* Tech Stack Marquee */}
+          <div className="flex whitespace-nowrap animate-[marquee_30s_linear_infinite] opacity-60 dark:opacity-40 hover:opacity-100 transition-opacity duration-300">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex items-center gap-16 mx-8">
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">React</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">Next.js</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">TailwindCSS</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">TypeScript</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">Supabase</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">Stripe</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">Vercel</span>
+                <span className="text-2xl font-bold font-display text-gray-800 dark:text-gray-200">Framer Motion</span>
+              </div>
+            ))}
+          </div>
 
-      <section className="py-16 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden block md:hidden">
+          {/* Client Logos Marquee (Only shows if projects exist) */}
+          {marqueeProjects.length > 0 && (
+            <div className="flex whitespace-nowrap animate-[marquee_40s_linear_infinite_reverse] opacity-70 hover:opacity-100 transition-opacity duration-300">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex items-center gap-16 mx-8">
+                  {marqueeProjects.map((p: any) => (
+                    <div key={p.id} className="flex items-center gap-4">
+                      {p.logo_url || p.image_url ? (
+                        <img src={p.logo_url || p.image_url} alt={p.client_name} className="h-10 object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+                      ) : (
+                        <span className="text-xl font-bold text-gray-600 dark:text-gray-400">{p.client_name}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+
+      
+      {/* Code-to-Canvas Interactive Section */}
+      <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-white dark:bg-[#0a0a0a]">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16 sm:mb-24">
+            <h2 className="text-sm font-bold tracking-widest text-brand-500 uppercase mb-4">How We Build</h2>
+            <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-black tracking-tighter text-gray-900 dark:text-white mb-6">
+              Code to Canvas.
+            </h3>
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light">
+              We bridge the gap between complex engineering and beautiful design, creating pixel-perfect interfaces powered by robust logic.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 items-stretch max-w-6xl mx-auto">
+            {/* The Code Side */}
+            <div className="rounded-3xl bg-[#0d1117] border border-gray-800 p-6 sm:p-8 shadow-2xl relative overflow-hidden group">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
+                <span className="ml-2 text-xs font-mono text-gray-500">HeroSection.tsx</span>
+              </div>
+              <div className="font-mono text-sm sm:text-base leading-relaxed overflow-x-auto text-gray-300">
+                <div className="flex"><span className="text-purple-400 mr-2">import</span><span>{'{'} motion {'}'}</span><span className="text-purple-400 ml-2">from</span><span className="text-green-400 ml-2">'framer-motion'</span><span>;</span></div>
+                <div className="flex mt-4"><span className="text-purple-400 mr-2">export default function</span><span className="text-blue-400">Hero</span><span>() {'{'}</span></div>
+                <div className="flex ml-4 mt-2"><span className="text-purple-400 mr-2">return</span><span>(</span></div>
+                <div className="flex ml-8 mt-2"><span>&lt;</span><span className="text-red-400">motion.div</span></div>
+                <div className="flex ml-12"><span className="text-orange-300">initial</span><span>=</span><span className="text-blue-300">{"{{"}</span><span> opacity: </span><span className="text-orange-400">0</span><span>, y: </span><span className="text-orange-400">20</span><span> </span><span className="text-blue-300">{"}}"}</span></div>
+                <div className="flex ml-12"><span className="text-orange-300">animate</span><span>=</span><span className="text-blue-300">{"{{"}</span><span> opacity: </span><span className="text-orange-400">1</span><span>, y: </span><span className="text-orange-400">0</span><span> </span><span className="text-blue-300">{"}}"}</span></div>
+                <div className="flex ml-12"><span className="text-orange-300">className</span><span>=</span><span className="text-green-400">"text-6xl font-black"</span></div>
+                <div className="flex ml-8"><span>&gt;</span></div>
+                <div className="flex ml-12 text-white">Digital Excellence</div>
+                <div className="flex ml-8"><span>&lt;/</span><span className="text-red-400">motion.div</span><span>&gt;</span></div>
+                <div className="flex ml-4"><span>);</span></div>
+                <div className="flex"><span>{'}'}</span></div>
+                
+                {/* Simulated typing cursor */}
+                <div className="w-2 h-5 bg-brand-400 animate-pulse mt-4" />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-50" />
+            </div>
+
+            {/* The Canvas Side */}
+            <div className="rounded-3xl bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/5 p-8 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center text-center group">
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-500/20 rounded-full blur-[80px] group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+              
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.5 }}
+                transition={{ duration: 0.8 }}
+                className="relative z-10"
+              >
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/10 border border-gray-200 dark:border-white/10 mb-6 shadow-sm">
+                  <Sparkles className="w-4 h-4 text-brand-500" />
+                  <span className="text-xs font-semibold tracking-wide text-gray-900 dark:text-white uppercase">Live Preview</span>
+                </div>
+                <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-black text-gray-900 dark:text-white tracking-tighter drop-shadow-sm">
+                  Digital Excellence
+                </h3>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+<section className="py-16 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden block md:hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-10 sm:mb-24">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4 text-gray-900 dark:text-white tracking-tight">
@@ -480,7 +611,10 @@ export default function HomePage() {
             </Link>
           </div>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
+          <div 
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 group/grid"
+            onMouseMove={handleServicesMouseMove}
+          >
             {services.map((service, index) => (
               <Link
                 key={index}
@@ -489,19 +623,41 @@ export default function HomePage() {
                   index === 1 ? 'md:-translate-y-8' : ''
                 }`}
               >
-                <div className="mb-8">
+                
+                {/* X-Ray Hover Glow */}
+                <motion.div
+                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover/grid:opacity-100 hidden sm:block"
+                  style={{
+                    background: useTransform(
+                      [mouseX, mouseY],
+                      ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(14, 165, 233, 0.15), transparent 40%)`
+                    )
+                  }}
+                />
+                <motion.div
+                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover/grid:opacity-100 hidden sm:block mix-blend-overlay"
+                  style={{
+                    background: useTransform(
+                      [mouseX, mouseY],
+                      ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(255, 255, 255, 0.1), transparent 40%)`
+                    )
+                  }}
+                />
+                
+                <div className="relative z-10 mb-8">
+
                   <service.icon className="w-8 h-8 text-brand-600 dark:text-brand-500 transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 
-                <h3 className="text-2xl font-display font-bold mb-3 text-gray-900 dark:text-white">
+                <h3 className="relative z-10 text-2xl font-display font-bold mb-3 text-gray-900 dark:text-white">
                   {service.title}
                 </h3>
                 
-                <p className="text-gray-500 dark:text-gray-400 font-medium text-base leading-relaxed mb-8 flex-grow">
+                <p className="relative z-10 text-gray-500 dark:text-gray-400 font-medium text-base leading-relaxed mb-8 flex-grow">
                   {service.description}
                 </p>
                 
-                <div className="mt-auto flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white transition-all">
+                <div className="relative z-10 mt-auto flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white transition-all">
                   Explore <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </Link>

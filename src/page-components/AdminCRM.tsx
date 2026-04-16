@@ -23,10 +23,12 @@ export default function AdminCRM() {
     client_name: '',
     client_industry: '',
     client_location: '',
-    color: 'from-cyan-500 to-blue-600'
+    color: 'from-cyan-500 to-blue-600',
+    show_in_marquee: false
   });
   const [projectImage, setProjectImage] = useState<File | null>(null);
   const [mobileProjectImage, setMobileProjectImage] = useState<File | null>(null);
+  const [logoImage, setLogoImage] = useState<File | null>(null);
   const [savingProject, setSavingProject] = useState(false);
   
   // Invoice State
@@ -1139,6 +1141,17 @@ export default function AdminCRM() {
     try {
       let imageUrl = editingProject?.image_url;
       let mobileImageUrl = editingProject?.mobile_image_url;
+      let logoUrl = editingProject?.logo_url;
+
+      if (logoImage) {
+        const fileExt = logoImage.name.split('.').pop();
+        const fileName = `logo_${Math.random()}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage.from('portfolio').upload(fileName, logoImage);
+        if (uploadError) throw uploadError;
+        const { data: { publicUrl } } = supabase.storage.from('portfolio').getPublicUrl(fileName);
+        logoUrl = publicUrl;
+      }
+
 
       if (projectImage) {
         const fileExt = projectImage.name.split('.').pop();
@@ -1179,7 +1192,9 @@ export default function AdminCRM() {
       const projectData = {
         ...projectForm,
         image_url: imageUrl,
-        mobile_image_url: mobileImageUrl
+        mobile_image_url: mobileImageUrl,
+        logo_url: logoUrl,
+        show_in_marquee: projectForm.show_in_marquee
       };
 
       if (editingProject) {
@@ -1204,10 +1219,12 @@ export default function AdminCRM() {
         client_name: '',
         client_industry: '',
         client_location: '',
-        color: 'from-cyan-500 to-blue-600'
+        color: 'from-cyan-500 to-blue-600',
+        show_in_marquee: false
       });
       setProjectImage(null);
       setMobileProjectImage(null);
+      setLogoImage(null);
       setEditingProject(null);
       fetchProjects();
     } catch (error: any) {
@@ -1235,7 +1252,8 @@ export default function AdminCRM() {
       client_name: project.client_name || '',
       client_industry: project.client_industry || '',
       client_location: project.client_location || '',
-      color: project.color || 'from-cyan-500 to-blue-600'
+      color: project.color || 'from-cyan-500 to-blue-600',
+      show_in_marquee: project.show_in_marquee || false
     });
     setActiveTab('portfolio');
   };
@@ -2016,7 +2034,8 @@ export default function AdminCRM() {
                         client_name: '',
                         client_industry: '',
                         client_location: '',
-                        color: 'from-cyan-500 to-blue-600'
+                        color: 'from-cyan-500 to-blue-600',
+                        show_in_marquee: false
                       });
                       setProjectImage(null);
                     }}
