@@ -206,10 +206,21 @@ export default function FranchisePage() {
       <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center bg-white dark:bg-black">
+      <section className="relative pt-40 pb-20 mt-16 overflow-hidden min-h-[80vh] flex flex-col items-center justify-center text-center bg-black">
+        {/* Background Image */}
+        <div className="absolute inset-0 w-full h-full z-0">
+          <img 
+            src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=A%20high%20end%20modern%20corporate%20office%20workspace%20with%20sleek%20glass%20windows%20overlooking%20a%20global%20metropolis%20at%20twilight%2C%20minimalist%2C%20premium%2C%20cinematic%20lighting%2C%20architectural%20photography&image_size=landscape_16_9" 
+            alt="Corporate Office" 
+            className="w-full h-full object-cover opacity-60 mix-blend-luminosity"
+          />
+          {/* Gradient Overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black"></div>
+        </div>
+
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
           <motion.h1 
-            className="text-7xl sm:text-8xl lg:text-[140px] font-black tracking-tighter mb-8 text-gray-900 dark:text-white leading-[0.9]"
+            className="text-7xl sm:text-8xl lg:text-[140px] font-black tracking-tighter mb-8 text-white leading-[0.9]"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -218,7 +229,7 @@ export default function FranchisePage() {
           </motion.h1>
           
           <motion.p 
-            className="text-2xl sm:text-3xl text-gray-500 dark:text-gray-400 mb-12 max-w-3xl mx-auto font-medium tracking-tight"
+            className="text-2xl sm:text-3xl text-gray-300 mb-12 max-w-3xl mx-auto font-medium tracking-tight"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -232,10 +243,10 @@ export default function FranchisePage() {
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <a href="#apply" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold text-lg hover:scale-105 transition-transform duration-300">
+            <a href="#apply" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-white text-black rounded-full font-bold text-lg hover:scale-105 transition-transform duration-300">
               Apply to Partner <ArrowRight className="w-5 h-5" />
             </a>
-            <a href="#map-container" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-gray-100 dark:bg-gray-900 text-black dark:text-white rounded-full font-bold text-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-300">
+            <a href="#map-container" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 transition-colors duration-300">
               <Globe className="w-5 h-5" /> View Territories
             </a>
           </motion.div>
