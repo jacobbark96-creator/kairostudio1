@@ -4,6 +4,7 @@ import Layout from '../src/components/Layout';
 import { AnimatePresence, motion } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import { LayoutRouterContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import CustomCursor from '../src/components/CustomCursor';
 
 function FrozenRouter({ children }: { children: React.ReactNode }) {
   const context = useContext(LayoutRouterContext ?? React.createContext(null));
@@ -78,6 +79,7 @@ export default function RootWrapper({ children }: { children: React.ReactNode })
 
   return (
     <>
+      <CustomCursor />
       <Layout>
         <AnimatePresence mode="wait">
           <motion.div key={pathname} className="w-full h-full relative">

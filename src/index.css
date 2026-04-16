@@ -3,6 +3,22 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    cursor: none !important; /* Hide default cursor on desktop */
+  }
+  
+  a, button, [role="button"], input, select, textarea {
+    cursor: none !important; /* Hide pointer cursor on interactive elements */
+  }
+}
+
+@media (pointer: coarse) {
+  body, a, button, [role="button"], input, select, textarea {
+    cursor: auto !important; /* Show default cursor on touch devices */
+  }
+}
+
+@layer base {
 	html {
 		scroll-behavior: smooth;
 		-webkit-text-size-adjust: 100%;
