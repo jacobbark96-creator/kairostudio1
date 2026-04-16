@@ -2,6 +2,7 @@
 import { ArrowRight, Code, Heart, Zap, Award, Target, Users, Rocket, Sparkles } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import SEO from './SEO';
+import { motion } from 'framer-motion';
 
 const stats = [
   { label: 'Years Experience', value: '5+' },
@@ -62,7 +63,11 @@ export default function AboutPage() {
            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-400/20 dark:bg-purple-500/10 rounded-full blur-[100px] animate-blob animation-delay-2000" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full relative z-10 text-center mt-16 sm:mt-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-7xl mx-auto w-full relative z-10 text-center mt-16 sm:mt-0">
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold leading-[1.1] mb-8 tracking-tight text-gray-900 dark:text-white">
             We Build Digital
             <br />
@@ -74,23 +79,36 @@ export default function AboutPage() {
           <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed max-w-3xl mx-auto font-light">
             Kairo Studio is a team of passionate creators, strategists, and developers dedicated to transforming your digital presence into a powerful asset.
           </p>
-        </div>
+        </motion.div>
       </section>
 
       {/* Stats Section */}
       <section className="py-12 sm:py-16 border-y border-gray-100 dark:border-gray-800 bg-white dark:bg-dark-bg sm:bg-white/50 sm:dark:bg-white/5 sm:backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+              className="col-span-2 md:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12"
+            >
             {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
+              <motion.div 
+                key={index} 
+                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                transition={{ duration: 0.5 }}
+                className="text-center group"
+              >
                 <div className="text-4xl sm:text-5xl font-display font-bold text-gray-900 dark:text-white mb-2 group-hover:scale-110 transition-transform duration-300">
                   {stat.value}
                 </div>
                 <div className="text-sm sm:text-base text-brand-600 dark:text-brand-400 font-medium uppercase tracking-wider">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </motion.div>
           </div>
         </div>
       </section>
@@ -98,7 +116,13 @@ export default function AboutPage() {
       {/* Story Section */}
       <section className="py-20 sm:py-32 px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark-bg relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start"
+          >
             <div className="relative sticky top-32">
               <div className="absolute inset-0 bg-gradient-to-tr from-brand-500/20 to-purple-500/20 rounded-[2rem] blur-2xl -z-10" />
               <img 
@@ -161,7 +185,7 @@ export default function AboutPage() {
                  </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -170,7 +194,13 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-500/20 rounded-full blur-[100px]" />
         
-        <div className="max-w-4xl mx-auto text-center relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="max-w-4xl mx-auto text-center relative z-10"
+        >
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-6 leading-tight">
             Ready to Work With Us?
           </h2>
@@ -184,7 +214,7 @@ export default function AboutPage() {
             Get Started Today
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
-        </div>
+        </motion.div>
       </section>
     </>
   );
