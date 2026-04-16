@@ -169,8 +169,12 @@ export default function AboutPage() {
         <DeveloperTerminal onModeChange={setIsTerminalMode} />
       </section>
 
-      <div className={isTerminalMode ? 'hidden' : 'block'}>
-      {/* 3. THE MANIFESTO (APPLE STICKY SCROLL) */}
+      {/* Wrapping the rest of the content in motion.div to push down when terminal expands */}
+      <motion.div 
+        layout
+        transition={{ type: "spring", stiffness: 200, damping: 25 }}
+      >
+        {/* 3. THE MANIFESTO (APPLE STICKY SCROLL) */}
       <section className="py-24 sm:py-32 relative overflow-visible">
         {/* Faint Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
@@ -320,8 +324,8 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
-      </section>
-      </div>
+        </section>
+      </motion.div>
     </div>
   );
 }
