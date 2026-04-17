@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Code, Layout, ArrowRight, RotateCcw } from 'lucide-react';
+import { Sparkles, Layout, ArrowRight, RotateCcw } from 'lucide-react';
 
 // The simulated typing sequence
 const codeSequence = [
@@ -101,10 +101,6 @@ export default function CodeToCanvas() {
     <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-white dark:bg-[#050505]">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16 sm:mb-24">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 border border-brand-500/20 mb-6">
-            <Code className="w-4 h-4 text-brand-500" />
-            <span className="text-xs font-bold tracking-widest text-brand-500 uppercase">Live Compilation</span>
-          </div>
           <h3 className="text-4xl sm:text-5xl md:text-6xl font-display font-black tracking-tighter text-gray-900 dark:text-white mb-6">
             Code to Canvas.
           </h3>
