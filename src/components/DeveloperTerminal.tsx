@@ -13,6 +13,7 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
   const fullPlaceholder = "Give me a command.... Examples are tellme --more or bookme appointment";
   const inputRef = useRef<HTMLInputElement>(null);
   const outputEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Typewriter effect for placeholder
   useEffect(() => {
@@ -29,13 +30,12 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
     return () => clearInterval(intervalId);
   }, [isTerminalMode]);
 
-  // Auto scroll to bottom, but we want to prevent the browser from scrolling the whole page
-  // when the terminal output updates.
+  // Auto scroll to bottom safely without moving the browser window
   useEffect(() => {
-    if (outputEndRef.current) {
-      outputEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
     }
-  }, [outputLines]);
+  }, [outputLines, isTerminalMode]);
 
   const processCommand = async (cmd: string) => {
     const trimmed = cmd.trim().toLowerCase();
@@ -132,7 +132,7 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
         </div>
 
         {/* Terminal Body */}
-        <div className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar flex flex-col relative" onClick={() => inputRef.current?.focus()}>
+        <div ref={scrollContainerRef} className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar flex flex-col relative" onClick={() => inputRef.current?.focus({ preventScroll: true })}>
           <AnimatePresence>
             {isTerminalMode && (
               <motion.div 
@@ -170,6 +170,10 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
               <input
                 ref={inputRef}
                 type="text"
+                onFocus={(e) => {
+                  // Additional protection to prevent browser scroll jumping when focused
+                  e.target.scrollIntoView = () => {};
+                }}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 className="w-full bg-transparent border-none outline-none text-white focus:ring-0 p-0 caret-transparent"
