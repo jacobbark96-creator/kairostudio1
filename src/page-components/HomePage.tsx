@@ -528,7 +528,7 @@ export default function HomePage() {
       )}
 
 
-<section className="py-16 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden block md:hidden">
+<section className="hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-10 sm:mb-24">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4 text-gray-900 dark:text-white tracking-tight">
@@ -564,14 +564,14 @@ export default function HomePage() {
           </div>
           
           <div 
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 group/grid"
+            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none pb-8 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 group/grid no-scrollbar"
             onMouseMove={handleServicesMouseMove}
           >
             {services.map((service, index) => (
               <Link
                 key={index}
                 href="/services"
-                className={`group flex flex-col p-8 sm:p-10 bg-white dark:bg-[#0a0a0a] rounded-3xl border border-gray-200 dark:border-gray-800 hover:border-brand-500/50 dark:hover:border-brand-500/50 shadow-sm hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden ${
+                className={`min-w-[85vw] sm:min-w-0 snap-center shrink-0 group flex flex-col p-8 sm:p-10 bg-white dark:bg-[#0a0a0a] rounded-3xl border border-gray-200 dark:border-gray-800 hover:border-brand-500/50 dark:hover:border-brand-500/50 shadow-sm hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden ${
                   index === 1 ? 'md:-translate-y-8' : ''
                 }`}
               >

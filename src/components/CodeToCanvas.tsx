@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Code, Layout, ArrowRight } from 'lucide-react';
+import { Sparkles, Code, Layout, ArrowRight, RotateCcw } from 'lucide-react';
 
 // The simulated typing sequence
 const codeSequence = [
@@ -15,7 +15,8 @@ const codeSequence = [
   { text: "      whileHover={{ rotate: 3 }}", color: "text-orange-300", type: "prop", triggerAnimation: "hover" },
   { text: "      className=\"premium-glass-card\"", color: "text-green-400", type: "prop", triggerAnimation: "style" },
   { text: "    >", color: "text-red-400", type: "tag" },
-  { text: "      Digital Excellence", color: "text-white", type: "content", triggerAnimation: "content" },
+  { text: "      Type 'Showme --secrets' into the", color: "text-white", type: "content" },
+  { text: "      code on About page for a surprise", color: "text-white", type: "content", triggerAnimation: "content" },
   { text: "    </motion.div>", color: "text-red-400", type: "tag" },
   { text: "  );", color: "text-purple-400", type: "return" },
   { text: "}", color: "text-blue-400", type: "function" }
@@ -26,7 +27,8 @@ export default function CodeToCanvas() {
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
   const [canvasState, setCanvasState] = useState("idle");
-  const [showPacket, setShowPacket] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [showFlipButton, setShowFlipButton] = useState(false);
 
   // Typing logic
   useEffect(() => {
@@ -38,36 +40,24 @@ export default function CodeToCanvas() {
       if (currentCharIndex < currentLine.text.length) {
         const timeout = setTimeout(() => {
           setCurrentCharIndex(prev => prev + 1);
-        }, 30); // Typing speed
+        }, 20); // Typing speed
         return () => clearTimeout(timeout);
       } else {
         // Line finished typing
         const timeout = setTimeout(() => {
           if (currentLine.triggerAnimation) {
-            // Trigger the visual data packet transfer
-            setShowPacket(true);
-            setTimeout(() => setShowPacket(false), 600); // Packet travel time
-            
-            // Update canvas state after packet arrives
-            setTimeout(() => {
-              setCanvasState(currentLine.triggerAnimation as string);
-            }, 600);
+            setCanvasState(currentLine.triggerAnimation as string);
           }
           
           setCurrentLineIndex(prev => prev + 1);
           setCurrentCharIndex(0);
           
-          // Pause slightly longer at the end of the whole block before restarting
+          // End of block
           if (currentLineIndex === codeSequence.length - 1) {
             setIsTyping(false);
-            setTimeout(() => {
-              setCurrentLineIndex(0);
-              setCurrentCharIndex(0);
-              setCanvasState("idle");
-              setIsTyping(true);
-            }, 3000);
+            setShowFlipButton(true);
           }
-        }, 500); // Pause between lines
+        }, 300); // Pause between lines
         return () => clearTimeout(timeout);
       }
     }
@@ -91,6 +81,22 @@ export default function CodeToCanvas() {
     }
   };
 
+  const handleFlip = () => {
+    setIsFlipped(true);
+  };
+
+  const handleReset = () => {
+    setIsFlipped(false);
+    setShowFlipButton(false);
+    setCurrentLineIndex(0);
+    setCurrentCharIndex(0);
+    setCanvasState("idle");
+    // Wait for flip to complete before restarting typing
+    setTimeout(() => {
+      setIsTyping(true);
+    }, 600);
+  };
+
   return (
     <section className="py-24 sm:py-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-white dark:bg-[#050505]">
       <div className="max-w-7xl mx-auto relative z-10">
@@ -103,30 +109,21 @@ export default function CodeToCanvas() {
             Code to Canvas.
           </h3>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-light">
-            Watch raw logic instantly compile into breathtaking design. We build pixel-perfect interfaces that move as fast as you do.
+            Watch raw logic compile into breathtaking design. We build pixel-perfect interfaces that move as fast as you do.
           </p>
         </div>
 
-        <div className="relative max-w-6xl mx-auto">
-          {/* Connecting Data Line between boxes */}
-          <div className="absolute top-1/2 left-[40%] right-[40%] h-0.5 bg-gray-200 dark:bg-gray-800 -translate-y-1/2 z-0 hidden lg:block" />
-          
-          {/* Animated Data Packet */}
-          <AnimatePresence>
-            {showPacket && (
-              <motion.div
-                initial={{ left: "45%", opacity: 0, scale: 0.5 }}
-                animate={{ left: "55%", opacity: 1, scale: 1.5 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="absolute top-1/2 -translate-y-1/2 w-4 h-1 bg-brand-500 rounded-full shadow-[0_0_15px_rgba(14,165,233,0.8)] z-10 hidden lg:block"
-              />
-            )}
-          </AnimatePresence>
-
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-stretch relative z-10">
-            {/* LEFT: The Code Side */}
-            <div className="rounded-3xl bg-[#0d1117] border border-gray-800 p-6 sm:p-8 shadow-2xl relative overflow-hidden group h-[450px] flex flex-col">
+        <div className="relative max-w-4xl mx-auto perspective-1000 h-[550px] sm:h-[450px]">
+          <motion.div
+            className="w-full h-full relative transform-style-3d"
+            initial={false}
+            animate={{ rotateY: isFlipped ? 180 : 0 }}
+            transition={{ duration: 0.8, type: "spring", stiffness: 80, damping: 20 }}
+          >
+            {/* FRONT: The Code Side */}
+            <div 
+              className="absolute inset-0 w-full h-full backface-hidden rounded-3xl bg-[#0d1117] border border-gray-800 p-6 sm:p-8 shadow-2xl overflow-hidden group flex flex-col"
+            >
               <div className="flex items-center justify-between mb-6 shrink-0">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
@@ -135,12 +132,12 @@ export default function CodeToCanvas() {
                   <span className="ml-3 text-xs font-mono text-gray-500">HeroSection.tsx</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-mono text-brand-400 bg-brand-500/10 px-2 py-1 rounded">
-                  <div className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
-                  Compiling...
+                  <div className={`w-2 h-2 rounded-full bg-brand-500 ${isTyping ? 'animate-pulse' : ''}`} />
+                  {isTyping ? 'Compiling...' : 'Compiled'}
                 </div>
               </div>
 
-              <div className="font-mono text-sm sm:text-base leading-relaxed overflow-x-auto text-gray-300 flex-1 relative">
+              <div className="font-mono text-xs sm:text-sm leading-relaxed overflow-x-auto text-gray-300 flex-1 relative">
                 {codeSequence.map((line, index) => {
                   if (index > currentLineIndex) return null;
                   
@@ -149,7 +146,6 @@ export default function CodeToCanvas() {
                     ? line.text.substring(0, currentCharIndex) 
                     : line.text;
 
-                  // Basic syntax highlighting rendering based on type
                   const renderHighlightedText = () => {
                     if (line.type === "import" || line.type === "function" || line.type === "return") {
                       return <span className={line.color}>{textToShow}</span>;
@@ -158,7 +154,6 @@ export default function CodeToCanvas() {
                       return <span className={line.color}>{textToShow}</span>;
                     }
                     if (line.type === "prop") {
-                      // Split property name and value roughly
                       const parts = textToShow.split('=');
                       if (parts.length > 1) {
                         return (
@@ -175,29 +170,45 @@ export default function CodeToCanvas() {
                   return (
                     <div key={index} className={`whitespace-pre transition-colors duration-300 ${isCurrentLine ? 'bg-white/5 rounded px-1 -ml-1' : ''}`}>
                       {renderHighlightedText()}
-                      {isCurrentLine && (
-                        <span className="inline-block w-2 h-5 bg-brand-400 animate-pulse ml-1 align-middle" />
+                      {isCurrentLine && isTyping && (
+                        <span className="inline-block w-2 h-4 bg-brand-400 animate-pulse ml-1 align-middle" />
                       )}
                     </div>
                   );
                 })}
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0d1117] via-transparent to-transparent opacity-50 pointer-events-none" />
+
+              {/* Flip Overlay Button */}
+              <AnimatePresence>
+                {showFlipButton && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-20"
+                  >
+                    <button
+                      onClick={handleFlip}
+                      className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white text-black rounded-full font-bold overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] active:scale-95"
+                    >
+                      <span className="relative z-10 flex items-center gap-2">
+                        Flip to see results
+                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                      <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* RIGHT: The Canvas Side */}
-            <div className="rounded-3xl bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/5 p-8 sm:p-12 shadow-2xl relative overflow-hidden flex flex-col items-center justify-center text-center group h-[450px]">
+            {/* BACK: The Canvas Side */}
+            <div 
+              className="absolute inset-0 w-full h-full backface-hidden rounded-3xl bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/5 p-8 sm:p-12 shadow-2xl overflow-hidden flex flex-col items-center justify-center text-center group"
+              style={{ transform: "rotateY(180deg)" }}
+            >
               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
               
-              {/* Glowing background that pulses when receiving data */}
-              <motion.div 
-                animate={{ 
-                  scale: showPacket ? 1.5 : 1,
-                  opacity: showPacket ? 0.8 : 0.4
-                }}
-                transition={{ duration: 0.5 }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-500/20 rounded-full blur-[80px] pointer-events-none" 
-              />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-500/20 rounded-full blur-[80px] pointer-events-none" />
               
               <div className="absolute top-6 right-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white dark:bg-white/10 border border-gray-200 dark:border-white/10 shadow-sm">
@@ -210,23 +221,29 @@ export default function CodeToCanvas() {
               <motion.div 
                 animate={getCanvasStyles()}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="relative z-10 w-full max-w-sm rounded-2xl p-8 flex flex-col items-center justify-center min-h-[200px]"
+                className="relative z-10 w-full max-w-sm rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center min-h-[200px]"
               >
-                {canvasState === "content" || canvasState === "style" ? (
-                  <>
-                    <div className="w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center mb-4">
-                      <Sparkles className="w-6 h-6 text-brand-400" />
-                    </div>
-                    <h3 className="text-3xl font-display font-bold text-gray-900 dark:text-white tracking-tight drop-shadow-sm">
-                      Digital Excellence
-                    </h3>
-                  </>
-                ) : (
-                  <div className="w-16 h-16 rounded-full border-4 border-dashed border-gray-300 dark:border-gray-700 animate-spin" />
-                )}
+                <div className="w-12 h-12 rounded-full bg-brand-500/20 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-brand-400" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 dark:text-white tracking-tight drop-shadow-sm leading-snug">
+                  Type 'Showme --secrets' into the code on About page for a surprise
+                </h3>
               </motion.div>
+
+              {/* Restart Button */}
+              <div className="absolute bottom-6 right-6">
+                <button
+                  onClick={handleReset}
+                  className="p-3 rounded-full bg-gray-200 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/20 transition-colors"
+                  title="Run code again"
+                >
+                  <RotateCcw className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-          </div>
+
+          </motion.div>
         </div>
       </div>
     </section>
