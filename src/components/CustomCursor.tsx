@@ -9,8 +9,8 @@ export default function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
   
-  // Extremely responsive spring for the trailing ring
-  const ringSpringConfig = { damping: 25, stiffness: 700, mass: 0.1 };
+  // Instantly snappy trailing ring (no lag)
+  const ringSpringConfig = { damping: 15, stiffness: 1000, mass: 0.05 };
   const ringXSpring = useSpring(cursorX, ringSpringConfig);
   const ringYSpring = useSpring(cursorY, ringSpringConfig);
 
