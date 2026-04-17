@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal } from 'lucide-react';
+import VaultRiddleModal from './VaultRiddleModal';
 import { useUI } from '../context/UIContext';
 
 export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isTerminal: boolean) => void }) {
@@ -9,6 +10,7 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
   const [outputLines, setOutputLines] = useState<string[]>([]);
   const [placeholderText, setPlaceholderText] = useState('');
   const { openContactModal } = useUI();
+  const [showVaultRiddle, setShowVaultRiddle] = useState(false);
   
   const fullPlaceholder = "Give me a command.... Examples are tellme --more or bookme appointment";
   const inputRef = useRef<HTMLInputElement>(null);
@@ -62,6 +64,14 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
       setOutputLines([]);
     } else if (trimmed === 'exit') {
       closeTerminal();
+    } else if (trimmed === 'showme --secrets' || trimmed === 'showme 0--secrets') {
+      await simulateTyping([
+        "WARNING: UNAUTHORIZED ACCESS DETECTED.",
+        "Initiating lockdown protocol...",
+      ]);
+      setTimeout(() => {
+        setShowVaultRiddle(true);
+      }, 1000);
     } else if (trimmed === 'help') {
       await simulateTyping([
         "Available commands:",
@@ -107,7 +117,9 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
   };
 
   return (
-    <motion.div 
+    <>
+      <VaultRiddleModal isOpen={showVaultRiddle} onClose={() => setShowVaultRiddle(false)} />
+      <motion.div 
       layout
       className={`w-full max-w-4xl mx-auto origin-top ${isTerminalMode ? 'h-[60vh] my-12' : 'h-16 my-8'}`}
       initial={{ opacity: 0, scaleY: 0.95 }}
@@ -196,5 +208,6 @@ export default function DeveloperTerminal({ onModeChange }: { onModeChange: (isT
         </div>
       </div>
     </motion.div>
+    </>
   );
 }

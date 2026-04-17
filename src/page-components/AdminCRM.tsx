@@ -118,7 +118,7 @@ export default function AdminCRM() {
   const [userPermissions, setUserPermissions] = useState<string[]>([]);
   const [savingPermissions, setSavingPermissions] = useState(false);
   const [userRoleToSet, setUserRoleToSet] = useState<'super_admin' | 'admin' | 'client'>('client');
-  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs', 'terms', 'franchise'];
+  const availablePermissionTabs = ['invoices', 'users', 'content', 'portfolio', 'offers', 'pricing', 'careers', 'media', 'bookings', 'audit_qs', 'terms', 'franchise', 'bali'];
 
   // Media State
   const [mediaFiles, setMediaFiles] = useState<any[]>([]);
@@ -130,6 +130,7 @@ export default function AdminCRM() {
 
   // Audit Questions State
   const [auditQs, setAuditQs] = useState<any[]>([]);
+  const [baliQuestions, setBaliQuestions] = useState<any[]>([]);
   const [loadingAuditQs, setLoadingAuditQs] = useState(false);
 
   // Terms State
@@ -265,6 +266,7 @@ export default function AdminCRM() {
     fetchMedia();
     fetchBookings();
     fetchAuditQs();
+      fetchBaliQuestions();
     fetchFranchiseLocations();
     fetchFranchiseFaqs();
   }, []);
@@ -381,6 +383,12 @@ export default function AdminCRM() {
     } catch (error: any) {
       console.error('Error deleting franchise location:', error.message);
     }
+  };
+
+  
+  const fetchBaliQuestions = async () => {
+    const { data } = await supabase.from('bali_chatbot_questions').select('*').order('order_index');
+    if (data) setBaliQuestions(data);
   };
 
   const fetchAuditQs = async () => {
@@ -1309,6 +1317,25 @@ export default function AdminCRM() {
     }
   };
 
+  const handleSaveBaliQuestion = async (q: any) => {
+    const { error } = await supabase.from('bali_chatbot_questions').update(q).eq('id', q.id);
+    if (error) alert(error.message);
+    else alert('Saved successfully!');
+  };
+
+  const handleAddBaliQuestion = async () => {
+    const { error } = await supabase.from('bali_chatbot_questions').insert({
+      order_index: baliQuestions.length,
+      question_text: 'New Question'
+    });
+    if (!error) fetchBaliQuestions();
+  };
+
+  const handleDeleteBaliQuestion = async (id: string) => {
+    const { error } = await supabase.from('bali_chatbot_questions').delete().eq('id', id);
+    if (!error) fetchBaliQuestions();
+  };
+
   return (
     <div className="min-h-screen pt-48 pb-12 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto">
@@ -1409,6 +1436,14 @@ export default function AdminCRM() {
               className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'franchise' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
             >
               Franchise
+            </button>
+          )}
+          {(userRole === 'super_admin' || allowedTabs.includes('bali')) && (
+            <button
+              onClick={() => setActiveTab('bali')}
+              className={`pb-4 px-4 whitespace-nowrap ${activeTab === 'bali' ? 'border-b-2 border-cyan-600 text-cyan-600' : 'text-gray-500'}`}
+            >
+              Bali Easter Egg
             </button>
           )}
         </div>
@@ -3218,6 +3253,31 @@ export default function AdminCRM() {
               </div>
             </>
           )}
+        </div>
+      )}
+
+      {activeTab === 'bali' && (userRole === 'super_admin' || allowedTabs.includes('bali')) && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-bold dark:text-white">Bali Chatbot Questions (Easter Egg)</h2>
+            <button onClick={handleAddBaliQuestion} className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Add Question</button>
+          </div>
+          <div className="space-y-4">
+            {baliQuestions.map((q) => (
+              <div key={q.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded relative">
+                <button onClick={() => handleDeleteBaliQuestion(q.id)} className="absolute top-4 right-4 text-red-500">Delete</button>
+                <div className="mb-2">
+                  <label className="block text-sm mb-1 dark:text-white">Order Index</label>
+                  <input type="number" value={q.order_index} onChange={e => setBaliQuestions(baliQuestions.map(bq => bq.id === q.id ? { ...bq, order_index: parseInt(e.target.value) } : bq))} className="border dark:border-gray-700 dark:bg-gray-900 dark:text-white p-2 rounded w-full max-w-[100px]" />
+                </div>
+                <div className="mb-2">
+                  <label className="block text-sm mb-1 dark:text-white">Question Text</label>
+                  <textarea value={q.question_text} onChange={e => setBaliQuestions(baliQuestions.map(bq => bq.id === q.id ? { ...bq, question_text: e.target.value } : bq))} className="border dark:border-gray-700 dark:bg-gray-900 dark:text-white p-2 rounded w-full h-24" />
+                </div>
+                <button onClick={() => handleSaveBaliQuestion(q)} className="px-4 py-2 bg-gray-900 dark:bg-white dark:text-black text-white rounded">Save Changes</button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

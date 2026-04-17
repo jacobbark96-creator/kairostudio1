@@ -479,6 +479,11 @@ export default function FranchisePage() {
                     className="cursor-pointer group relative flex items-center justify-center"
                     onMouseEnter={() => setHoveredLocation(loc)}
                     onMouseLeave={() => setHoveredLocation(null)}
+                    onClick={() => {
+                      if (loc.city_name.toLowerCase() === 'bali') {
+                        setShowBaliChatbot(true);
+                      }
+                    }}
                   >
                     {/* The actual dot */}
                     <div className={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg group-hover:scale-125 z-10 ${loc.status === 'pending' ? 'bg-amber-400 hover:bg-amber-300' : loc.status === 'filled' ? 'bg-purple-500 hover:bg-purple-400' : 'bg-brand-500 hover:bg-brand-400'}`} />

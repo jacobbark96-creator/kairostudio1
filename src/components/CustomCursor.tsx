@@ -1,18 +1,17 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function CustomCursor() {
-  const [isClicking, setIsClicking] = useState(false);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   
-  const cursorX = useMotionValue(-100);
-  const cursorY = useMotionValue(-100);
+  // Track actual mouse position
+  const mouse = useRef({ x: -100, y: -100 });
+  // Track ring position for lerping
+  const ring = useRef({ x: -100, y: -100 });
   
-  // Instantly snappy trailing ring (no lag)
-  const ringSpringConfig = { damping: 15, stiffness: 1000, mass: 0.05 };
-  const ringXSpring = useSpring(cursorX, ringSpringConfig);
-  const ringYSpring = useSpring(cursorY, ringSpringConfig);
+  const requestRef = useRef<number>();
 
   useEffect(() => {
     // Don't run on touch devices
@@ -20,28 +19,55 @@ export default function CustomCursor() {
       return;
     }
 
-    const moveCursor = (e: MouseEvent) => {
-      cursorX.set(e.clientX);
-      cursorY.set(e.clientY);
+    const onMouseMove = (e: MouseEvent) => {
+      mouse.current.x = e.clientX;
+      mouse.current.y = e.clientY;
       if (!isVisible) setIsVisible(true);
+      
+      // Instantly move the inner dot for zero lag
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+      }
     };
 
-    const handleMouseDown = () => setIsClicking(true);
-    const handleMouseUp = () => setIsClicking(false);
+    const animate = () => {
+      // Lerp the ring position towards the mouse position for a snappy trailing effect
+      // High lerp factor (0.4) means very low lag
+      ring.current.x += (mouse.current.x - ring.current.x) * 0.4;
+      ring.current.y += (mouse.current.y - ring.current.y) * 0.4;
+
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
+      }
+
+      requestRef.current = requestAnimationFrame(animate);
+    };
+
+    const handleMouseDown = () => {
+      if (dotRef.current) dotRef.current.style.scale = '0.5';
+      if (ringRef.current) ringRef.current.style.scale = '0.8';
+    };
+    const handleMouseUp = () => {
+      if (dotRef.current) dotRef.current.style.scale = '1';
+      if (ringRef.current) ringRef.current.style.scale = '1';
+    };
     const handleMouseLeave = () => setIsVisible(false);
 
-    window.addEventListener('mousemove', moveCursor);
+    window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     document.addEventListener('mouseleave', handleMouseLeave);
+    
+    requestRef.current = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('mousemove', moveCursor);
+      window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
-  }, [cursorX, cursorY, isVisible]);
+  }, [isVisible]);
 
   if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
     return null;
@@ -49,38 +75,15 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Small dot that perfectly tracks the mouse without any lag */}
-      <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-brand-500 rounded-full pointer-events-none z-[10000] mix-blend-difference hidden sm:block"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
-          opacity: isVisible ? 1 : 0
-        }}
-        animate={{
-          scale: isClicking ? 0.5 : 1
-        }}
-        transition={{ duration: 0.1 }}
+      <div
+        ref={dotRef}
+        className="fixed top-0 left-0 w-2 h-2 bg-brand-500 rounded-full pointer-events-none z-[10000] mix-blend-difference hidden sm:block transition-opacity duration-300"
+        style={{ opacity: isVisible ? 1 : 0, transitionProperty: 'opacity, scale', transitionDuration: '300ms, 100ms' }}
       />
-      
-      {/* Larger trailing ring */}
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 border border-brand-500/50 rounded-full pointer-events-none z-[9999] hidden sm:block mix-blend-difference"
-        style={{
-          x: ringXSpring,
-          y: ringYSpring,
-          translateX: '-50%',
-          translateY: '-50%',
-          opacity: isVisible ? 1 : 0
-        }}
-        animate={{
-          scale: isClicking ? 0.8 : 1,
-          backgroundColor: 'rgba(14, 165, 233, 0)',
-          borderColor: 'rgba(14, 165, 233, 0.5)',
-        }}
-        transition={{ duration: 0.15 }}
+      <div
+        ref={ringRef}
+        className="fixed top-0 left-0 w-8 h-8 border border-brand-500/50 rounded-full pointer-events-none z-[9999] hidden sm:block mix-blend-difference transition-opacity duration-300"
+        style={{ opacity: isVisible ? 1 : 0, transitionProperty: 'opacity, scale', transitionDuration: '300ms, 150ms' }}
       />
     </>
   );
