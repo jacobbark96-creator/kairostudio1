@@ -43,7 +43,7 @@ const Card = ({ principle, index, progress, totalCards }: any) => {
   const opacity = useTransform(progress, [shrinkStart, shrinkEnd], [1, 0.4]);
 
   return (
-    <div className="h-screen w-full flex items-center justify-center sticky top-24 md:top-32" style={{ zIndex: index }}>
+    <div className="h-screen w-full flex items-center justify-center sticky top-32 md:top-40" style={{ zIndex: index }}>
       <motion.div 
         style={{ scale, opacity, transformOrigin: "top", top: `calc(0px + ${index * 30}px)` }} 
         className="relative flex flex-col md:flex-row w-[90vw] max-w-5xl h-[70vh] min-h-[500px] md:h-[550px] bg-white dark:bg-[#0a0a0a] rounded-[2.5rem] border border-gray-200 dark:border-white/10 overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] dark:shadow-[0_30px_60px_rgba(0,0,0,0.5)] transform-gpu"
