@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, X } from 'lucide-react';
+import { Lock, X, CheckCircle } from 'lucide-react';
 
 export default function VaultRiddleModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const [showRiddle, setShowRiddle] = useState(false);
   const [answer, setAnswer] = useState('');
   const [error, setError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setShowRiddle(false);
       setAnswer('');
       setError(false);
+      setIsSuccess(false);
       // Wait for vault doors to close before showing riddle
       const timer = setTimeout(() => {
         setShowRiddle(true);
@@ -23,7 +25,7 @@ export default function VaultRiddleModal({ isOpen, onClose }: { isOpen: boolean;
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (answer.toLowerCase().trim() === 'bali') {
-      onClose(); // Correct!
+      setIsSuccess(true);
     } else {
       setError(true);
       setTimeout(() => setError(false), 1000);
@@ -56,13 +58,14 @@ export default function VaultRiddleModal({ isOpen, onClose }: { isOpen: boolean;
         <div className="w-16 h-32 bg-gray-800 rounded-r-2xl border-y-4 border-r-4 border-gray-600 ml-2" />
       </motion.div>
 
-      {/* Riddle Lightbox */}
-      <AnimatePresence>
-        {showRiddle && (
+      {/* Lightboxes */}
+      <AnimatePresence mode="wait">
+        {showRiddle && !isSuccess && (
           <motion.div 
+            key="riddle"
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="relative z-20 w-full max-w-lg mx-4 bg-[#0a0a0a] border border-gray-800 rounded-3xl p-8 shadow-2xl"
           >
@@ -109,6 +112,31 @@ export default function VaultRiddleModal({ isOpen, onClose }: { isOpen: boolean;
                 )}
               </form>
             </div>
+          </motion.div>
+        )}
+
+        {showRiddle && isSuccess && (
+          <motion.div 
+            key="success"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="relative z-20 w-full max-w-lg mx-4 bg-[#0a0a0a] border border-brand-500/30 rounded-3xl p-12 shadow-[0_0_50px_rgba(14,165,233,0.15)] text-center"
+          >
+            <div className="w-20 h-20 rounded-full bg-brand-500/20 flex items-center justify-center mx-auto mb-8 border border-brand-500/50">
+              <CheckCircle className="w-10 h-10 text-brand-400" />
+            </div>
+            <h2 className="text-3xl font-display font-bold text-white mb-6 tracking-tight">Access Granted</h2>
+            <p className="text-xl text-gray-300 font-light leading-relaxed mb-10">
+              Well done, you have passed this stage. You know what to look for to find the next challenge.
+            </p>
+            <button
+              onClick={onClose}
+              className="px-8 py-4 bg-brand-500 text-white rounded-full font-bold tracking-wide hover:bg-brand-400 transition-colors shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:shadow-[0_0_30px_rgba(14,165,233,0.6)]"
+            >
+              Continue
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
