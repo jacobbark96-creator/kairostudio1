@@ -7,6 +7,7 @@ import Layout from '../components/Layout';
 import Map, { Marker, NavigationControl, ViewStateChangeEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import BaliChatbotModal from '../components/BaliChatbotModal';
 
 interface Location {
   id: string;
@@ -25,6 +26,7 @@ export default function FranchisePage() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [loadingLocations, setLoadingLocations] = useState(true);
   const [hoveredLocation, setHoveredLocation] = useState<Location | null>(null);
+  const [showBaliChatbot, setShowBaliChatbot] = useState(false);
   
   const [viewState, setViewState] = useState({
     longitude: 0,
@@ -479,11 +481,6 @@ export default function FranchisePage() {
                     className="cursor-pointer group relative flex items-center justify-center"
                     onMouseEnter={() => setHoveredLocation(loc)}
                     onMouseLeave={() => setHoveredLocation(null)}
-                    onClick={() => {
-                      if (loc.city_name.toLowerCase() === 'bali') {
-                        setShowBaliChatbot(true);
-                      }
-                    }}
                   >
                     {/* The actual dot */}
                     <div className={`w-3 h-3 rounded-full transition-all duration-300 shadow-lg group-hover:scale-125 z-10 ${loc.status === 'pending' ? 'bg-amber-400 hover:bg-amber-300' : loc.status === 'filled' ? 'bg-purple-500 hover:bg-purple-400' : 'bg-brand-500 hover:bg-brand-400'}`} />
@@ -496,9 +493,9 @@ export default function FranchisePage() {
                     
                     {/* Tooltip rendered directly on the hovered marker */}
                     {hoveredLocation?.id === loc.id && (
-                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 pointer-events-none transform -translate-x-1/2 bottom-[calc(50%+14px)] left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95">
-                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45" />
-                        <div className="relative z-10">
+                      <div className="absolute z-[100] bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-64 transform -translate-x-1/2 bottom-[calc(50%+14px)] left-1/2 transition-all duration-200 animate-in fade-in zoom-in-95 pointer-events-auto">
+                        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white dark:bg-gray-800 border-b border-r border-gray-100 dark:border-gray-700 rotate-45 pointer-events-none" />
+                        <div className="relative z-10 pointer-events-none">
                           <div className="flex items-center justify-between mb-2">
                             <h4 className="font-bold text-lg text-gray-900 dark:text-white flex items-center gap-1.5">
                               <MapPin className="w-4 h-4 text-brand-500" />
@@ -508,10 +505,22 @@ export default function FranchisePage() {
                               {loc.status}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-left whitespace-normal">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed text-left whitespace-normal mb-3">
                             {loc.description}
                           </p>
                         </div>
+                        {loc.city_name.toLowerCase() === 'bali' && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowBaliChatbot(true);
+                            }}
+                            className="w-full py-1.5 px-3 bg-brand-500/10 hover:bg-brand-500/20 text-brand-600 dark:text-brand-400 text-xs font-bold rounded-lg transition-colors border border-brand-500/20 flex items-center justify-center gap-1.5 relative z-20 pointer-events-auto"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+                            Treasure
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
