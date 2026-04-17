@@ -205,6 +205,7 @@ export default function FranchisePage() {
 
   return (
     <>
+      <BaliChatbotModal isOpen={showBaliChatbot} onClose={() => setShowBaliChatbot(false)} />
       <div className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-white">
 
       {/* Hero Section */}
