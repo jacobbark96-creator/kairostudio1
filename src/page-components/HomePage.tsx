@@ -281,7 +281,8 @@ export default function HomePage() {
                 
                 {/* Mobile Swipe to Analyse Slider */}
                 <div 
-                  className="md:hidden w-full relative h-[60px] bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-full overflow-hidden border border-gray-300 dark:border-white/10 shadow-lg flex items-center mt-2 touch-none"
+                  className="md:hidden w-full relative h-[60px] bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-full overflow-hidden border border-gray-300 dark:border-white/10 shadow-lg flex items-center mt-2 touch-none cursor-pointer"
+                  onClick={() => setShowMobileAudit(true)}
                   onTouchStart={(e) => {
                     const slider = e.currentTarget;
                     const touch = e.touches[0];
@@ -564,14 +565,14 @@ export default function HomePage() {
           </div>
           
           <div 
-            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none pb-8 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 group/grid no-scrollbar"
+            className="flex flex-nowrap sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-10 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none pb-8 -mx-4 px-4 sm:mx-0 sm:px-0 sm:pb-0 group/grid no-scrollbar"
             onMouseMove={handleServicesMouseMove}
           >
             {services.map((service, index) => (
               <Link
                 key={index}
                 href="/services"
-                className={`min-w-[85vw] sm:min-w-0 snap-center shrink-0 group flex flex-col p-8 sm:p-10 bg-white dark:bg-[#0a0a0a] rounded-3xl border border-gray-200 dark:border-gray-800 hover:border-brand-500/50 dark:hover:border-brand-500/50 shadow-sm hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden ${
+                className={`w-[75vw] sm:w-auto shrink-0 snap-center group flex flex-col p-6 sm:p-10 bg-white dark:bg-[#0a0a0a] rounded-3xl border border-gray-200 dark:border-gray-800 hover:border-brand-500/50 dark:hover:border-brand-500/50 shadow-sm hover:shadow-2xl hover:shadow-brand-500/10 hover:-translate-y-1 transition-all duration-300 relative overflow-hidden ${
                   index === 1 ? 'md:-translate-y-8' : ''
                 }`}
               >

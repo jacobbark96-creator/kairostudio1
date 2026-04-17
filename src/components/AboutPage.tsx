@@ -175,7 +175,7 @@ export default function AboutPage() {
         transition={{ type: "spring", stiffness: 200, damping: 25 }}
       >
         {/* 3. THE MANIFESTO (APPLE STICKY SCROLL) */}
-      <section className="py-12 sm:py-20 relative overflow-visible">
+      <section className="py-8 sm:py-20 relative overflow-visible">
         {/* Faint Grid Background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
         
@@ -254,7 +254,7 @@ export default function AboutPage() {
                         We work remotely, not only because we want to work on the beach, but because it allows at least one of our team to be available 24 hours a day. Meaning no more stress calling and emailing your web manager with no response.
                     </motion.div>
                     
-                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ margin: "-20%" }} transition={{ duration: 0.6 }} className="pt-12 mt-12 border-t border-gray-200 dark:border-white/10">
+                    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ margin: "-20%" }} transition={{ duration: 0.6 }} className="pt-6 mt-6 sm:pt-12 sm:mt-12 border-t border-gray-200 dark:border-white/10">
                       <p className="text-2xl sm:text-3xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-purple-500">
                           Kairo is here for you, because it was created for us.
                       </p>
@@ -268,7 +268,7 @@ export default function AboutPage() {
       </section>
 
       {/* 4. CORE PRINCIPLES (STICKY CARD DECK) */}
-      <div className="pt-24 sm:pt-32">
+      <div className="pt-4 sm:pt-32">
         <CorePrinciplesDeck />
       </div>
 

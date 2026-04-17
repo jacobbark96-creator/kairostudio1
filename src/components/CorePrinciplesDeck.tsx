@@ -80,7 +80,7 @@ export default function CorePrinciplesDeck() {
   });
 
   return (
-    <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-white/5 pt-20" style={{ height: `calc(${principles.length * 100}vh + 5rem)` }}>
+    <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#0a0a0a] border-y border-gray-200 dark:border-white/5 pt-8 sm:pt-20" style={{ height: `calc(${principles.length * 100}vh + 5rem)` }}>
       {/* Cards container */}
       <div className="relative">
         {principles.map((p, i) => (
