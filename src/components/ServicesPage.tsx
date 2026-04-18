@@ -168,15 +168,15 @@ const MagneticVideoCard = ({ service, index }) => {
     >
       {/* Background Video Reveal */}
       <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden rounded-[2rem]">
-        <div className="absolute inset-0 bg-gray-900/90 dark:bg-black/80 z-10 backdrop-blur-3xl" />
+        <div className="absolute inset-0 bg-gray-900/90 dark:bg-black/90 z-0" />
         {/* Animated Mesh Gradients instead of broken videos */}
-        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-[spin_20s_linear_infinite] opacity-50"
+        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-[spin_20s_linear_infinite] opacity-70 z-10 mix-blend-screen"
              style={{
                background: `conic-gradient(from 0deg, ${service.colors[0]}, ${service.colors[1]}, ${service.colors[2]}, ${service.colors[0]})`,
                filter: 'blur(60px)'
              }} 
         />
-        <div className="absolute top-0 left-0 w-full h-full animate-[pulse_4s_ease-in-out_infinite] opacity-30"
+        <div className="absolute top-0 left-0 w-full h-full animate-[pulse_4s_ease-in-out_infinite] opacity-50 z-20 mix-blend-screen"
              style={{
                background: `radial-gradient(circle at center, ${service.colors[1]} 0%, transparent 70%)`,
                filter: 'blur(40px)'
@@ -254,22 +254,22 @@ const MorphingProcess = () => {
   ];
 
   return (
-    <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#050505] border-y border-gray-200 dark:border-white/5" style={{ height: "400vh" }}>
-      <div className="sticky top-20 w-full h-[calc(100vh-5rem)] flex flex-col md:flex-row items-center justify-center overflow-hidden">
+    <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#050505] border-y border-gray-200 dark:border-white/5" style={{ height: "500vh" }}>
+      <div className="sticky top-0 w-full h-screen py-24 flex flex-col md:flex-row items-center justify-center overflow-hidden">
         
         {/* Text Content (Left) */}
-        <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center px-8 md:px-16 lg:px-24 relative z-20 mt-16 md:mt-0">
+        <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center px-8 md:px-16 lg:px-24 relative z-20">
           <div className="relative h-[400px] w-full">
             {phases.map((phase, i) => {
-              const start = i * 0.25;
-              const end = (i + 1) * 0.25;
+              const start = i * 0.2; // 0, 0.2, 0.4, 0.6
+              const end = start + 0.2; // 0.2, 0.4, 0.6, 0.8
               const opacity = useTransform(scrollYProgress, 
-                [start - 0.1, start, end - 0.1, end], 
-                [0, 1, 1, 0]
+                [start, start + 0.05, end - 0.05, end], 
+                [0, 1, 1, i === phases.length - 1 ? 1 : 0] // Keep last step visible longer
               );
               const y = useTransform(scrollYProgress, 
-                [start - 0.1, start, end - 0.1, end], 
-                [40, 0, 0, -40]
+                [start, start + 0.05, end - 0.05, end], 
+                [40, 0, 0, i === phases.length - 1 ? 0 : -40] // Keep last step in place
               );
 
               return (
@@ -344,19 +344,20 @@ const HolographicCard = ({ title, price, desc, features, icon: Icon, isPremium }
       {/* Holographic Foil Overlay */}
       {isPremium && (
         <div 
-          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2.5rem] overflow-hidden"
+          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2.5rem] overflow-hidden mix-blend-screen"
         >
           <div 
-            className="absolute inset-[-100%] w-[300%] h-[300%] opacity-40 mix-blend-screen"
+            className="absolute inset-0 opacity-60"
             style={{
-              background: `conic-gradient(from 0deg at ${mousePos.x}px ${mousePos.y}px, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000)`,
-              filter: 'blur(30px)'
+              background: `conic-gradient(from ${mousePos.x * 0.5}deg at ${mousePos.x}px ${mousePos.y}px, #0ea5e9, #8b5cf6, #ec4899, #0ea5e9)`,
+              filter: 'blur(40px)',
+              transform: 'scale(1.5)'
             }}
           />
           <div 
             className="absolute inset-0"
             style={{
-              background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.15), transparent 40%)`
+              background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.3), transparent 40%)`
             }}
           />
         </div>
@@ -365,11 +366,23 @@ const HolographicCard = ({ title, price, desc, features, icon: Icon, isPremium }
       {/* Light Foil Overlay for Standard */}
       {!isPremium && (
         <div 
-          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2.5rem] overflow-hidden"
-          style={{
-            background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14,165,233,0.15), transparent 40%)`,
-          }}
-        />
+          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2.5rem] overflow-hidden mix-blend-screen"
+        >
+          <div 
+            className="absolute inset-0 opacity-30"
+            style={{
+              background: `conic-gradient(from ${mousePos.x * 0.5}deg at ${mousePos.x}px ${mousePos.y}px, #3b82f6, #0ea5e9, #3b82f6)`,
+              filter: 'blur(40px)',
+              transform: 'scale(1.5)'
+            }}
+          />
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.1), transparent 40%)`
+            }}
+          />
+        </div>
       )}
 
       <div className="relative z-10 pointer-events-none">
