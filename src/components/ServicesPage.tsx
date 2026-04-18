@@ -265,11 +265,11 @@ const MorphingProcess = () => {
               const end = start + 0.2; // 0.2, 0.4, 0.6, 0.8
               const opacity = useTransform(scrollYProgress, 
                 [start, start + 0.05, end - 0.05, end], 
-                [0, 1, 1, i === phases.length - 1 ? 1 : 0] // Keep last step visible longer
+                [i === 0 ? 1 : 0, 1, 1, i === phases.length - 1 ? 1 : 0] // Keep first step visible instantly, keep last step visible longer
               );
               const y = useTransform(scrollYProgress, 
                 [start, start + 0.05, end - 0.05, end], 
-                [40, 0, 0, i === phases.length - 1 ? 0 : -40] // Keep last step in place
+                [i === 0 ? 0 : 40, 0, 0, i === phases.length - 1 ? 0 : -40] // Keep first step in place, keep last step in place
               );
 
               return (
