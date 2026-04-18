@@ -85,11 +85,11 @@ const NodeNetwork = () => {
         const dxMouse = mouse.current.x - p.x;
         const dyMouse = mouse.current.y - p.y;
         const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-        if (distMouse < 200) {
+        if (distMouse < 300) {
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.current.x, mouse.current.y);
-          ctx.strokeStyle = `rgba(${mouseLineColor}, ${0.5 - distMouse / 400})`;
+          ctx.strokeStyle = `rgba(${mouseLineColor}, ${0.8 - distMouse / 375})`;
           ctx.lineWidth = 1.5;
           ctx.stroke();
         }
@@ -101,11 +101,11 @@ const NodeNetwork = () => {
           const dy = p.y - p2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 120) {
+          if (dist < 150) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(${lineColor}, ${0.15 - dist / 800})`;
+            ctx.strokeStyle = `rgba(${lineColor}, ${0.3 - dist / 500})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -125,7 +125,7 @@ const NodeNetwork = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-40 dark:opacity-60" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none opacity-80 dark:opacity-100" />;
 };
 
 // --- 2. Magnetic Video Card Component ---
@@ -167,15 +167,20 @@ const MagneticVideoCard = ({ service, index }) => {
       className={`group relative p-8 sm:p-10 bg-white dark:bg-[#111] rounded-[2rem] border border-gray-200 dark:border-gray-800 hover:border-brand-500/50 transition-colors duration-500 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-2xl ${service.colSpan}`}
     >
       {/* Background Video Reveal */}
-      <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-        <div className="absolute inset-0 bg-black/60 dark:bg-black/80 z-10" />
-        <video 
-          src={service.videoUrl} 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000"
+      <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden rounded-[2rem]">
+        <div className="absolute inset-0 bg-gray-900/90 dark:bg-black/80 z-10 backdrop-blur-3xl" />
+        {/* Animated Mesh Gradients instead of broken videos */}
+        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] animate-[spin_20s_linear_infinite] opacity-50"
+             style={{
+               background: `conic-gradient(from 0deg, ${service.colors[0]}, ${service.colors[1]}, ${service.colors[2]}, ${service.colors[0]})`,
+               filter: 'blur(60px)'
+             }} 
+        />
+        <div className="absolute top-0 left-0 w-full h-full animate-[pulse_4s_ease-in-out_infinite] opacity-30"
+             style={{
+               background: `radial-gradient(circle at center, ${service.colors[1]} 0%, transparent 70%)`,
+               filter: 'blur(40px)'
+             }}
         />
       </div>
 
@@ -184,7 +189,7 @@ const MagneticVideoCard = ({ service, index }) => {
           <service.icon className="w-6 h-6 text-gray-900 dark:text-white group-hover:text-white transition-colors" />
         </div>
         
-        <h3 className="text-2xl sm:text-3xl font-display font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white tracking-tight transition-colors">
+        <h3 className="text-2xl sm:text-3xl font-display font-bold mb-4 text-gray-900 dark:text-white group-hover:text-white tracking-tight transition-colors drop-shadow-md">
           {service.title}
         </h3>
         
@@ -250,11 +255,11 @@ const MorphingProcess = () => {
 
   return (
     <section ref={containerRef} className="relative w-full bg-gray-50 dark:bg-[#050505] border-y border-gray-200 dark:border-white/5" style={{ height: "400vh" }}>
-      <div className="sticky top-0 w-full h-screen flex flex-col md:flex-row items-center justify-center overflow-hidden">
+      <div className="sticky top-20 w-full h-[calc(100vh-5rem)] flex flex-col md:flex-row items-center justify-center overflow-hidden">
         
         {/* Text Content (Left) */}
         <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center px-8 md:px-16 lg:px-24 relative z-20 mt-16 md:mt-0">
-          <div className="relative h-[200px] w-full">
+          <div className="relative h-[400px] w-full">
             {phases.map((phase, i) => {
               const start = i * 0.25;
               const end = (i + 1) * 0.25;
@@ -264,7 +269,7 @@ const MorphingProcess = () => {
               );
               const y = useTransform(scrollYProgress, 
                 [start - 0.1, start, end - 0.1, end], 
-                [50, 0, 0, -50]
+                [40, 0, 0, -40]
               );
 
               return (
@@ -339,20 +344,30 @@ const HolographicCard = ({ title, price, desc, features, icon: Icon, isPremium }
       {/* Holographic Foil Overlay */}
       {isPremium && (
         <div 
-          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-color-dodge pointer-events-none"
-          style={{
-            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.4), transparent 40%), linear-gradient(120deg, #ff0000 0%, #ffff00 20%, #00ff00 40%, #00ffff 60%, #0000ff 80%, #ff00ff 100%)`,
-            backgroundBlendMode: 'overlay',
-          }}
-        />
+          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2.5rem] overflow-hidden"
+        >
+          <div 
+            className="absolute inset-[-100%] w-[300%] h-[300%] opacity-40 mix-blend-screen"
+            style={{
+              background: `conic-gradient(from 0deg at ${mousePos.x}px ${mousePos.y}px, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3, #ff0000)`,
+              filter: 'blur(30px)'
+            }}
+          />
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.15), transparent 40%)`
+            }}
+          />
+        </div>
       )}
       
       {/* Light Foil Overlay for Standard */}
       {!isPremium && (
         <div 
-          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[2.5rem] overflow-hidden"
           style={{
-            background: `radial-gradient(800px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14,165,233,0.1), transparent 40%)`,
+            background: `radial-gradient(600px circle at ${mousePos.x}px ${mousePos.y}px, rgba(14,165,233,0.15), transparent 40%)`,
           }}
         />
       )}
@@ -405,7 +420,7 @@ export default function ServicesPage() {
       description: 'We build, host, and manage your entire website. No huge upfront costs, just a high-performing site that works.',
       features: ['Custom Design & Build', 'Premium Hosting Included', 'Unlimited Edits', '24/7 Technical Support'],
       colSpan: 'md:col-span-2 lg:col-span-2',
-      videoUrl: 'https://cdn.pixabay.com/video/2020/05/25/40141-424888809_tiny.mp4'
+      colors: ['#0ea5e9', '#3b82f6', '#8b5cf6']
     },
     {
       icon: Search,
@@ -413,7 +428,7 @@ export default function ServicesPage() {
       description: 'Your site isn’t a digital brochure—it’s an engine. We continually optimise your presence so customers can actually find you.',
       features: ['Local SEO', 'Keyword Strategy', 'Performance Monitoring'],
       colSpan: 'md:col-span-1 lg:col-span-1',
-      videoUrl: 'https://cdn.pixabay.com/video/2019/02/15/21356-317208035_tiny.mp4'
+      colors: ['#10b981', '#3b82f6', '#0ea5e9']
     },
     {
       icon: Palette,
@@ -421,7 +436,7 @@ export default function ServicesPage() {
       description: 'Look like the premium business you are. We craft logos and visual systems that build immediate trust.',
       features: ['Logo Design', 'Brand Guidelines', 'Visual Identity'],
       colSpan: 'md:col-span-1 lg:col-span-1',
-      videoUrl: 'https://cdn.pixabay.com/video/2020/04/09/35732-407421111_tiny.mp4'
+      colors: ['#f59e0b', '#ef4444', '#ec4899']
     },
     {
       icon: Zap,
@@ -429,7 +444,7 @@ export default function ServicesPage() {
       description: 'Lightning-fast load times and scalable architecture designed to grow seamlessly as your business expands.',
       features: ['Speed Optimisation', 'Scalable Architecture', 'Security Audits', 'Conversion Tracking'],
       colSpan: 'md:col-span-2 lg:col-span-2',
-      videoUrl: 'https://cdn.pixabay.com/video/2023/10/22/186115-877141544_tiny.mp4'
+      colors: ['#8b5cf6', '#d946ef', '#f43f5e']
     },
   ];
 
