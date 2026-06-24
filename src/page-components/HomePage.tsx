@@ -513,15 +513,33 @@ export default function HomePage() {
           <div className="flex w-max animate-[marquee_40s_linear_infinite_reverse] opacity-70 hover:opacity-100 transition-opacity duration-300">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="flex items-center gap-16 px-8">
-                {marqueeProjects.map((p: any) => (
-                  <div key={p.id} className="flex items-center gap-4">
-                    {p.logo_url || p.image_url ? (
-                      <img src={p.logo_url || p.image_url} alt={p.client_name} className="h-16 md:h-20 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" />
-                    ) : (
-                      <span className="text-2xl md:text-3xl font-bold text-gray-600 dark:text-gray-400">{p.client_name}</span>
-                    )}
-                  </div>
-                ))}
+                {marqueeProjects.map((p: any) => {
+                   const name = p.client_name?.toLowerCase() || '';
+                    const isHyro = name.includes('hyro');
+                    const isSolarpedia = name.includes('solarpedia');
+                    const isOpenlead = name.includes('openlead');
+                    const isVerdePizza = name.includes('verde') || name.includes('pizza');
+                    
+                    let heightClass = 'h-[90px] md:h-28'; // Default for others
+                    if (isHyro) heightClass = 'h-[58px] md:h-[72px]'; // 10% reduction from h-16/h-20
+                    if (isSolarpedia) heightClass = 'h-[163px] md:h-[204px]'; // Another 10% increase from 185/148
+                    if (isOpenlead) heightClass = 'h-[119px] md:h-[147px]'; // 10% increase from 134/108
+                    if (isVerdePizza) heightClass = 'h-[99px] md:h-[123px]'; // 10% increase from 28/90
+                    
+                    return (
+                     <div key={p.id} className="flex items-center gap-4">
+                       {p.logo_url || p.image_url ? (
+                         <img 
+                            src={p.logo_url || p.image_url} 
+                            alt={p.client_name} 
+                            className={`${heightClass} w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300`} 
+                          />
+                       ) : (
+                         <span className="text-2xl md:text-3xl font-bold text-gray-600 dark:text-gray-400">{p.client_name}</span>
+                       )}
+                     </div>
+                   );
+                 })}
               </div>
             ))}
           </div>
