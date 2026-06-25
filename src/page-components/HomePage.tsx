@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone, TrendingUp, CheckCircle } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Sparkles, X, Layout, Smartphone, TrendingUp, CheckCircle, RefreshCw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, useMotionValue, useTransform, useSpring, AnimatePresence } from 'framer-motion';
@@ -53,84 +53,6 @@ export default function HomePage() {
     }
     return () => { document.body.style.overflow = 'unset'; }
   }, [showMobileCalculator]);
-
-  const handleAuditSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!auditUrl || !auditEmail) return;
-    
-    // Open the wizard instead of submitting immediately
-    setShowWizard(true);
-  };
-
-  const handleWizardComplete = async (answers: Record<number, string>) => {
-    setIsSubmittingAudit(true);
-    setShowWizard(false);
-    setIsScanning(true);
-    
-    // Simulate terminal scanning effect
-    const scanningSequence = [
-      `> Initializing scan sequence...`,
-      `> Pinging domain: ${auditUrl}...`,
-      `> Analyzing Core Web Vitals...`,
-      `> Cross-referencing SEO data...`,
-      `> Compiling results into email format...`,
-      `> Dispatching email to ${auditEmail}...`,
-      `> Scan complete.`
-    ];
-
-    setScanLines([]);
-    
-    // Wait a brief moment before starting animation
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    for (let i = 0; i < scanningSequence.length; i++) {
-      setScanLines(prev => [...prev, scanningSequence[i]]);
-      // Random delay between 300ms and 800ms for realism
-      await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 500));
-    }
-
-    // Format URL logic
-    let formattedUrl = auditUrl.trim().toLowerCase();
-    if (!/^https?:\/\//i.test(formattedUrl)) {
-      if (!/^www\./i.test(formattedUrl)) {
-          formattedUrl = `https://www.${formattedUrl}`;
-      } else {
-          formattedUrl = `https://${formattedUrl}`;
-      }
-    }
-
-    try {
-        await fetch('https://hook.eu1.make.com/aewnwbg67m55lr979f9ofriktxg9i496', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                url: formattedUrl,
-                email: auditEmail,
-                answers: answers // Include wizard answers
-            }),
-        });
-        
-        setAuditSuccess(true);
-        setAuditUrl('');
-        setAuditEmail('');
-        setIsScanning(false);
-        setScanLines([]);
-        // Show success state on mobile if we were on mobile
-        // Actually we just set auditSuccess to true which updates the desktop box.
-        // Let's open mobile audit modal to show success if it was closed
-        if (window.innerWidth < 768) {
-            setShowMobileAudit(true);
-        }
-    } catch (error) {
-        console.error("Error submitting audit request", error);
-        alert("There was an issue submitting your request. Please try again.");
-    } finally {
-        setIsSubmittingAudit(false);
-        setIsScanning(false);
-    }
-  };
 
   // Handle Jackpot Celebration
   useEffect(() => {
