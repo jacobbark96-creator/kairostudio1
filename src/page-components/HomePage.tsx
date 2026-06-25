@@ -363,7 +363,7 @@ export default function HomePage() {
                     const isSolarpedia = name.includes('solarpedia');
                     const isOpenlead = name.includes('openlead');
                     const isVerdePizza = name.includes('verde') || name.includes('pizza');
-                    const isWhiteLogo = name.includes('open energy') || name.includes('openlead academy');
+                    const isWhiteLogo = name.includes('open energy') || name.includes('openlead academy') || name.includes('openlead');
                     
                     let heightClass = 'h-[90px] md:h-28'; // Default for others
                     if (isHyro) heightClass = 'h-[58px] md:h-[72px]'; // 10% reduction from h-16/h-20
