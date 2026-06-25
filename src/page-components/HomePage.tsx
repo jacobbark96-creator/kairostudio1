@@ -8,7 +8,7 @@ import { supabase } from '../lib/supabase';
 import TypewriterHero from '../components/TypewriterHero';
 import SEO from '../components/SEO';
 import FeaturedProjects from '../components/FeaturedProjects';
-import SiteAuditWizard from '../components/SiteAuditWizard';
+import InvestmentCalculator from '../components/InvestmentCalculator';
 import CodeToCanvas from '../components/CodeToCanvas';
 
 import { useUI } from '../context/UIContext';
@@ -41,25 +41,18 @@ export default function HomePage() {
   const [heroTitleAlt2, setHeroTitleAlt2] = useState('We design products that scale');
   const [heroSubtitle, setHeroSubtitle] = useState('Transform your vision into stunning digital realities. We blend creativity with technology to build brands that captivate and convert.');
 
-  const [auditUrl, setAuditUrl] = useState('');
-  const [auditEmail, setAuditEmail] = useState('');
-  const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
-  const [auditSuccess, setAuditSuccess] = useState(false);
-  const [showMobileAudit, setShowMobileAudit] = useState(false);
-  const [showWizard, setShowWizard] = useState(false);
+  const [showCalculator, setShowCalculator] = useState(false);
+  const [showMobileCalculator, setShowMobileCalculator] = useState(false);
   
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanLines, setScanLines] = useState<string[]>([]);
-
-  // Prevent scroll when mobile audit modal is open
+  // Prevent scroll when mobile calculator modal is open
   useEffect(() => {
-    if (showMobileAudit) {
+    if (showMobileCalculator) {
         document.body.style.overflow = 'hidden';
     } else {
         document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; }
-  }, [showMobileAudit]);
+  }, [showMobileCalculator]);
 
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -282,7 +275,7 @@ export default function HomePage() {
                 {/* Mobile Swipe to Analyse Slider */}
                 <div 
                   className="md:hidden w-full relative h-[60px] bg-white/80 dark:bg-black/40 backdrop-blur-md rounded-full overflow-hidden border border-gray-300 dark:border-white/10 shadow-lg flex items-center mt-2 touch-none cursor-pointer"
-                  onClick={() => setShowMobileAudit(true)}
+                  onClick={() => setShowMobileCalculator(true)}
                   onTouchStart={(e) => {
                     const slider = e.currentTarget;
                     const touch = e.touches[0];
@@ -313,7 +306,7 @@ export default function HomePage() {
                       // If swiped all the way (or close enough), trigger action
                       if (diff > maxSlide * 0.85) {
                         handleTouchEnd();
-                        setShowMobileAudit(true);
+                        setShowMobileCalculator(true);
                       }
                     };
 
@@ -340,128 +333,57 @@ export default function HomePage() {
                   
                   {/* The instructional text */}
                   <span className="swipe-text w-full text-center text-sm font-bold text-gray-900 dark:text-gray-200 pl-10 pointer-events-none drop-shadow-sm">
-                    Swipe to Analyse Site
+                    Investment Calculator
                   </span>
                 </div>
               </div>
             </div>
             
             <div className="flex justify-center lg:justify-end relative">
-              {/* DESKTOP BOX - Hidden on mobile */}
+              {/* DESKTOP BOX - Investment Calculator */}
               <div 
                 className="hidden md:block w-full max-w-lg relative z-10 transition-all duration-500 group"
               >
                 <div 
                   className="relative overflow-hidden rounded-3xl bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-white/50 dark:border-white/10"
                 >
-                  {/* Sonar Radar Background Effect */}
-                  <div className="absolute inset-0 z-0 overflow-hidden opacity-20 pointer-events-none mix-blend-overlay">
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/30 scale-[0.2]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/20 scale-[0.5]" />
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/10 scale-[0.8]" />
-                  </div>
-
                   <div className="relative z-10 p-10 text-center bg-white/40 dark:bg-black/40 backdrop-blur-sm">
-                        
-                        <h3 className="text-4xl font-display font-black text-gray-900 dark:text-white mb-3 tracking-tight">
-                            Analyse your site
-                        </h3>
-                        
-                        {auditSuccess ? (
-                              <div className="py-4 text-center animate-fade-in-up">
-                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-2xl">Report generated.</h4>
-                                  <p className="text-base text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
-                                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-                                  </div>
-                              </div>
-                          ) : (
-                            <>
-                                <p className="text-gray-500 dark:text-gray-400 text-base mb-8 max-w-sm mx-auto leading-relaxed">
-                                    Enter your URL below to get a comprehensive performance and SEO breakdown.
-                                </p>
-                                
-                                <div className="w-full relative overflow-hidden min-h-[380px] flex items-start justify-center transition-all duration-500">
-                                    {isScanning ? (
-                                      <div className="w-full text-left font-mono text-sm bg-gray-950 p-6 rounded-2xl border border-gray-800 h-[380px] overflow-hidden flex flex-col justify-end relative shadow-inner">
-                                        <div className="absolute top-0 left-0 w-full h-[2px] bg-brand-500/50 shadow-[0_0_20px_rgba(14,165,233,0.8)] animate-[scanline_2s_linear_infinite]" />
-                                        <div className="space-y-3">
-                                          {scanLines.map((line, idx) => (
-                                            <div 
-                                              key={idx}
-                                              className={`${idx === scanLines.length - 1 ? 'text-brand-400 font-bold' : 'text-gray-500'}`}
-                                            >
-                                              {line}
-                                            </div>
-                                          ))}
-                                          <div className="w-2 h-4 bg-brand-400 inline-block mt-2 animate-pulse" />
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      <>
-                                        <div className={`w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0' : 'translate-x-0 opacity-100 relative z-20 pointer-events-auto'}`}>
-                                        <form 
-                                            onSubmit={handleAuditSubmit}
-                                            className="flex flex-col gap-4 relative z-50 pointer-events-auto"
-                                        >
-                                        <input 
-                                            type="text" 
-                                            placeholder="yourdomain.com" 
-                                            required
-                                            value={auditUrl}
-                                            onChange={(e) => setAuditUrl(e.target.value)}
-                                            className="w-full px-6 py-5 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-lg text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
-                                        />
-                                        <input 
-                                            type="email" 
-                                            placeholder="name@company.com" 
-                                            required
-                                            value={auditEmail}
-                                            onChange={(e) => setAuditEmail(e.target.value)}
-                                            className="w-full px-6 py-5 rounded-2xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-lg text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
-                                        />
-                                        <button 
-                                            type="submit"
-                                            disabled={isSubmittingAudit}
-                                            className="w-full py-5 mt-2 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 disabled:active:scale-100"
-                                        >
-                                            {isSubmittingAudit ? 'Scanning your site...' : 'Get Free Analysis'}
-                                            {!isSubmittingAudit && <ArrowRight className="w-5 h-5" />}
-                                        </button>
-                                        </form>
-                                        
-                                        {/* Trust Signals */}
-                                        <div className="mt-6 flex flex-col items-center justify-center gap-2">
-                                        <div className="flex items-center gap-1 text-yellow-400">
-                                            {[...Array(5)].map((_, i) => (
-                                            <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                            ))}
-                                        </div>
-                                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Takes 30 seconds. 100% Free.</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100 relative z-20 pointer-events-auto' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0'}`}>
-                                            <div className="pt-2 relative z-50 pointer-events-auto">
-                                            <SiteAuditWizard 
-                                            isOpen={showWizard} 
-                                            onClose={() => setShowWizard(false)} 
-                                            auditUrl={auditUrl} 
-                                            auditEmail={auditEmail} 
-                                            onComplete={handleWizardComplete} 
-                                            embedded={true}
-                                            />
-                                        </div>
-                                    </div>
-                                  </>
-                                )}
-                            </div>
-                        </>
-                      )}
+                    <div className="w-16 h-16 bg-brand-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <RefreshCw className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+                    </div>
+                    
+                    <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-4 tracking-tight">
+                      Website Investment Calculator
+                    </h3>
+                    
+                    <p className="text-gray-500 dark:text-gray-400 text-base mb-8 max-w-sm mx-auto leading-relaxed">
+                      Answer 5 quick questions to get an instant recommendation and pricing for your new project.
+                    </p>
+                    
+                    <button 
+                      onClick={() => setShowCalculator(true)}
+                      className="w-full py-5 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-2xl font-bold text-lg shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+                    >
+                      Start Calculator
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                    
+                    <div className="mt-6 flex flex-col items-center justify-center gap-2">
+                      <div className="flex items-center gap-1 text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <svg key={i} className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        ))}
+                      </div>
+                      <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Instant quote. No obligation.</p>
                     </div>
                   </div>
                 </div>
+              </div>
 
+              <InvestmentCalculator 
+                isOpen={showCalculator} 
+                onClose={() => setShowCalculator(false)} 
+              />
             </div>
           </div>
         </div>
@@ -510,7 +432,7 @@ export default function HomePage() {
              </span>
           </div>
 
-          <div className="flex w-max animate-[marquee_40s_linear_infinite_reverse] opacity-70 hover:opacity-100 transition-opacity duration-300">
+          <div className="flex w-max animate-[marquee_40s_linear_infinite_reverse]">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="flex items-center gap-16 px-8">
                 {marqueeProjects.map((p: any) => {
@@ -527,12 +449,12 @@ export default function HomePage() {
                     if (isVerdePizza) heightClass = 'h-[99px] md:h-[123px]'; // 10% increase from 28/90
                     
                     return (
-                     <div key={p.id} className="flex items-center gap-4">
+                     <div key={p.id} className="flex items-center gap-4 group/logo">
                        {p.logo_url || p.image_url ? (
                          <img 
                             src={p.logo_url || p.image_url} 
                             alt={p.client_name} 
-                            className={`${heightClass} w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300`} 
+                            className={`${heightClass} w-auto object-contain grayscale group-hover/logo:grayscale-0 transition-all duration-0`} 
                           />
                        ) : (
                          <span className="text-2xl md:text-3xl font-bold text-gray-600 dark:text-gray-400">{p.client_name}</span>
@@ -638,138 +560,11 @@ export default function HomePage() {
       </section>
 
 
-              {/* MOBILE MODAL - Smooth Lightbox Transition */}
-              <div 
-                className={`md:hidden fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transform-gpu transition-[opacity,visibility] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  showMobileAudit ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-                }`}
-                style={{ willChange: 'opacity, visibility' }}
-              >
-                {/* Modal Container */}
-                <div 
-                  className={`relative w-full max-w-lg transform-gpu transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    showMobileAudit ? 'translate-y-0 scale-100 opacity-100 ' : 'translate-y-12 scale-95 opacity-0'
-                  }`}
-                  style={{ willChange: 'transform, opacity' }}
-                >
-                  <button 
-                    onClick={() => setShowMobileAudit(false)}
-                    className="absolute -top-12 right-0 z-[10000] p-2 bg-white/20 dark:bg-white/10 rounded-full text-white backdrop-blur-md shadow-lg border border-white/20"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                  
-                  {/* Site Assessment Feature */}
-                  <div className="relative w-full overflow-hidden rounded-3xl bg-white/90 dark:bg-[#0a0a0a]/90 backdrop-blur-2xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)] border border-white/50 dark:border-white/10">
-                    
-                    {/* Sonar Radar Background Effect */}
-                    <div className="absolute inset-0 z-0 overflow-hidden opacity-20 pointer-events-none mix-blend-overlay">
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/30 scale-[0.2]" />
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/20 scale-[0.5]" />
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] aspect-square rounded-full border border-brand-500/10 scale-[0.8]" />
-                    </div>
-
-                    <div className="relative z-10 p-8 text-center max-h-[85vh] overflow-y-auto bg-white/40 dark:bg-black/40 backdrop-blur-sm">
-                          
-                          <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-2 tracking-tight">
-                              Analyse your site
-                          </h3>
-                          
-                          {auditSuccess ? (
-                              <div className="py-4 text-center animate-fade-in-up">
-                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Report generated.</h4>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
-                                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
-                                  </div>
-                              </div>
-                          ) : (
-                              <>
-                                  <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-sm mx-auto leading-relaxed">
-                                      Enter your URL below to get a comprehensive performance and SEO breakdown.
-                                  </p>
-                                  
-                                  <div className="w-full relative overflow-hidden min-h-[320px] flex items-start justify-center transition-all duration-200">
-                                      {isScanning ? (
-                                        <div className="w-full text-left font-mono text-xs bg-gray-950 p-4 rounded-2xl border border-gray-800 h-[320px] overflow-hidden flex flex-col justify-end relative shadow-inner">
-                                          <div className="absolute top-0 left-0 w-full h-[2px] bg-brand-500/50 shadow-[0_0_20px_rgba(14,165,233,0.8)] animate-[scanline_2s_linear_infinite]" />
-                                          <div className="space-y-3">
-                                            {scanLines.map((line, idx) => (
-                                              <div 
-                                                key={idx}
-                                                className={`${idx === scanLines.length - 1 ? 'text-brand-400 font-bold' : 'text-gray-500'}`}
-                                              >
-                                                {line}
-                                              </div>
-                                            ))}
-                                            <div className="w-2 h-4 bg-brand-400 inline-block mt-2 animate-pulse" />
-                                          </div>
-                                        </div>
-                                      ) : (
-                                        <>
-                                          <div className={`w-full transition-all duration-200 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0' : 'translate-x-0 opacity-100 relative z-20 pointer-events-auto'}`}>
-                                          <form 
-                                              onSubmit={handleAuditSubmit}
-                                              className="flex flex-col gap-3 relative z-50 pointer-events-auto"
-                                          >
-                                          <input 
-                                              type="text" 
-                                              placeholder="yourdomain.com" 
-                                              required
-                                              value={auditUrl}
-                                              onChange={(e) => setAuditUrl(e.target.value)}
-                                              className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
-                                          />
-                                          <input 
-                                              type="email" 
-                                              placeholder="name@company.com" 
-                                              required
-                                              value={auditEmail}
-                                              onChange={(e) => setAuditEmail(e.target.value)}
-                                              className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
-                                          />
-                                          <button 
-                                              type="button"
-                                              onClick={handleAuditSubmit}
-                                              disabled={isSubmittingAudit || !auditUrl || !auditEmail}
-                                              className="w-full py-4 mt-2 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-bold text-base shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 disabled:active:scale-100"
-                                          >
-                                              {isSubmittingAudit ? 'Scanning your site...' : 'Get Free Analysis'}
-                                              {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
-                                          </button>
-                                          </form>
-                                          
-                                          <div className="mt-5 flex flex-col items-center justify-center gap-1.5">
-                                            <div className="flex items-center gap-1 text-yellow-400">
-                                              {[...Array(5)].map((_, i) => (
-                                                <svg key={i} className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                              ))}
-                                            </div>
-                                            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Takes 30 seconds. 100% Free.</p>
-                                          </div>
-                                      </div>
-                                      
-                                      <div className={`w-full transition-all duration-200 transform ${showWizard ? 'translate-x-0 opacity-100 relative z-20 pointer-events-auto' : 'translate-x-full opacity-0 pointer-events-none absolute inset-0 z-0'}`}>
-                                          <div className="pt-2 relative z-50 pointer-events-auto">
-                                              <SiteAuditWizard 
-                                              isOpen={showWizard} 
-                                              onClose={() => setShowWizard(false)} 
-                                              auditUrl={auditUrl} 
-                                              auditEmail={auditEmail} 
-                                              onComplete={handleWizardComplete} 
-                                              embedded={true}
-                                              />
-                                          </div>
-                                      </div>
-                                    </>
-                                  )}
-                              </div>
-                          </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* MOBILE MODAL - Website Investment Calculator */}
+      <InvestmentCalculator 
+        isOpen={showMobileCalculator} 
+        onClose={() => setShowMobileCalculator(false)} 
+      />
     </>
   );
 }
