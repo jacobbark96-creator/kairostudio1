@@ -441,6 +441,7 @@ export default function HomePage() {
                     const isSolarpedia = name.includes('solarpedia');
                     const isOpenlead = name.includes('openlead');
                     const isVerdePizza = name.includes('verde') || name.includes('pizza');
+                    const isWhiteLogo = name.includes('open energy') || name.includes('openlead academy');
                     
                     let heightClass = 'h-[90px] md:h-28'; // Default for others
                     if (isHyro) heightClass = 'h-[58px] md:h-[72px]'; // 10% reduction from h-16/h-20
@@ -454,7 +455,7 @@ export default function HomePage() {
                          <img 
                             src={p.logo_url || p.image_url} 
                             alt={p.client_name} 
-                            className={`${heightClass} w-auto object-contain grayscale group-hover/logo:grayscale-0 transition-all duration-0`} 
+                            className={`${heightClass} w-auto object-contain grayscale group-hover/logo:grayscale-0 transition-all duration-0 ${isWhiteLogo ? 'invert dark:invert-0' : ''}`} 
                           />
                        ) : (
                          <span className="text-2xl md:text-3xl font-bold text-gray-600 dark:text-gray-400">{p.client_name}</span>
