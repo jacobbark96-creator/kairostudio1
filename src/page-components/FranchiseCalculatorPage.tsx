@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import Layout from '../components/Layout';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ArrowRight, Calculator } from 'lucide-react';
 import Link from 'next/link';
@@ -31,9 +30,9 @@ export default function FranchiseCalculatorPage() {
   };
 
   return (
-    <Layout>
-      <div className="min-h-screen bg-black text-white pt-32 pb-20 selection:bg-white/30">
-        <div className="max-w-4xl mx-auto px-6">
+    <>
+      <div className="min-h-screen bg-black text-white pt-40 pb-20 selection:bg-white/30">
+        <div className="max-w-5xl mx-auto px-6">
           
           <div className="mb-12 text-center">
             <motion.div
@@ -263,6 +262,6 @@ export default function FranchiseCalculatorPage() {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }
