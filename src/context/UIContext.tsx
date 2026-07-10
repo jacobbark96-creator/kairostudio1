@@ -5,7 +5,8 @@ interface UIContextType {
   isContactModalOpen: boolean;
   contactModalPreill: string; // Used for the locked offer title
   offerPrice?: number;
-  openContactModal: (prefill?: string, price?: number) => void;
+  metadata?: any;
+  openContactModal: (prefill?: string, price?: number, metadata?: any) => void;
   closeContactModal: () => void;
   isJackpot: boolean;
   triggerJackpot: (status: boolean) => void;
@@ -17,12 +18,14 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactModalPreill, setContactModalPrefill] = useState('');
   const [offerPrice, setOfferPrice] = useState<number | undefined>(undefined);
+  const [metadata, setMetadata] = useState<any>(undefined);
   const [isJackpot, setIsJackpot] = useState(false);
 
-  const openContactModal = (prefill: string = '', price?: number) => {
-    console.log('UIContext - openContactModal called with:', { prefill, price });
+  const openContactModal = (prefill: string = '', price?: number, metadata?: any) => {
+    console.log('UIContext - openContactModal called with:', { prefill, price, metadata });
     setContactModalPrefill(prefill);
     setOfferPrice(price);
+    setMetadata(metadata);
     setIsContactModalOpen(true);
   };
 
@@ -34,6 +37,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
     setIsContactModalOpen(false);
     setContactModalPrefill('');
     setOfferPrice(undefined);
+    setMetadata(undefined);
   };
 
   return (
@@ -42,6 +46,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
         isContactModalOpen,
         contactModalPreill,
         offerPrice,
+        metadata,
         openContactModal,
         closeContactModal,
         isJackpot,

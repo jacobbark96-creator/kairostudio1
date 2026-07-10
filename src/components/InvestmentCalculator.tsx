@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ArrowRight, Check, Briefcase, RefreshCw, Search, Palette, ShoppingCart, Calendar } from 'lucide-react';
+import { useUI } from '../context/UIContext';
 import Link from 'next/link';
 
 interface CalculatorProps {
@@ -55,6 +56,7 @@ const questions = [
 ];
 
 export default function InvestmentCalculator({ isOpen, onClose }: CalculatorProps) {
+  const { openContactModal } = useUI();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<any>(null);
@@ -207,14 +209,16 @@ export default function InvestmentCalculator({ isOpen, onClose }: CalculatorProp
                   </p>
                   
                   <div className="flex flex-col gap-3">
-                    <Link 
-                      href="/book"
-                      onClick={onClose}
+                    <button 
+                      onClick={() => {
+                        onClose();
+                        openContactModal(`${result.name} (from Calculator)`, undefined, answers);
+                      }}
                       className="w-full py-5 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition-all shadow-xl shadow-brand-500/20"
                     >
                       {result.cta}
                       <Calendar className="w-5 h-5" />
-                    </Link>
+                    </button>
                     <button 
                       onClick={reset}
                       className="text-sm font-bold text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors py-2"

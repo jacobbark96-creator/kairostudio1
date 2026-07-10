@@ -5,7 +5,7 @@ import { useUI } from '../context/UIContext';
 import { supabase } from '../lib/supabase';
 
 export default function ContactModal() {
-  const { isContactModalOpen: isOpen, closeContactModal: onClose, contactModalPreill: lockedSubject, offerPrice } = useUI();
+  const { isContactModalOpen: isOpen, closeContactModal: onClose, contactModalPreill: lockedSubject, offerPrice, metadata } = useUI();
   const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
   const [messageBody, setMessageBody] = useState('');
@@ -28,7 +28,8 @@ export default function ContactModal() {
   useEffect(() => {
     console.log('ContactModal - lockedSubject:', lockedSubject);
     console.log('ContactModal - offerPrice:', offerPrice);
-  }, [lockedSubject, offerPrice]);
+    console.log('ContactModal - metadata:', metadata);
+  }, [lockedSubject, offerPrice, metadata]);
 
   async function handleSubmit(e?: React.FormEvent) {
     if (e) e.preventDefault();
@@ -44,7 +45,8 @@ export default function ContactModal() {
       website: website.trim() || undefined,
       subject: lockedSubject || undefined,
       offer_price: offerPrice || null,
-      deposit_amount: offerPrice ? offerPrice * 0.5 : null
+      deposit_amount: offerPrice ? offerPrice * 0.5 : null,
+      metadata: metadata || null
     };
 
     try {

@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'your-google-site-verification-code', // We can update this later when you register on Google Search Console
+    google: 'II9v7duCgzQQFJH6VhiUIaHhLansF0JXZ4vd88sYOCk',
   },
   icons: {
     icon: [

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
-import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, Search, Plus, Minus, Globe, Briefcase, Zap, Rocket } from 'lucide-react';
+import { ArrowRight, MapPin, Loader2, CheckCircle, Shield, Target, TrendingUp, Search, Plus, Minus, Globe, Briefcase, Zap, Rocket, Calculator } from 'lucide-react';
 import Layout from '../components/Layout';
 import Map, { Marker, NavigationControl, ViewStateChangeEvent } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -244,10 +244,13 @@ export default function FranchisePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap"
           >
             <a href="#apply" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-white text-black rounded-full font-bold text-lg hover:scale-105 transition-transform duration-300">
               Apply to Partner <ArrowRight className="w-5 h-5" />
+            </a>
+            <a href="/franchise/calculator" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 transition-colors duration-300">
+              <Calculator className="w-5 h-5" /> Calculate Investment
             </a>
             <a href="#map-container" className="inline-flex items-center justify-center gap-2 px-8 py-5 bg-white/10 backdrop-blur-md text-white border border-white/20 rounded-full font-bold text-lg hover:bg-white/20 transition-colors duration-300">
               <Globe className="w-5 h-5" /> View Territories
