@@ -14,10 +14,12 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 
     const resendApiKey = env.RESEND_API_KEY;
 
+    console.log('API Request Received:', { hasToken: !!resendApiKey, staffEmail });
+
     if (!resendApiKey) {
       return new Response(JSON.stringify({ 
         error: 'RESEND_API_KEY environment variable is not set in Cloudflare.',
-        details: 'Please add it in Settings > Functions > Environment variables and redeploy.'
+        debug_info: 'Check Cloudflare Dash > Settings > Functions > Environment variables'
       }), { 
         status: 500,
         headers: { 'Content-Type': 'application/json' }
@@ -44,22 +46,36 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       </div>
     `;
 
+    const resendRequest = {
+      from: 'Kairo Studio <hello@kairostudio.co.uk>',
+      to: [staffEmail],
+      subject: `Discovery Call: ${answers['Client / Business Name'] || 'New Lead'}`,
+      html: emailHtml,
+    };
+
+    console.log('Sending to Resend:', { to: staffEmail });
+
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${resendApiKey}`,
+        'Authorization': `Bearer ${resendApiKey.trim()}`,
       },
-      body: JSON.stringify({
-        from: 'Kairo Studio <hello@kairostudio.co.uk>',
-        to: [staffEmail],
-        subject: `Discovery Call: ${answers['Client / Business Name'] || 'New Lead'}`,
-        html: emailHtml,
-      }),
+      body: JSON.stringify(resendRequest),
     });
 
     const data: any = await res.json();
-    if (!res.ok) throw new Error(`Resend API Error: ${JSON.stringify(data)}`);
+    console.log('Resend Response:', { ok: res.ok, status: res.status, data });
+
+    if (!res.ok) {
+      return new Response(JSON.stringify({ 
+        error: 'Resend API rejected the request',
+        resend_error: data
+      }), {
+        status: res.status,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     return new Response(JSON.stringify({ success: true, messageId: data.id }), {
       status: 200,
