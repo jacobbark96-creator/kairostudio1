@@ -5,7 +5,7 @@ language plpgsql
 security definer
 as $$
 declare
-  resend_api_key text := current_setting('app.settings.resend_api_key', true);
+  resend_api_key text := get_system_setting('resend_api_key');
   portal_link text := 'https://billing.stripe.com/p/login/00w5kEa8a9oVdJogU65kk00';
   email_payload jsonb;
   display_name text;

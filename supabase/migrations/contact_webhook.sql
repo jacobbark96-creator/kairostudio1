@@ -11,7 +11,7 @@ language plpgsql
 security definer
 as $$
 declare
-  resend_api_key text := current_setting('app.settings.resend_api_key', true);
+  resend_api_key text := get_system_setting('resend_api_key');
   admin_payload jsonb;
   metadata_html text := '';
   metadata_key text;
