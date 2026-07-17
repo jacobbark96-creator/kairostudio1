@@ -15,7 +15,13 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const resendApiKey = env.RESEND_API_KEY;
 
     if (!resendApiKey) {
-      throw new Error('RESEND_API_KEY environment variable is not set');
+      return new Response(JSON.stringify({ 
+        error: 'RESEND_API_KEY environment variable is not set in Cloudflare.',
+        details: 'Please add it in Settings > Functions > Environment variables and redeploy.'
+      }), { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
 
     const emailHtml = `
