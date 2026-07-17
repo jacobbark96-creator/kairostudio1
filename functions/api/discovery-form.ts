@@ -14,7 +14,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 
     const resendApiKey = env.RESEND_API_KEY;
 
-    console.log('API Request Received:', { hasToken: !!resendApiKey, staffEmail });
+    console.log('API Request Received:', { 
+      hasToken: !!resendApiKey, 
+      tokenPrefix: resendApiKey ? `${resendApiKey.substring(0, 7)}...` : 'none',
+      staffEmail 
+    });
 
     if (!resendApiKey) {
       return new Response(JSON.stringify({ 
