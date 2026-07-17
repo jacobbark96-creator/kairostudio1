@@ -86,10 +86,20 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       end: {
         dateTime: endDateTimeLocal,
         timeZone: 'Europe/London',
+      },
+      attendees: [
+        { email: email }, // The client
+        { email: 'jake@openlead.co.uk' } // The admin
+      ],
+      conferenceData: {
+        createRequest: {
+          requestId: `booking-${Date.now()}`,
+          conferenceSolutionKey: { type: 'hangoutsMeet' }
+        }
       }
     };
 
-    const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`, {
+    const calRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?conferenceDataVersion=1&sendUpdates=all`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
