@@ -47,7 +47,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     `;
 
     const resendRequest = {
-      from: 'Kairo Studio <onboarding@resend.dev>', // Use verified sender for testing if hello@ isn't setup
+      from: 'Kairo Studio <hello@kairostudio.co.uk>',
       to: [staffEmail],
       subject: `Discovery Call: ${answers['Client / Business Name'] || 'New Lead'}`,
       html: emailHtml,
