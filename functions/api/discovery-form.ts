@@ -12,7 +12,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
     }
 
-    const resendApiKey = env.RESEND_API_KEY || 're_TeVXqARF_De9xssbiT9Ywhq7PcFvQbQUs'; // Fallback used in other project files
+    const resendApiKey = env.RESEND_API_KEY;
+
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
 
     const emailHtml = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">

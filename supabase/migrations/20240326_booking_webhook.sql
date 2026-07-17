@@ -8,7 +8,7 @@ language plpgsql
 security definer
 as $$
 declare
-  resend_api_key text := 're_TeVXqARF_De9xssbiT9Ywhq7PcFvQbQUs';
+  resend_api_key text := current_setting('app.settings.resend_api_key', true);
   formatted_date text;
   client_payload jsonb;
   admin_payload jsonb;

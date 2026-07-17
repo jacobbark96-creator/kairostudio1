@@ -20,7 +20,10 @@ serve(async (req) => {
       )
     }
 
-    const resendApiKey = Deno.env.get('RESEND_API_KEY') || 're_TeVXqARF_De9xssbiT9Ywhq7PcFvQbQUs'
+    const resendApiKey = Deno.env.get('RESEND_API_KEY')
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set')
+    }
     const portalLink = 'https://billing.stripe.com/p/login/00w5kEa8a9oVdJogU65kk00'
     const displayName = name || 'there'
     

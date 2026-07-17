@@ -27,7 +27,10 @@ serve(async (req) => {
       day: 'numeric' 
     })
 
-    const resendApiKey = Deno.env.get('RESEND_API_KEY') || 're_TeVXqARF_De9xssbiT9Ywhq7PcFvQbQUs'
+    const resendApiKey = Deno.env.get('RESEND_API_KEY')
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set')
+    }
     
     // 1. Send Email to Client
     let clientEmailStatus = null;
