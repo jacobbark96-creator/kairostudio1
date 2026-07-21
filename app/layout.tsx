@@ -9,8 +9,11 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://kairostudio.co.uk'),
+  alternates: {
+    canonical: '/',
+  },
   title: {
-    default: 'Kairo Studio | High-Performance Digital Solutions & Web Design',
+    default: 'Kairo Studio | Web Design Agency Glasgow | High-Performance Digital Solutions',
     template: '%s | Kairo Studio'
   },
   description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
@@ -78,26 +81,56 @@ export default function RootLayout({
 }) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
+    '@type': 'LocalBusiness',
     name: 'Kairo Studio',
-    image: 'https://kairostudio.co.uk/icon.png',
-    logo: 'https://kairostudio.co.uk/icon.png',
+    alternateName: 'Kairo Studio Web Design',
+    description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
     url: 'https://kairostudio.co.uk',
-    description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, and scalable digital products.',
+    logo: 'https://kairostudio.co.uk/icon.png',
+    image: 'https://kairostudio.co.uk/icon.png',
+    email: 'hello@kairostudio.co.uk',
+    telephone: '0161 224 5044',
     address: {
       '@type': 'PostalAddress',
-      addressCountry: 'UK'
+      streetAddress: '20 Wenlock Road',
+      addressLocality: 'London',
+      postalCode: 'N1 7GU',
+      addressCountry: 'GB'
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 51.5297,
+      longitude: -0.0886
+    },
+    branchOf: {
+      '@type': 'Organization',
+      name: 'Kairo Studio',
+      location: [
+        {
+          '@type': 'LocalBusiness',
+          name: 'Kairo Studio Manchester',
+          address: {
+            '@type': 'PostalAddress',
+            streetAddress: '11 King Street',
+            addressLocality: 'Manchester',
+            postalCode: 'M2 4AH',
+            addressCountry: 'GB'
+          }
+        }
+      ]
     },
     sameAs: [
-      'https://twitter.com/kairostudio',
-      'https://linkedin.com/company/kairo-studio'
+      'https://instagram.com/kairowebstudio',
+      'https://linkedin.com/company/kairo-studio',
+      'https://github.com/kairostudio',
+      'https://dribbble.com/kairostudio'
     ]
   };
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4QHDY6WV7H"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18287243813"></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -105,6 +138,7 @@ export default function RootLayout({
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', 'G-4QHDY6WV7H');
+              gtag('config', 'AW-18287243813');
             `,
           }}
         />

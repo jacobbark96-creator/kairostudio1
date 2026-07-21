@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: post.title,
     description: post.excerpt,
     alternates: {
-      canonical: `https://kairostudio.co.uk/blog/${params.slug}`,
+      canonical: `https://kairostudio.co.uk/blog/${params.slug}/`,
     },
     openGraph: {
       title: post.title,

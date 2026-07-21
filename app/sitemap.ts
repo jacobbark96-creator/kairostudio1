@@ -6,20 +6,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   
   // Base routes
   const routes = [
-    '',
-    '/about',
-    '/services',
-    '/portfolio',
-    '/pricing',
-    '/blog',
-    '/careers',
-    '/book',
-    '/franchise'
+    '/',
+    '/about/',
+    '/services/',
+    '/portfolio/',
+    '/pricing/',
+    '/blog/',
+    '/careers/',
+    '/book/',
+    '/franchise/'
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
+    priority: route === '/' ? 1 : 0.8,
   }));
 
   // Fetch dynamic blog posts
@@ -30,11 +30,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const { data: posts } = await supabase
       .from('blog_posts')
-      .select('slug, updated_at, created_at');
+      .select('slug, updated_at, created_at')
+      .eq('published', true);
 
     if (posts) {
       const postRoutes = posts.map((post) => ({
-        url: `${baseUrl}/blog/${post.slug}`,
+        url: `${baseUrl}/blog/${post.slug}/`,
         lastModified: new Date(post.updated_at || post.created_at),
         changeFrequency: 'monthly' as const,
         priority: 0.6,

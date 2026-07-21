@@ -15,8 +15,8 @@ const codeSequence = [
   { text: "      whileHover={{ rotate: 3 }}", color: "text-orange-300", type: "prop", triggerAnimation: "hover" },
   { text: "      className=\"premium-glass-card\"", color: "text-green-400", type: "prop", triggerAnimation: "style" },
   { text: "    >", color: "text-red-400", type: "tag" },
-  { text: "      Type 'Showme --secrets' into the", color: "text-white", type: "content" },
-  { text: "      code on About page for a surprise", color: "text-white", type: "content", triggerAnimation: "content" },
+  { text: "      Engineered for excellence,", color: "text-white", type: "content" },
+  { text: "      designed for market growth.", color: "text-white", type: "content", triggerAnimation: "content" },
   { text: "    </motion.div>", color: "text-red-400", type: "tag" },
   { text: "  );", color: "text-purple-400", type: "return" },
   { text: "}", color: "text-blue-400", type: "function" }
@@ -224,7 +224,7 @@ export default function CodeToCanvas() {
                   <Sparkles className="w-6 h-6 text-brand-400" />
                 </div>
                 <h3 className="text-xl sm:text-2xl font-display font-bold text-gray-900 dark:text-white tracking-tight drop-shadow-sm leading-snug">
-                  Type 'Showme --secrets' into the code on About page for a surprise
+                  Engineered for excellence, designed for growth.
                 </h3>
               </motion.div>
 

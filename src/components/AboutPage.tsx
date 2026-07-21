@@ -51,7 +51,7 @@ function AnimatedNumber({ value, suffix }: { value: number, suffix: string }) {
     return () => controls.stop();
   }, [isInView, value, suffix]);
 
-  return <span ref={nodeRef}>0{suffix}</span>;
+  return <span ref={nodeRef}>{value}{suffix}</span>;
 }
 
 export default function AboutPage() {
