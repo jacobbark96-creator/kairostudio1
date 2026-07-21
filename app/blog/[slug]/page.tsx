@@ -21,8 +21,33 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     .single();
 
   if (!post) {
+    // Check if it's one of the mock posts
+    const mockPost = {
+      'custom-web-design-vs-templates': {
+        title: 'Why Custom Web Design Outperforms Templates Every Time',
+        excerpt: 'Discover why investing in a custom-built website yields higher conversion rates and better brand perception than off-the-shelf templates.',
+        image_url: 'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=2000&auto=format&fit=crop',
+      }
+    }[params.slug];
+
+    if (mockPost) {
+      return {
+        title: `${mockPost.title} | Kairo Blog`,
+        description: mockPost.excerpt,
+        alternates: {
+          canonical: `/blog/${params.slug}/`,
+        },
+        openGraph: {
+          title: mockPost.title,
+          description: mockPost.excerpt,
+          url: `/blog/${params.slug}/`,
+          images: [{ url: mockPost.image_url }],
+        }
+      };
+    }
+
     return {
-      title: 'Post Not Found',
+      title: 'Post Not Found | Kairo Studio',
     };
   }
 
