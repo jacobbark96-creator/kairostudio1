@@ -7,6 +7,8 @@ export const officeLocations = [
     country: 'United Kingdom',
     description: 'Our global headquarters located in the heart of London, driving digital innovation for enterprise clients.',
     image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=premium%20modern%20tech%20office%20in%20london%20dark%20aesthetic%20glassmorphism%20neon%20accents%20architectural%20photography&image_size=landscape_16_9',
+    lat: 51.528,
+    lng: -0.089,
   },
   {
     slug: 'east-anglia',
@@ -16,6 +18,8 @@ export const officeLocations = [
     country: 'United Kingdom',
     description: 'Serving the thriving tech community and businesses across East Anglia from our Norwich hub.',
     image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=premium%20modern%20tech%20office%20in%20norwich%20england%20dark%20aesthetic%20glassmorphism%20neon%20accents%20architectural%20photography&image_size=landscape_16_9',
+    lat: 52.630,
+    lng: 1.297,
   },
   {
     slug: 'glasgow',
@@ -25,6 +29,8 @@ export const officeLocations = [
     country: 'United Kingdom',
     description: 'Our Scottish hub, delivering high-performance digital solutions and connecting with the vibrant Glasgow creative scene.',
     image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=premium%20modern%20tech%20office%20in%20glasgow%20scotland%20dark%20aesthetic%20glassmorphism%20neon%20accents%20architectural%20photography&image_size=landscape_16_9',
+    lat: 55.859,
+    lng: -4.244,
   },
   {
     slug: 'bali',
@@ -34,6 +40,8 @@ export const officeLocations = [
     country: 'Indonesia',
     description: 'Our creative retreat and APAC operational center, where innovation meets lifestyle in Uluwatu.',
     image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=premium%20modern%20tech%20office%20in%20bali%20uluwatu%20tropical%20dark%20aesthetic%20glassmorphism%20neon%20accents%20architectural%20photography&image_size=landscape_16_9',
+    lat: -8.829,
+    lng: 115.088,
   },
   {
     slug: 'dubai',
@@ -43,6 +51,8 @@ export const officeLocations = [
     country: 'United Arab Emirates',
     description: 'Connecting with the rapidly expanding tech ecosystem and premium brands in the Middle East.',
     image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=premium%20modern%20tech%20office%20in%20dubai%20skyscraper%20dark%20aesthetic%20glassmorphism%20neon%20accents%20architectural%20photography&image_size=landscape_16_9',
+    lat: 25.204,
+    lng: 55.270,
   },
   {
     slug: 'sydney',
@@ -52,5 +62,7 @@ export const officeLocations = [
     country: 'Australia',
     description: 'Expanding our global footprint with dedicated support and digital expertise for our Australian partners.',
     image: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=premium%20modern%20tech%20office%20in%20sydney%20australia%20dark%20aesthetic%20glassmorphism%20neon%20accents%20architectural%20photography&image_size=landscape_16_9',
+    lat: -33.868,
+    lng: 151.209,
   }
 ];

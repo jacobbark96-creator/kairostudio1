@@ -5,4 +5,11 @@ Disallow: /dashboard
 Disallow: /login
 Disallow: /api/
 
+User-Agent: GPTBot
+User-Agent: ChatGPT-User
+User-Agent: Claude-Web
+User-Agent: ClaudeBot
+User-Agent: Google-Extended
+Allow: /
+
 Sitemap: https://kairostudio.co.uk/sitemap.xml

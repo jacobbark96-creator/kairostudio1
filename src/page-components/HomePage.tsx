@@ -13,6 +13,7 @@ import CodeToCanvas from '../components/CodeToCanvas';
 
 import { useUI } from '../context/UIContext';
 import confetti from 'canvas-confetti';
+import WorldMap from '../components/WorldMap';
 
 export default function HomePage() {
   
@@ -482,6 +483,23 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* Global Reach / Map Section */}
+      <section className="py-16 sm:py-32 bg-gray-50 dark:bg-[#0a0a0a] border-t border-gray-200 dark:border-gray-900 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 sm:mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4 text-gray-900 dark:text-white tracking-tight">
+              Our Global Reach
+            </h2>
+            <p className="text-base sm:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-normal leading-relaxed">
+              With offices across the globe, we are positioned to deliver world-class digital solutions wherever you are.
+            </p>
+          </div>
+          <div className="w-full h-[400px] md:h-[600px] rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-800">
+            <WorldMap hideTooltips={true} />
+          </div>
+        </div>
+      </section>
 
       {/* MOBILE MODAL - Website Investment Calculator */}
       <InvestmentCalculator 

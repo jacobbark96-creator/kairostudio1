@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import Footer from './Footer';
 import ContactModal from './ContactModal';
+import LocalKairoButton from './LocalKairoButton';
 import { useTheme } from '../hooks/useTheme';
 import { useUI } from '../context/UIContext';
 
@@ -110,6 +111,7 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Pricing
               </Link>
+              <LocalKairoButton />
               <Link
                 href="/dashboard"
                 className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
@@ -196,6 +198,9 @@ export default function Layout({ children }: LayoutProps) {
           >
             Pricing
           </Link>
+          <div className="flex justify-center" onClick={() => setMobileMenuOpen(false)}>
+            <LocalKairoButton />
+          </div>
           <Link
             href="/dashboard"
             onClick={() => setMobileMenuOpen(false)}
