@@ -230,7 +230,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </div>
 
-      <main style={{ zoom: 0.7 }}>
+      <main style={{ zoom: 0.7 }} className="pt-32 sm:pt-40">
         {children}
       </main>
 
