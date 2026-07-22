@@ -6,7 +6,29 @@ export const metadata: Metadata = {
   title: 'Blog & Insights',
   description: 'Read the latest insights, tutorials, and case studies on web design, development, and digital strategy from the Kairo Studio team.',
   alternates: {
-    canonical: 'https://kairostudio.co.uk/blog/',
+    canonical: '/blog/',
+  },
+  openGraph: {
+    title: 'Blog & Insights | Kairo Studio',
+    description: 'Read the latest insights, tutorials, and case studies on web design, development, and digital strategy from the Kairo Studio team.',
+    url: 'https://kairostudio.co.uk/blog/',
+    siteName: 'Kairo Studio',
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2940&auto=format&fit=crop',
+        width: 1200,
+        height: 630,
+        alt: 'Kairo Studio Blog',
+      },
+    ],
+    locale: 'en_GB',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Blog & Insights | Kairo Studio',
+    description: 'Read the latest insights, tutorials, and case studies on web design, development, and digital strategy from the Kairo Studio team.',
+    images: ['https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2940&auto=format&fit=crop'],
   },
 };
 

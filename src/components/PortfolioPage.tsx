@@ -27,10 +27,10 @@ interface Project {
   results?: string[];
 }
 
-export default function PortfolioPage() {
+export default function PortfolioPage({ initialProjects = null }: { initialProjects?: any }) {
   const { openContactModal } = useUI();
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[]>(initialProjects || []);
+  const [loading, setLoading] = useState(!initialProjects);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     client: false,
     challenge: false,
@@ -40,8 +40,10 @@ export default function PortfolioPage() {
   });
 
   useEffect(() => {
-    fetchProjects();
-  }, []);
+    if (!initialProjects) {
+      fetchProjects();
+    }
+  }, [initialProjects]);
 
   const fetchProjects = async () => {
     const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });

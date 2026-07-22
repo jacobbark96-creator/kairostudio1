@@ -2,15 +2,15 @@ import AboutPage from '../../src/components/AboutPage';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Our Glasgow Web Design Agency',
-  description: 'Learn about Kairo Studio, a leading Glasgow web design agency building high-performance digital solutions globally.',
+  title: 'About Our London Web Design Agency',
+  description: 'Learn about Kairo Studio, a leading UK web design agency with offices in London and Manchester, building high-performance digital solutions globally.',
   alternates: {
     canonical: '/about/',
   },
   openGraph: {
     title: 'About Us | Kairo Studio',
     description: 'Learn about Kairo Studio, our mission, and the expert team building high-performance digital solutions.',
-    url: 'https://kairostudio.co.uk/about',
+    url: 'https://kairostudio.co.uk/about/',
     siteName: 'Kairo Studio',
     images: [
       {

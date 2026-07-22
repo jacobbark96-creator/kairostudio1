@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   title: {
-    default: 'Kairo Studio | Web Design Agency Glasgow | High-Performance Digital Solutions',
+    default: 'Kairo Studio | Web Design Agency London | High-Performance Digital Solutions',
     template: '%s | Kairo Studio'
   },
   description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',

@@ -18,10 +18,10 @@ export interface PricingPlan {
   sort_order: number;
 }
 
-export default function PricingPage() {
+export default function PricingPage({ initialPlans = null }: { initialPlans?: any }) {
   const { openContactModal } = useUI();
-  const [plans, setPlans] = useState<PricingPlan[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [plans, setPlans] = useState<PricingPlan[]>(initialPlans || []);
+  const [loading, setLoading] = useState(!initialPlans);
   const [currency, setCurrency] = useState<'GBP' | 'USD' | 'AUD'>('GBP');
 
   // Hardcoded conversion rates relative to GBP (for display purposes)
@@ -64,8 +64,10 @@ export default function PricingPage() {
   };
 
   useEffect(() => {
-    fetchPlans();
-  }, []);
+    if (!initialPlans) {
+      fetchPlans();
+    }
+  }, [initialPlans]);
 
   const fetchPlans = async () => {
     try {

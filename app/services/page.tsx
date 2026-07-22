@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Our Services | Kairo Studio',
     description: 'Explore our range of digital services including custom web design, web application development, UI/UX design, and SEO optimization.',
-    url: 'https://kairostudio.co.uk/services',
+    url: 'https://kairostudio.co.uk/services/',
     siteName: 'Kairo Studio',
     images: [
       {

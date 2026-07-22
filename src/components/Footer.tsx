@@ -1,6 +1,7 @@
 "use client";
 import { Mail, MapPin, Instagram, Linkedin, Github, Phone } from 'lucide-react';
 import Link from 'next/link';
+import { siteConfig } from '../data/siteConfig';
 
 interface FooterProps {
   logo: string;
@@ -103,32 +104,36 @@ export default function Footer({ logo, onShowContact }: FooterProps) {
               <li className="flex items-start gap-3 justify-center md:justify-start">
                 <MapPin className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1 text-left">
-                  <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">London (Head Office)</span>
+                  {siteConfig.locations.headquarters.map((hq, index) => (
+                    <div key={index} className={index > 0 ? "mt-2" : ""}>
+                      <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">{hq.name}</span>
+                      <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight uppercase tracking-tighter">
+                        {hq.address}
+                      </p>
+                    </div>
+                  ))}
+                  <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mt-4">Franchise Territories</span>
                   <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight uppercase tracking-tighter">
-                    20 Wenlock Road, London N1 7GU
-                  </p>
-                  <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mt-2">Manchester</span>
-                  <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight uppercase tracking-tighter">
-                    11 King Street, Manchester M2 4AH
+                    {siteConfig.locations.franchises.map(f => f.city).join(' | ')}
                   </p>
                 </div>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <Phone className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
                 <a
-                  href="tel:01612245044"
+                  href={`tel:${siteConfig.phone.replace(/\s+/g, '')}`}
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200"
                 >
-                  0161 224 5044
+                  {siteConfig.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3 justify-center md:justify-start">
                 <Mail className="w-5 h-5 text-cyan-600 dark:text-cyan-400 flex-shrink-0" />
                 <a
-                  href="mailto:hello@kairostudio.co.uk"
+                  href={`mailto:${siteConfig.email}`}
                   className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors duration-200 break-all"
                 >
-                  hello@kairostudio.co.uk
+                  {siteConfig.email}
                 </a>
               </li>
             </ul>

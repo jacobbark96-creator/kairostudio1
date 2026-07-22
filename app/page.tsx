@@ -6,7 +6,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  title: 'Kairo Studio | High-Performance Digital Solutions & Web Design',
+  title: {
+    absolute: 'Kairo Studio | High-Performance Digital Solutions & Web Design'
+  },
   description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
   openGraph: {
     title: 'Kairo Studio | High-Performance Digital Solutions',
