@@ -17,7 +17,7 @@ export const officeLocations = [
     address: 'Norwich, East Anglia',
     country: 'United Kingdom',
     description: 'Serving the thriving tech community and businesses across East Anglia from our Norwich hub.',
-    image: 'https://images.unsplash.com/photo-1582088575086-a2123565860b?q=80&w=2000&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1549646452-25fb513ec1ea?q=80&w=2000&auto=format&fit=crop',
     lat: 52.630,
     lng: 1.297,
   },
