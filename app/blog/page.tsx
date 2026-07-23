@@ -2,6 +2,8 @@ import BlogList from '../../src/components/BlogList';
 import { Metadata } from 'next';
 import { createClient } from '@supabase/supabase-js';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Blog & Insights',
   description: 'Read the latest insights, tutorials, and case studies on web design, development, and digital strategy from the Kairo Studio team.',

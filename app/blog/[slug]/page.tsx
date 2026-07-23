@@ -2,7 +2,7 @@ import BlogPost from '../../../src/components/BlogPost';
 import { createClient } from '@supabase/supabase-js';
 import { Metadata } from 'next';
 
-export const dynamicParams = true;
+export const dynamic = 'force-dynamic';
 
 // Generate metadata dynamically for each blog post
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
@@ -82,34 +82,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export async function generateStaticParams() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return [
-      { slug: 'custom-web-design-vs-templates' },
-      { slug: 'dummy-post' }
-    ];
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-  const { data: posts, error } = await supabase
-    .from('blog_posts')
-    .select('slug')
-    .eq('published', true);
-
-  if (error || !posts || posts.length === 0) {
-    return [
-      { slug: 'custom-web-design-vs-templates' },
-      { slug: 'dummy-post' }
-    ];
-  }
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
+// Removed generateStaticParams since we are using force-dynamic
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
