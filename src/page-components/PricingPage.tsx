@@ -66,6 +66,9 @@ export default function PricingPage({ initialPlans = null }: { initialPlans?: an
   useEffect(() => {
     if (!initialPlans) {
       fetchPlans();
+    } else {
+      setPlans(initialPlans);
+      setLoading(false);
     }
   }, [initialPlans]);
 

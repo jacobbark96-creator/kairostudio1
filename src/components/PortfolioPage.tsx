@@ -42,6 +42,9 @@ export default function PortfolioPage({ initialProjects = null }: { initialProje
   useEffect(() => {
     if (!initialProjects) {
       fetchProjects();
+    } else {
+      setProjects(initialProjects);
+      setLoading(false);
     }
   }, [initialProjects]);
 

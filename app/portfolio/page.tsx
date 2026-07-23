@@ -2,6 +2,8 @@ import PortfolioPage from '../../src/components/PortfolioPage';
 import { Metadata } from 'next';
 import { createClient } from '@supabase/supabase-js';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Our Work & Case Studies',
   description: 'View our portfolio of premium websites, applications, and digital products built by Kairo Studio.',
