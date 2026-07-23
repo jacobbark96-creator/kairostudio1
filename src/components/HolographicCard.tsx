@@ -49,9 +49,10 @@ export default function HolographicCard({ member, index }: { member: any, index:
       className="relative w-full max-w-[320px] aspect-[3/4] rounded-3xl overflow-hidden cursor-pointer group"
     >
       {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
-        style={{ backgroundImage: `url(${member.img})` }}
+      <img 
+        src={member.img} 
+        alt={member.alt || `${member.name} - ${member.role}`}
+        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
       />
       
       {/* Dark Gradient Overlay */}

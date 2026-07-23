@@ -4,13 +4,13 @@ import { createClient } from '@supabase/supabase-js';
 
 export const metadata: Metadata = {
   title: 'Our Work & Case Studies',
-  description: 'View our portfolio of award-winning websites, applications, and digital products built by Kairo Studio.',
+  description: 'View our portfolio of premium websites, applications, and digital products built by Kairo Studio.',
   alternates: {
     canonical: '/portfolio/',
   },
   openGraph: {
     title: 'Our Work & Case Studies | Kairo Studio',
-    description: 'View our portfolio of award-winning websites, applications, and digital products built by Kairo Studio.',
+    description: 'View our portfolio of premium websites, applications, and digital products built by Kairo Studio.',
     url: 'https://kairostudio.co.uk/portfolio/',
     siteName: 'Kairo Studio',
     images: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Our Work & Case Studies | Kairo Studio',
-    description: 'View our portfolio of award-winning websites, applications, and digital products built by Kairo Studio.',
+    description: 'View our portfolio of premium websites, applications, and digital products built by Kairo Studio.',
     images: ['https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2940&auto=format&fit=crop'],
   },
 };

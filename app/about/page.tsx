@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     siteName: 'Kairo Studio',
     images: [
       {
-        url: 'https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=professional%20digital%20agency%20team%20working%20on%20innovative%20projects%20modern%20office%20abstract%20style%20dark%20aesthetic&image_size=landscape_16_9',
+        url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop',
         width: 1200,
         height: 630,
         alt: 'About Kairo Studio',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'About Us | Kairo Studio',
     description: 'Learn about Kairo Studio, our mission, and the expert team building high-performance digital solutions.',
-    images: ['https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=professional%20digital%20agency%20team%20working%20on%20innovative%20projects%20modern%20office%20abstract%20style%20dark%20aesthetic&image_size=landscape_16_9'],
+    images: ['https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop'],
   },
 };
 

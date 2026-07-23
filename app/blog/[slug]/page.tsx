@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         openGraph: {
           title: mockPost.title,
           description: mockPost.excerpt,
-          url: `/blog/${params.slug}/`,
+          url: `https://kairostudio.co.uk/blog/${params.slug}/`,
           images: [{ url: mockPost.image_url }],
         }
       };
@@ -60,6 +60,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: `https://kairostudio.co.uk/blog/${params.slug}/`,
       type: 'article',
       publishedTime: post.created_at,
       modifiedTime: post.updated_at || post.created_at,

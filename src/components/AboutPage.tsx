@@ -284,9 +284,9 @@ export default function AboutPage() {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {[
-              { name: "Jake", role: "Founder & Lead Engineer", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=60" },
-              { name: "Sarah", role: "Head of Design", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60" },
-              { name: "David", role: "Growth Strategist", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=60" }
+              { name: "Jake", role: "Founder & Lead Engineer", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=60", alt: "Jake, Founder & Lead Engineer at Kairo Studio" },
+              { name: "Sarah", role: "Head of Design", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&auto=format&fit=crop&q=60", alt: "Sarah, Head of Design at Kairo Studio" },
+              { name: "David", role: "Growth Strategist", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&auto=format&fit=crop&q=60", alt: "David, Growth Strategist at Kairo Studio" }
             ].map((member, i) => (
               <HolographicCard key={i} member={member} index={i} />
             ))}

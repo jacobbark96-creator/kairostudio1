@@ -16,8 +16,7 @@ export const metadata: Metadata = {
     default: 'Kairo Studio | Web Design Agency London | High-Performance Digital Solutions',
     template: '%s | Kairo Studio'
   },
-  description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
-  keywords: ['web design', 'digital agency', 'custom software development', 'SEO optimization', 'Next.js development', 'branding', 'UI/UX design'],
+  description: 'Premium digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
   authors: [{ name: 'Kairo Studio' }],
   creator: 'Kairo Studio',
   publisher: 'Kairo Studio',
@@ -31,7 +30,7 @@ export const metadata: Metadata = {
     locale: 'en_GB',
     url: 'https://kairostudio.co.uk',
     title: 'Kairo Studio | High-Performance Digital Solutions',
-    description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, and scalable digital products.',
+    description: 'Premium digital agency specializing in custom web design, high-performance web applications, and scalable digital products.',
     siteName: 'Kairo Studio',
     images: [
       {
@@ -45,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Kairo Studio | High-Performance Digital Solutions',
-    description: 'Award-winning digital agency specializing in custom web design and high-performance web applications.',
+    description: 'Premium digital agency specializing in custom web design and high-performance web applications.',
     creator: '@kairostudio',
     images: ['https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop'],
   },
@@ -84,7 +83,7 @@ export default function RootLayout({
     '@type': 'LocalBusiness',
     name: 'Kairo Studio',
     alternateName: 'Kairo Studio Web Design',
-    description: 'Award-winning digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
+    description: 'Premium digital agency specializing in custom web design, high-performance web applications, SEO optimization, and scalable digital products for modern brands.',
     url: 'https://kairostudio.co.uk',
     logo: 'https://kairostudio.co.uk/icon.png',
     image: 'https://kairostudio.co.uk/icon.png',

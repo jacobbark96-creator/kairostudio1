@@ -148,10 +148,10 @@ export default function HomePage() {
         {/* Night Sky Background */}
         <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden">
             <img 
-                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
-                alt="Night Sky" 
-                className="absolute inset-0 w-full h-full object-cover"
-            />
+            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+            alt="Kairo Studio abstract background" 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
             {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
             <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/70 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
         </div>
