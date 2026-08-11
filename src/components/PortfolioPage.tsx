@@ -40,9 +40,10 @@ export default function PortfolioPage({ initialProjects = null }: { initialProje
   });
 
   useEffect(() => {
-    if (!initialProjects) {
-      fetchProjects();
-    } else {
+    // Always fetch fresh data on the client so CRM updates are immediately visible,
+    // while still utilizing initialProjects for SSR/SEO fallback.
+    fetchProjects();
+    if (initialProjects) {
       setProjects(initialProjects);
       setLoading(false);
     }

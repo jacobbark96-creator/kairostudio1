@@ -52,7 +52,25 @@ const MOCK_POSTS: BlogPost[] = [
 ];
 
 export default function BlogList({ initialPosts }: { initialPosts?: BlogPost[] | null }) {
-  const posts = initialPosts || MOCK_POSTS;
+  const [posts, setPosts] = useState<BlogPost[]>(initialPosts || MOCK_POSTS);
+
+  useEffect(() => {
+    // Always fetch fresh data on the client so CRM updates are immediately visible,
+    // while still utilizing initialPosts for SSR/SEO fallback.
+    const fetchPosts = async () => {
+      const { data } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .order('created_at', { ascending: false });
+      
+      if (data && data.length > 0) {
+        setPosts(data as BlogPost[]);
+      }
+    };
+    
+    fetchPosts();
+  }, []);
 
   return (
     <>
