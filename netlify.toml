@@ -1,0 +1,10 @@
+[build]
+  command = "npm install --legacy-peer-deps && npm run build"
+  publish = "out"
+
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+

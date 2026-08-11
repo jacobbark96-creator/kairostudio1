@@ -1,0 +1,55 @@
+{
+  "name": "vite-react-typescript-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && rm -rf dist && cp -r out dist && cp -r public/* dist/ 2>/dev/null || :",
+    "export": "next build && next export && rm -rf dist && mv out dist",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
+    "@tailwindcss/typography": "^0.5.19",
+    "canvas-confetti": "^1.9.4",
+    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
+    "framer-motion": "^12.34.2",
+    "googleapis": "^171.4.0",
+    "jose": "^6.2.2",
+    "lucide-react": "^0.344.0",
+    "maplibre-gl": "^5.23.0",
+    "next": "^14.2.5",
+    "picomatch": "^4.0.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-map-gl": "^8.1.1",
+    "react-markdown": "^10.1.0",
+    "resend": "^6.9.4",
+    "twilio": "^5.13.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@netlify/plugin-nextjs": "^5.15.9",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^26.1.2",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^9.9.1",
+    "eslint-config-next": "16.3.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.11",
+    "globals": "^15.9.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.3.0"
+  }
+}

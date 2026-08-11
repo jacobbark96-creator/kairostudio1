@@ -1,0 +1,1 @@
+ALTER TABLE client_projects ADD COLUMN IF NOT EXISTS ga_api_key text;

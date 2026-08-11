@@ -1,0 +1,355 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+import { ArrowRight, Sparkles, Zap, Code, Palette, Rocket, Users, Award, X, Layout, TrendingUp, CheckCircle } from 'lucide-react';
+import RandomOffer from '../../components/RandomOffer';
+import SiteAuditWizard from '../../components/SiteAuditWizard';
+import { useUI } from '../../context/UIContext';
+import { supabase } from '../../lib/supabase';
+import logoNb from '../../Logo/kairologo-nbg.png';
+
+interface Project {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  image_url: string | null;
+  link?: string;
+  featured: boolean;
+  color?: string;
+}
+
+export default function MobileHome() {
+  const { openContactModal } = useUI();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [auditUrl, setAuditUrl] = useState('');
+  const [auditEmail, setAuditEmail] = useState('');
+  const [isSubmittingAudit, setIsSubmittingAudit] = useState(false);
+  const [auditSuccess, setAuditSuccess] = useState(false);
+
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    // Fetch all projects, prioritizing featured ones, then by date
+    const { data } = await supabase
+      .from('projects')
+      .select('*')
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (data) {
+        setProjects(data);
+    }
+  };
+
+  const handleAuditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!auditUrl || !auditEmail) return;
+
+    setShowWizard(true);
+  };
+
+  const handleWizardComplete = async (answers: Record<number, string>) => {
+    setIsSubmittingAudit(true);
+
+    // Format URL logic
+    let formattedUrl = auditUrl.trim().toLowerCase();
+    if (!/^https?:\/\//i.test(formattedUrl)) {
+      if (!/^www\./i.test(formattedUrl)) {
+          formattedUrl = `https://www.${formattedUrl}`;
+      } else {
+          formattedUrl = `https://${formattedUrl}`;
+      }
+    }
+
+    try {
+        await fetch('https://hook.eu1.make.com/aewnwbg67m55lr979f9ofriktxg9i496', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                url: formattedUrl,
+                email: auditEmail,
+                answers: answers
+            }),
+        });
+        
+        setAuditSuccess(true);
+        setAuditUrl('');
+        setAuditEmail('');
+        setShowWizard(false);
+    } catch (error) {
+        console.error("Error submitting audit request", error);
+        alert("There was an issue submitting your request. Please try again.");
+    } finally {
+        setIsSubmittingAudit(false);
+    }
+  };
+
+  const services = [
+    { 
+        icon: Layout, 
+        title: 'Web Presence', 
+        desc: 'Done-for-you sites & hosting.',
+        color: 'from-brand-500 to-brand-600',
+    },
+    { 
+        icon: TrendingUp, 
+        title: 'SEO & Growth', 
+        desc: 'Continuous market optimization.',
+        color: 'from-purple-500 to-purple-600',
+    },
+    { 
+        icon: Palette, 
+        title: 'Brand Identity', 
+        desc: 'Modern, high-trust visual systems.',
+        color: 'from-pink-500 to-rose-500',
+    }
+  ];
+
+  return (
+    <div className="space-y-8 pb-20 relative overflow-hidden z-0">
+        {/* Night Sky Background */}
+        <div className="absolute top-0 left-0 w-full h-[100vh] -z-20">
+            <img 
+                src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2940&auto=format&fit=crop" 
+                alt="Night Sky" 
+                className="w-full h-full object-cover"
+            />
+            {/* Fade at the bottom to blend into plain background */}
+            <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent" />
+            
+            {/* Light Mode "Fade" Overlay: Makes image subtle in light mode, invisible in dark mode */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/80 to-white dark:opacity-0 transition-opacity duration-500 pointer-events-none" />
+        </div>
+
+      {/* Mobile Hero - Premium Editorial Redesign */}
+      <section className="relative z-10 pt-16 px-6 pb-12 flex flex-col justify-end min-h-[60vh]">
+        {/* Main Headline */}
+        <div className="space-y-4 mb-6 animate-fade-in-up animation-delay-200 relative">
+            <div className="absolute inset-0 bg-black/30 dark:bg-black/50 blur-2xl -z-10 rounded-full scale-150 hidden dark:block" />
+            <div className="w-24 h-auto">
+                <img 
+                    src={typeof logoNb === 'string' ? logoNb : (logoNb as any).src} 
+                    alt="Kairo" 
+                    className="w-full h-auto object-contain brightness-0 dark:invert drop-shadow-lg" 
+                />
+            </div>
+            <h1 className="text-5xl font-display font-black text-gray-900 dark:text-white leading-[0.85] tracking-tight drop-shadow-xl">
+                BEYOND <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-purple-600 to-pink-600 dark:from-brand-400 dark:via-purple-400 dark:to-pink-400">IMAGINATION</span>
+            </h1>
+        </div>
+
+        {/* Description with side line */}
+        <div className="flex gap-4 mb-8 animate-fade-in-up animation-delay-400 relative">
+            <div className="absolute inset-0 bg-black/40 dark:bg-black/60 blur-xl -z-10 rounded-full hidden dark:block" />
+            <div className="w-1 bg-gradient-to-b from-brand-600 to-transparent dark:from-brand-500 rounded-full" />
+            <p className="text-base text-gray-900 dark:text-gray-100 font-medium leading-relaxed max-w-[80%] drop-shadow-md">
+                We design digital experiences that define the future of your brand. Unapologetically bold.
+            </p>
+        </div>
+
+        {/* CTAs */}
+        <div className="flex gap-3 animate-fade-in-up animation-delay-600">
+            <button 
+                onClick={() => openContactModal()}
+                className="flex-1 h-14 bg-gray-900 dark:bg-white text-white dark:text-black rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-transform"
+            >
+                Start Project
+                <ArrowRight className="w-4 h-4" />
+            </button>
+        </div>
+      </section>
+
+      {/* Site Assessment Trigger Pill */}
+      <div className="px-4 relative z-10 flex justify-center -mt-6 mb-4 animate-fade-in-up animation-delay-800">
+          <button 
+              onClick={() => setIsAuditModalOpen(true)}
+              className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gray-900 dark:bg-white shadow-xl shadow-gray-900/20 dark:shadow-white/10 text-white dark:text-gray-900 font-bold text-sm active:scale-95 transition-all hover:shadow-2xl"
+          >
+              <Layout className="w-5 h-5" />
+              Analyse Your Website
+          </button>
+      </div>
+
+      {/* Site Assessment Modal */}
+      {isAuditModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+              <div 
+                  className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                  onClick={() => setIsAuditModalOpen(false)}
+              />
+              <div className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] shadow-2xl border border-gray-200 dark:border-gray-800 animate-fade-in-up">
+                  {/* Close Button */}
+                  <button 
+                      onClick={() => setIsAuditModalOpen(false)}
+                      className="absolute top-4 right-4 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                  >
+                      <X className="w-4 h-4" />
+                  </button>
+
+                  <div className="relative z-10 p-8 text-center max-h-[85vh] overflow-y-auto">
+                      <h3 className="text-3xl font-display font-black text-gray-900 dark:text-white mb-2 tracking-tight">
+                          Analyse your site
+                      </h3>
+                      
+                      {auditSuccess ? (
+                              <div className="py-4 text-center animate-fade-in-up">
+                                  <h4 className="font-bold text-gray-900 dark:text-white mb-2 text-xl">Report generated.</h4>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Your detailed analysis is on its way to your inbox.</p>
+                                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                                      <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                                  </div>
+                              </div>
+                          ) : (
+                          <>
+                              <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-[16rem] mx-auto leading-relaxed">
+                                  Enter your URL below to get a comprehensive performance and SEO breakdown.
+                              </p>
+                              
+                              <div className="w-full relative overflow-hidden min-h-[250px] flex items-start justify-center transition-all duration-500">
+                                  <div className={`absolute inset-0 w-full transition-all duration-500 transform ${showWizard ? '-translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}>
+                                      <form 
+                                          onSubmit={handleAuditSubmit}
+                                          className="flex flex-col gap-3"
+                                      >
+                                      <input 
+                                          type="text" 
+                                          placeholder="yourdomain.com" 
+                                          required
+                                          value={auditUrl}
+                                          onChange={(e) => setAuditUrl(e.target.value)}
+                                          className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+                                      />
+                                      <input 
+                                          type="email" 
+                                          placeholder="name@company.com" 
+                                          required
+                                          value={auditEmail}
+                                          onChange={(e) => setAuditEmail(e.target.value)}
+                                          className="w-full px-5 py-4 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 text-base text-gray-900 dark:text-white placeholder-gray-400 focus:bg-white dark:focus:bg-black focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]"
+                                      />
+                                      <button 
+                                          type="submit"
+                                          disabled={isSubmittingAudit}
+                                          className="w-full py-4 mt-2 bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-bold text-base shadow-lg active:scale-[0.98] transition-all flex justify-center items-center gap-2 disabled:opacity-70 disabled:active:scale-100"
+                                      >
+                                          {isSubmittingAudit ? 'Scanning your site...' : 'Get Free Analysis'}
+                                          {!isSubmittingAudit && <ArrowRight className="w-4 h-4" />}
+                                      </button>
+                                      </form>
+                                      
+                                      <div className="mt-5 flex flex-col items-center justify-center gap-1.5">
+                                        <div className="flex items-center gap-1 text-yellow-400">
+                                          {[...Array(5)].map((_, i) => (
+                                            <svg key={i} className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                          ))}
+                                        </div>
+                                        <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Takes 30 seconds. 100% Free.</p>
+                                      </div>
+                                  </div>
+                                  
+                                  <div className={`w-full transition-all duration-500 transform ${showWizard ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none hidden'}`}>
+                                      <div className="pt-2">
+                                          <SiteAuditWizard 
+                                          isOpen={showWizard} 
+                                          onClose={() => setShowWizard(false)} 
+                                          auditUrl={auditUrl} 
+                                          auditEmail={auditEmail} 
+                                          onComplete={handleWizardComplete} 
+                                          embedded={true}
+                                          />
+                                      </div>
+                                  </div>
+                              </div>
+                          </>
+                      )}
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Services Redesigned */}
+      <section className="space-y-4 relative z-10">
+        <div className="flex justify-between items-end px-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Services</h2>
+            <Link href="/services" className="text-xs text-brand-600 font-medium">View All</Link>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-4">
+            {services.map((s, i) => (
+                <Link key={i} href="/services" className="group flex flex-col relative overflow-hidden rounded-3xl bg-white dark:bg-[#0a0a0a] border border-gray-200 dark:border-gray-800 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div className="mb-4">
+                        <s.icon className={`w-8 h-8 text-brand-600 dark:text-brand-500 transition-transform duration-300 group-hover:scale-110`} />
+                        <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${s.color} opacity-[0.03] dark:opacity-5 rounded-bl-full`} />
+                    </div>
+                    <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mb-2">{s.title}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6 flex-grow">{s.desc}</p>
+                    
+                    <div className="mt-auto flex items-center gap-2 text-xs font-bold text-gray-900 dark:text-white transition-all">
+                        Explore <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </div>
+                </Link>
+            ))}
+        </div>
+      </section>
+
+      {/* Recent Work Carousel */}
+      <section className="space-y-4 relative z-10 overflow-hidden">
+        <div className="flex justify-between items-end px-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">Recent Work</h2>
+            <Link href="/portfolio" className="text-xs text-brand-600 font-medium">View All</Link>
+        </div>
+        
+        {projects.length > 0 ? (
+            <div className="marquee">
+                <div className="marquee__inner">
+                    {[...projects, ...projects].map((project, index) => (
+                        <Link 
+                            key={`${project.id}-${index}`} 
+                            href="/portfolio"
+                            className="flex-shrink-0 w-[85vw] relative rounded-[2rem] overflow-hidden aspect-[4/3] group"
+                        >
+                            {project.image_url ? (
+                                <img 
+                                    src={project.image_url} 
+                                    alt={project.title} 
+                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                            ) : (
+                                <div className={`absolute inset-0 w-full h-full bg-gradient-to-br ${project.color || 'from-gray-800 to-black'}`} />
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80" />
+                            
+                            <div className="absolute bottom-0 left-0 p-6 w-full">
+                                <span className="inline-block px-2 py-1 rounded-md bg-white/20 backdrop-blur-md text-[10px] font-bold uppercase tracking-wider text-white mb-2">
+                                    {project.category}
+                                </span>
+                                <h3 className="text-2xl font-bold text-white mb-1">{project.title}</h3>
+                                <p className="text-sm text-gray-300 line-clamp-2">{project.description}</p>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+        ) : (
+             <div className="px-4">
+                <div className="bg-gray-100 dark:bg-gray-800 rounded-[2rem] p-8 text-center">
+                    <p className="text-gray-500 dark:text-gray-400">Loading projects...</p>
+                </div>
+            </div>
+        )}
+      </section>
+    </div>
+  );
+}

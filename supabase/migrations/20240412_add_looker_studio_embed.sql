@@ -1,0 +1,1 @@
+ALTER TABLE client_projects ADD COLUMN IF NOT EXISTS looker_studio_embed text;
