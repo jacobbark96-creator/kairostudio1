@@ -111,12 +111,6 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Portfolio
               </Link>
-              <Link
-                href="/pricing"
-                className="px-5 py-2 text-sm font-medium rounded-full text-gray-600 dark:text-gray-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-brand-50 dark:hover:bg-white/5 transition-all duration-300"
-              >
-                Pricing
-              </Link>
               <LocalKairoButton />
               <Link
                 href="/dashboard"
@@ -203,13 +197,6 @@ export default function Layout({ children }: LayoutProps) {
             className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
           >
             Portfolio
-          </Link>
-          <Link
-            href="/pricing"
-            onClick={() => setMobileMenuOpen(false)}
-            className="text-3xl font-display font-bold text-gray-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors"
-          >
-            Pricing
           </Link>
           <div className="flex justify-center" onClick={() => setMobileMenuOpen(false)}>
             <LocalKairoButton />
